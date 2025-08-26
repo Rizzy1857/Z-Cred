@@ -15,9 +15,6 @@ plotly>=5.15.0
 matplotlib>=3.7.0
 seaborn>=0.12.0
 
-# Database
-sqlite3
-
 # Authentication and security
 bcrypt>=4.0.0
 passlib>=1.7.4
