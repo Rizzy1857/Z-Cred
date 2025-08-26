@@ -77,6 +77,11 @@ st.markdown("""
         border-radius: 5px;
         border: 1px solid #c3e6cb;
     }
+    
+    div.stButton > button {
+        text-align: left;
+        justify-content: left;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -115,15 +120,15 @@ class ZScoreApp:
         """Show main navigation menu"""
         with st.sidebar:
             st.markdown("---")
-            st.subheader("🎯 Navigation")
+            st.subheader("Navigation")
             
             pages = [
-                ("📊 Dashboard", "Dashboard"),
-                ("👤 New Applicant", "New Applicant"),
-                ("🔍 Risk Assessment", "Risk Assessment"),
-                ("🎮 Gamification", "Gamification"),
-                ("📋 Compliance", "Compliance"),
-                ("⚙️ Admin Panel", "Admin Panel")
+                ("Dashboard", "Dashboard"),
+                ("New Applicant", "New Applicant"),
+                ("Risk Assessment", "Risk Assessment"),
+                ("Gamification", "Gamification"),
+                ("Compliance", "Compliance"),
+                ("Admin Panel", "Admin Panel")
             ]
             
             for page_label, page_key in pages:
@@ -134,7 +139,7 @@ class ZScoreApp:
             st.markdown("---")
             
             # Demo controls
-            st.subheader("🚀 Demo Controls")
+            st.subheader("Demo Controls")
             if st.button("Load Sample Data", use_container_width=True):
                 self.db.add_sample_data()
                 st.success("Sample data loaded!")
@@ -194,7 +199,7 @@ class ZScoreApp:
         
         # Recent applications
         if applicants:
-            st.subheader("📋 Recent Applications")
+            st.subheader("Recent Applications")
             
             df = pd.DataFrame(applicants)
             df['trust_percentage'] = (df['overall_trust_score'] * 100).round(1)
@@ -216,7 +221,7 @@ class ZScoreApp:
         
         # Trust score distribution
         if scored_applicants:
-            st.subheader("📊 Trust Score Distribution")
+            st.subheader("Trust Score Distribution")
             
             trust_scores = [a.get('overall_trust_score', 0) * 100 for a in scored_applicants]
             
@@ -230,7 +235,7 @@ class ZScoreApp:
     
     def show_new_applicant(self):
         """New applicant registration page"""
-        st.markdown('<h1 class="main-header">📝 New Applicant Registration</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">New Applicant Registration</h1>', unsafe_allow_html=True)
         
         with st.form("new_applicant_form"):
             st.subheader("Basic Information")
@@ -252,7 +257,7 @@ class ZScoreApp:
             # Alternative data section
             st.subheader("Alternative Data (Optional)")
             
-            with st.expander("💳 Payment History"):
+            with st.expander("Payment History"):
                 col1, col2 = st.columns(2)
                 with col1:
                     total_payments = st.number_input("Total Utility Payments", min_value=0, value=12)
@@ -261,7 +266,7 @@ class ZScoreApp:
                     avg_payment_amount = st.number_input("Average Payment Amount (₹)", min_value=0, value=1500)
                     payment_consistency = st.slider("Payment Consistency", 0.0, 1.0, 0.8)
             
-            with st.expander("👥 Social Proof"):
+            with st.expander("Social Proof"):
                 col1, col2 = st.columns(2)
                 with col1:
                     community_rating = st.slider("Community Rating", 1.0, 5.0, 3.5)
@@ -270,7 +275,7 @@ class ZScoreApp:
                     group_participation = st.slider("Group Participation Score", 0.0, 1.0, 0.6)
                     social_references = st.number_input("Social References", min_value=0, value=2)
             
-            with st.expander("📱 Digital Footprint"):
+            with st.expander("Digital Footprint"):
                 col1, col2 = st.columns(2)
                 with col1:
                     transaction_regularity = st.slider("Digital Transaction Regularity", 0.0, 1.0, 0.7)
@@ -349,8 +354,8 @@ class ZScoreApp:
                                 {'timestamp': datetime.now().isoformat()}
                             )
                             
-                            st.success(f"✅ Applicant {name} registered successfully!")
-                            st.success(f"📊 Trust Score: {((behavioral_score + social_score + digital_score) / 3 * 100):.1f}%")
+                            st.success(f"Applicant {name} registered successfully!")
+                            st.success(f"Trust Score: {((behavioral_score + social_score + digital_score) / 3 * 100):.1f}%")
                             
                             # Store in session for navigation
                             st.session_state.current_applicant = applicant_id
@@ -365,7 +370,7 @@ class ZScoreApp:
     
     def show_risk_assessment(self):
         """Risk assessment and ML prediction page"""
-        st.markdown('<h1 class="main-header">🎯 Credit Risk Assessment</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Credit Risk Assessment</h1>', unsafe_allow_html=True)
         
         # Select applicant
         applicants = self.db.get_all_applicants()
@@ -387,7 +392,7 @@ class ZScoreApp:
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader(f"📊 Assessment for {applicant['name']}")
+            st.subheader(f"Assessment for {applicant['name']}")
             
             # Current trust score
             trust_percentage = (applicant.get('overall_trust_score', 0) * 100)
@@ -416,7 +421,7 @@ class ZScoreApp:
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
-            st.subheader("📋 Applicant Details")
+            st.subheader("Applicant Details")
             st.write(f"**Phone:** {applicant['phone']}")
             st.write(f"**Age:** {applicant['age']}")
             st.write(f"**Location:** {applicant['location']}")
@@ -424,7 +429,7 @@ class ZScoreApp:
             st.write(f"**Monthly Income:** ₹{applicant['monthly_income']:,.0f}")
         
         # ML Prediction
-        st.subheader("🤖 AI Risk Assessment")
+        st.subheader("AI Risk Assessment")
         
         if st.button("Run Credit Risk Assessment", use_container_width=True):
             with st.spinner("Running AI models..."):
@@ -451,7 +456,7 @@ class ZScoreApp:
                         st.metric("Confidence Score", f"{prediction_result['confidence_score']:.1%}")
                     
                     # SHAP Explanation
-                    st.subheader("🔍 AI Decision Explanation")
+                    st.subheader("AI Decision Explanation")
                     explanation = self.model.explain_prediction(applicant)
                     
                     if 'error' not in explanation:
@@ -493,15 +498,15 @@ class ZScoreApp:
                         if negative_features:
                             for feature in negative_features[:3]:  # Top 3 negative features
                                 if 'payment' in feature.lower():
-                                    st.info("📅 **Improve Payment History**: Make more on-time utility payments")
+                                    st.info("**Improve Payment History**: Make more on-time utility payments")
                                 elif 'social' in feature.lower():
-                                    st.info("👥 **Build Social Proof**: Get community endorsements and references")
+                                    st.info("**Build Social Proof**: Get community endorsements and references")
                                 elif 'digital' in feature.lower():
-                                    st.info("📱 **Enhance Digital Presence**: Increase digital transaction regularity")
+                                    st.info("**Enhance Digital Presence**: Increase digital transaction regularity")
                                 elif 'income' in feature.lower():
-                                    st.info("💰 **Increase Income Stability**: Work on stable income sources")
+                                    st.info("**Increase Income Stability**: Work on stable income sources")
                         else:
-                            st.success("🎉 **Excellent Profile!** All major factors are positive.")
+                            st.success("**Excellent Profile!** All major factors are positive.")
                     
                     else:
                         st.error(f"Explanation Error: {explanation['error']}")
@@ -511,7 +516,7 @@ class ZScoreApp:
     
     def show_gamification(self):
         """Gamification and financial literacy page"""
-        st.markdown('<h1 class="main-header">🎮 Financial Literacy & Gamification</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Financial Literacy & Gamification</h1>', unsafe_allow_html=True)
         
         # Select applicant
         applicants = self.db.get_all_applicants()
@@ -544,7 +549,7 @@ class ZScoreApp:
             st.metric("Credit Eligibility", eligibility)
         
         # Trust progression bar
-        st.subheader("📊 Trust Progression")
+        st.subheader("Trust Progression")
         
         progress_val = trust_percentage / 100
         st.progress(progress_val, text=f"Trust Score: {trust_percentage:.1f}% (Threshold: 70%)")
@@ -553,32 +558,32 @@ class ZScoreApp:
             remaining = 70 - trust_percentage
             st.info(f"📈 You need {remaining:.1f}% more to become credit eligible!")
         else:
-            st.success("🎉 Congratulations! You are eligible for credit assessment!")
+            st.success("Congratulations! You are eligible for credit assessment!")
         
         # Available missions
-        st.subheader("🎯 Available Missions")
+        st.subheader("Available Missions")
         
         missions = [
             {
-                'title': '💡 Financial Literacy Quiz',
+                'title': 'Financial Literacy Quiz',
                 'description': 'Complete basic financial literacy assessment',
                 'reward': '+15% Trust Score, 50 Z-Credits',
                 'type': 'quiz'
             },
             {
-                'title': '📅 Pay Utility Bill On Time',
+                'title': 'Pay Utility Bill On Time',
                 'description': 'Submit proof of on-time utility payment',
                 'reward': '+20% Trust Score, 75 Z-Credits',
                 'type': 'payment'
             },
             {
-                'title': '👥 Get Community Endorsement',
+                'title': 'Get Community Endorsement',
                 'description': 'Obtain endorsement from community leader',
                 'reward': '+25% Trust Score, 100 Z-Credits',
                 'type': 'social'
             },
             {
-                'title': '📱 Connect Bank Account',
+                'title': 'Connect Bank Account',
                 'description': 'Provide consent for bank transaction history',
                 'reward': '+30% Trust Score, 150 Z-Credits',
                 'type': 'data'
@@ -629,11 +634,11 @@ class ZScoreApp:
         if trust_percentage >= 30:
             achievements.append("🌱 First Steps - Reached 30% Trust")
         if trust_percentage >= 50:
-            achievements.append("📈 Growing Trust - Reached 50% Trust")
+            achievements.append("Growing Trust - Reached 50% Trust")
         if trust_percentage >= 70:
-            achievements.append("🎯 Credit Ready - Reached 70% Trust")
+            achievements.append("Credit Ready - Reached 70% Trust")
         if z_credits >= 100:
-            achievements.append("💰 Credit Collector - Earned 100+ Z-Credits")
+            achievements.append("Credit Collector - Earned 100+ Z-Credits")
         
         if achievements:
             for achievement in achievements:
@@ -643,7 +648,7 @@ class ZScoreApp:
     
     def show_compliance(self):
         """DPDPA compliance and consent management"""
-        st.markdown('<h1 class="main-header">⚖️ Compliance & Data Privacy</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Compliance & Data Privacy</h1>', unsafe_allow_html=True)
         
         st.subheader("🔒 DPDPA 2023 Compliance Framework")
         
@@ -662,7 +667,7 @@ class ZScoreApp:
             st.success(f"{status}: {description}")
         
         # RBI Guidelines compliance
-        st.subheader("🏛️ RBI Digital Lending Guidelines 2025")
+        st.subheader("RBI Digital Lending Guidelines 2025")
         
         rbi_items = [
             ("✅ LSP Partnership Model", "Working with regulated lending entities"),
@@ -676,7 +681,7 @@ class ZScoreApp:
             st.success(f"{status}: {description}")
         
         # Consent management demo
-        st.subheader("📋 Consent Management System")
+        st.subheader("Consent Management System")
         
         if st.button("Demonstrate Consent Collection"):
             st.info("""
@@ -704,17 +709,17 @@ class ZScoreApp:
                 st.info("You can withdraw this consent at any time.")
         
         # Privacy controls
-        st.subheader("🛡️ Privacy Controls")
+        st.subheader("Privacy Controls")
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.button("📥 Download My Data", use_container_width=True)
-            st.button("🔄 Update Preferences", use_container_width=True)
+            st.button("Download My Data", use_container_width=True)
+            st.button("Update Preferences", use_container_width=True)
         
         with col2:
-            st.button("❌ Withdraw Consent", use_container_width=True)
-            st.button("🗑️ Delete My Account", use_container_width=True)
+            st.button("Withdraw Consent", use_container_width=True)
+            st.button("Delete My Account", use_container_width=True)
     
     def show_admin_panel(self):
         """Admin panel for system management"""
@@ -722,10 +727,10 @@ class ZScoreApp:
             st.error("Access denied. Admin role required.")
             return
         
-        st.markdown('<h1 class="main-header">⚙️ Admin Panel</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">Admin Panel</h1>', unsafe_allow_html=True)
         
         # System statistics
-        st.subheader("📊 System Statistics")
+        st.subheader("System Statistics")
         
         applicants = self.db.get_all_applicants()
         
@@ -747,7 +752,7 @@ class ZScoreApp:
             st.metric("New This Week", recent_apps)
         
         # Database management
-        st.subheader("🗄️ Database Management")
+        st.subheader("Database Management")
         
         col1, col2, col3 = st.columns(3)
         
@@ -780,7 +785,7 @@ class ZScoreApp:
                     st.warning("⚠️ Click again to confirm database reset")
         
         # Model management
-        st.subheader("🤖 Model Management")
+        st.subheader("Model Management")
         
         if st.button("Retrain Models", use_container_width=True):
             with st.spinner("Retraining ML models..."):
@@ -789,7 +794,7 @@ class ZScoreApp:
         
         # All applicants table
         if applicants:
-            st.subheader("👥 All Applicants")
+            st.subheader("All Applicants")
             
             df = pd.DataFrame(applicants)
             df['trust_percentage'] = (df['overall_trust_score'] * 100).round(1)
