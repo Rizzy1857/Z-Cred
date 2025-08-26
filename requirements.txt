@@ -1,0 +1,26 @@
+# Core web framework
+streamlit>=1.28.0
+
+# Data processing
+pandas>=1.5.0
+numpy>=1.24.0
+
+# Machine learning
+scikit-learn>=1.3.0
+xgboost>=1.7.0
+shap>=0.42.0
+
+# Visualization
+plotly>=5.15.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Database
+sqlite3
+
+# Authentication and security
+bcrypt>=4.0.0
+passlib>=1.7.4
+
+# Utilities
+python-dotenv>=1.0.0
