@@ -19,6 +19,7 @@ import time
 from auth import AuthManager
 from local_db import Database
 from model_pipeline import CreditRiskModel, calculate_trust_score, TrustScoreCalculator
+from error_handling import safe_numeric_conversion, safe_json_parse
 
 # Page configuration
 st.set_page_config(
@@ -28,7 +29,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for minimalistic
+# Custom CSS for dark blue-purple theme
 st.markdown("""
 <style>
     /* Hide Streamlit default elements */
@@ -37,49 +38,52 @@ st.markdown("""
     footer {visibility: hidden;}
     #stDecoration {display:none;}
     
-    /* Main app styling */
+    /* Main app styling - Dark theme with blue-purple gradient */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #2c3e50;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7209b7 100%);
+        color: #e0e6ed;
     }
     
-    /* Content area */
+    /* Content area - Dark with glass effect */
     .main .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(22, 33, 62, 0.85);
         border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(112, 9, 183, 0.2);
         margin: 1rem;
     }
     
-    /* Headers */
+    /* Headers - Light text for dark theme */
     .main-header {
         font-size: 2.2rem;
         font-weight: 300;
-        color: #2c3e50;
+        color: #ffffff;
         text-align: center;
         margin-bottom: 2rem;
         letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(112, 9, 183, 0.3);
     }
     
     h1, h2, h3 {
         font-weight: 300;
-        color: #2c3e50;
+        color: #e0e6ed;
         letter-spacing: -0.3px;
     }
     
-    /* Sidebar styling */
+    /* Sidebar styling - Dark theme */
     .css-1d391kg {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
+        background: rgba(26, 26, 46, 0.95);
+        backdrop-filter: blur(15px);
         border-radius: 0 20px 20px 0;
+        border-right: 1px solid rgba(112, 9, 183, 0.3);
     }
     
-    /* Buttons */
+    /* Buttons - Blue-purple gradient */
     .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #4a6cf7 0%, #7209b7 100%);
         color: white;
         border: none;
         border-radius: 12px;
@@ -87,137 +91,261 @@ st.markdown("""
         font-weight: 400;
         font-size: 0.9rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 15px rgba(74, 108, 247, 0.4);
     }
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 6px 20px rgba(74, 108, 247, 0.6);
+        background: linear-gradient(135deg, #5a7cf8 0%, #8219c7 100%);
     }
     
-    /* Form inputs */
+    /* Form inputs - Dark theme */
     .stTextInput > div > div > input,
     .stSelectbox > div > div > select,
     .stNumberInput > div > div > input {
-        border: 1px solid #e1e8ed;
+        border: 1px solid rgba(112, 9, 183, 0.3);
         border-radius: 12px;
         padding: 0.75rem;
         font-size: 0.9rem;
         transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(26, 26, 46, 0.8);
+        color: #e0e6ed;
     }
     
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus,
     .stNumberInput > div > div > input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #4a6cf7;
+        box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+        background: rgba(26, 26, 46, 0.9);
     }
     
-    /* Metrics */
+    /* Metrics - Dark theme */
     .metric-container {
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(26, 26, 46, 0.9);
         padding: 1.5rem;
         border-radius: 16px;
-        border: 1px solid rgba(230, 230, 230, 0.5);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(112, 9, 183, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         text-align: center;
         transition: all 0.3s ease;
+        color: #e0e6ed;
     }
     
     .metric-container:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(74, 108, 247, 0.2);
+        border-color: rgba(74, 108, 247, 0.5);
     }
     
     [data-testid="metric-container"] {
-        background: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(230, 230, 230, 0.5);
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(112, 9, 183, 0.3);
         padding: 1rem;
         border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        color: #e0e6ed;
     }
     
-    /* Cards */
+    /* Cards - Dark theme */
     .card {
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(26, 26, 46, 0.95);
         padding: 1.5rem;
         border-radius: 16px;
-        border: 1px solid rgba(230, 230, 230, 0.3);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(112, 9, 183, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         margin: 1rem 0;
         transition: all 0.3s ease;
+        color: #e0e6ed;
     }
     
     .card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 25px rgba(74, 108, 247, 0.2);
+        border-color: rgba(74, 108, 247, 0.5);
     }
     
-    /* Status indicators */
+    /* Status indicators - Enhanced for dark theme */
     .status-low {
-        color: #27ae60;
+        color: #00e676;
         font-weight: 500;
         padding: 0.3rem 0.8rem;
-        background: rgba(39, 174, 96, 0.1);
+        background: rgba(0, 230, 118, 0.2);
         border-radius: 20px;
         font-size: 0.85rem;
+        border: 1px solid rgba(0, 230, 118, 0.3);
     }
     
     .status-medium {
-        color: #f39c12;
+        color: #ffb300;
         font-weight: 500;
         padding: 0.3rem 0.8rem;
-        background: rgba(243, 156, 18, 0.1);
+        background: rgba(255, 179, 0, 0.2);
         border-radius: 20px;
         font-size: 0.85rem;
+        border: 1px solid rgba(255, 179, 0, 0.3);
     }
     
     .status-high {
-        color: #e74c3c;
+        color: #ff5722;
         font-weight: 500;
         padding: 0.3rem 0.8rem;
-        background: rgba(231, 76, 60, 0.1);
+        background: rgba(255, 87, 34, 0.2);
         border-radius: 20px;
         font-size: 0.85rem;
+        border: 1px solid rgba(255, 87, 34, 0.3);
     }
     
-    /* Progress bars */
+    /* Progress bars - Blue-purple gradient */
     .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(90deg, #4a6cf7 0%, #7209b7 100%);
         border-radius: 10px;
     }
     
-    /* Tabs */
+    /* Tabs - Dark theme */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(26, 26, 46, 0.8);
         border-radius: 12px;
         padding: 0.3rem;
+        border: 1px solid rgba(112, 9, 183, 0.3);
     }
     
     .stTabs [data-baseweb="tab"] {
         border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-weight: 400;
+        color: #e0e6ed;
+        background: transparent;
     }
     
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(74, 108, 247, 0.2);
+    }
+    
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background: linear-gradient(135deg, #4a6cf7 0%, #7209b7 100%);
         color: white;
     }
     
-    /* Success/Info/Warning messages */
-    .stSuccess, .stInfo, .stWarning {
+    /* Success/Info/Warning messages - Dark theme */
+    .stSuccess, .stInfo, .stWarning, .stError {
         border-radius: 12px;
         border: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
     }
     
-    /* Expander */
+    .stSuccess {
+        background: rgba(0, 230, 118, 0.15);
+        border-left: 4px solid #00e676;
+        color: #00e676;
+    }
+    
+    .stInfo {
+        background: rgba(74, 108, 247, 0.15);
+        border-left: 4px solid #4a6cf7;
+        color: #4a6cf7;
+    }
+    
+    .stWarning {
+        background: rgba(255, 179, 0, 0.15);
+        border-left: 4px solid #ffb300;
+        color: #ffb300;
+    }
+    
+    .stError {
+        background: rgba(255, 87, 34, 0.15);
+        border-left: 4px solid #ff5722;
+        color: #ff5722;
+    }
+    
+    /* Expander - Dark theme */
     .streamlit-expanderHeader {
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(112, 9, 183, 0.3);
+        color: #e0e6ed;
+    }
+    
+    .streamlit-expanderContent {
+        background: rgba(26, 26, 46, 0.8);
+        border: 1px solid rgba(112, 9, 183, 0.2);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    /* Data tables - Dark theme */
+    .stDataFrame {
+        background: rgba(26, 26, 46, 0.9);
+        border-radius: 12px;
+        border: 1px solid rgba(112, 9, 183, 0.3);
+    }
+    
+    .stDataFrame table {
+        background: rgba(26, 26, 46, 0.9);
+        color: #e0e6ed;
+    }
+    
+    .stDataFrame th {
+        background: rgba(74, 108, 247, 0.3);
+        color: #ffffff;
+        border-bottom: 2px solid rgba(112, 9, 183, 0.5);
+    }
+    
+    .stDataFrame td {
+        border-bottom: 1px solid rgba(112, 9, 183, 0.2);
+        color: #e0e6ed;
+    }
+    
+    /* Risk category specific styling */
+    .risk-low {
+        background: linear-gradient(135deg, #00e676 0%, #00c853 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);
+    }
+    
+    .risk-medium {
+        background: linear-gradient(135deg, #ffb300 0%, #ff8f00 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(255, 179, 0, 0.3);
+    }
+    
+    .risk-high {
+        background: linear-gradient(135deg, #ff5722 0%, #d32f2f 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    }
+    
+    /* Selectbox dropdown - Dark theme */
+    .stSelectbox > div > div {
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(112, 9, 183, 0.3);
+        color: #e0e6ed;
+    }
+    
+    /* Text areas - Dark theme */
+    .stTextArea > div > div > textarea {
+        background: rgba(26, 26, 46, 0.8);
+        border: 1px solid rgba(112, 9, 183, 0.3);
+        color: #e0e6ed;
+        border-radius: 12px;
+    }
+    
+    .stTextArea > div > div > textarea:focus {
+        border-color: #4a6cf7;
+        box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
     }
     
     /* Remove excessive padding */
@@ -273,7 +401,7 @@ class ZScoreApp:
         st.markdown("### Complete your profile to start your credit journey")
         
         with st.form("profile_completion"):
-            st.subheader("📋 Personal Information")
+            st.subheader("Personal Information")
             
             col1, col2 = st.columns(2)
             
@@ -289,7 +417,7 @@ class ZScoreApp:
                 education = st.selectbox("Education Level", ["High School", "Graduate", "Post Graduate", "Professional"])
                 marital_status = st.selectbox("Marital Status", ["Single", "Married", "Divorced", "Widowed"])
             
-            st.subheader("🎯 Your Credit Goals")
+            st.subheader("Your Credit Goals")
             credit_purpose = st.multiselect(
                 "What do you need credit for?",
                 ["Business expansion", "Education", "Home improvement", "Medical expenses", 
@@ -334,7 +462,7 @@ class ZScoreApp:
                         }
                     )
                     
-                    st.success("🎉 Profile completed successfully!")
+                    st.success("Profile completed successfully!")
                     st.balloons()
                     time.sleep(2)
                     st.rerun()
@@ -369,84 +497,140 @@ class ZScoreApp:
         self.route_to_page(page)
     
     def show_navigation(self):
-        """Show main navigation menu"""
+        """Show role-based navigation menu"""
         with st.sidebar:
-            # Clean header
-            st.markdown("### Navigation")
-            
+            # Header with user info
             current_user = self.auth.get_current_user()
-            is_admin = current_user and current_user['role'] == 'admin'
-            is_applicant = current_user and current_user['role'] == 'applicant'
-            
-            # Simplified navigation
-            if is_admin:
-                nav_items = [
-                    ("📊", "Dashboard", "Dashboard"),
-                    ("👤", "New User", "New Applicant"),
-                    ("🔍", "Assess Risk", "Risk Assessment"),
-                    ("👥", "All Users", "All Applicants"),
-                    ("⚙️", "Settings", "Admin Panel")
-                ]
-            elif is_applicant:
-                nav_items = [
-                    ("📊", "Dashboard", "Dashboard"),
-                    ("👤", "My Profile", "My Profile"),
-                    ("🎯", "My Journey", "My Journey"),
-                    ("📈", "Trust Score", "Trust Score"),
-                    ("💳", "Apply Credit", "Apply for Credit")
-                ]
+            if current_user:
+                st.markdown(f"### Welcome, {current_user['username']}!")
+                st.markdown(f"**Role:** {current_user['role'].title()}")
             else:
-                nav_items = [("📊", "Dashboard", "Dashboard")]
-            
-            # Clean button layout
-            for icon, label, page_key in nav_items:
-                if st.button(f"{icon} {label}", use_container_width=True, key=f"nav_{page_key}"):
-                    st.session_state.selected_page = page_key
-                    st.rerun()
-            
-            st.markdown("---")
-            st.subheader("🎯 Navigation")
-            
-            pages = [
-                ("📊 Dashboard", "Dashboard"),
-                ("👤 New Applicant", "New Applicant"),
-                ("🔍 Risk Assessment", "Risk Assessment"),
-                ("🎮 Gamification", "Gamification"),
-                ("📋 Compliance", "Compliance"),
-                ("⚙️ Admin Panel", "Admin Panel")
-            ]
-            
-            for page_label, page_key in pages:
-                if st.button(page_label, use_container_width=True):
-                    st.session_state.selected_page = page_key
-                    st.rerun()
+                st.markdown("### Z-Score Navigation")
             
             st.markdown("---")
             
-            # Demo controls
-            st.subheader("🚀 Demo Controls")
-            if st.button("Load Sample Data", use_container_width=True):
-                self.db.add_sample_data()
-                st.success("Sample data loaded!")
-                time.sleep(1)
-                st.rerun()
+            # Role-based navigation
+            if current_user:
+                if current_user['role'] == 'admin':
+                    self.show_admin_navigation()
+                elif current_user['role'] == 'applicant':
+                    self.show_user_navigation()
+                else:
+                    self.show_guest_navigation()
+            else:
+                self.show_guest_navigation()
             
-            if st.button("Reset Database", use_container_width=True):
-                if st.session_state.get('confirm_reset'):
-                    from local_db import reset_database
-                    reset_database()
-                    st.success("Database reset!")
-                    st.session_state.confirm_reset = False
+            st.markdown("---")
+            
+            # User controls
+            if current_user:
+                if st.button("🚪 Logout", use_container_width=True):
+                    self.auth.logout()
+                    st.session_state.clear()
+                    st.rerun()
+            
+            # Demo controls (only for admin)
+            if current_user and current_user['role'] == 'admin':
+                st.markdown("---")
+                st.subheader("🚀 Admin Controls")
+                if st.button("Load Sample Data", use_container_width=True):
+                    self.db.add_sample_data()
+                    st.success("Sample data loaded!")
                     time.sleep(1)
                     st.rerun()
-                else:
-                    st.session_state.confirm_reset = True
-                    st.warning("Click again to confirm reset")
+                
+                if st.button("Reset Database", use_container_width=True):
+                    if st.session_state.get('confirm_reset'):
+                        from local_db import reset_database
+                        reset_database()
+                        st.success("Database reset!")
+                        st.session_state.confirm_reset = False
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.session_state.confirm_reset = True
+                        st.warning("Click again to confirm reset")
+    
+    def show_admin_navigation(self):
+        """Show navigation for admin users"""
+        st.subheader("Admin Dashboard")
+        
+        admin_pages = [
+            ("System Overview", "Dashboard"),
+            ("All Applicants", "All Applicants"),
+            ("Risk Assessment", "Risk Assessment"),
+            ("New Applicant", "New Applicant"),
+            ("Gamification", "Gamification"),
+            ("Compliance", "Compliance"),
+            ("Admin Panel", "Admin Panel")
+        ]
+        
+        for label, page_key in admin_pages:
+            if st.button(f"{label}", use_container_width=True, key=f"admin_{page_key}"):
+                st.session_state.selected_page = page_key
+                st.rerun()
+    
+    def show_user_navigation(self):
+        """Show navigation for regular users/applicants"""
+        st.subheader("My Dashboard")
+        
+        user_pages = [
+            ("My Dashboard", "Dashboard"),
+            ("My Profile", "My Profile"),
+            ("My Journey", "My Journey"),
+            ("Trust Score", "Trust Score"),
+            ("Apply for Credit", "Apply for Credit")
+        ]
+        
+        for label, page_key in user_pages:
+            if st.button(f"{label}", use_container_width=True, key=f"user_{page_key}"):
+                st.session_state.selected_page = page_key
+                st.rerun()
+    
+    def show_guest_navigation(self):
+        """Show navigation for guests/unauthenticated users"""
+        st.subheader("Get Started")
+        
+        guest_pages = [
+            ("Overview", "Dashboard"),
+            ("Demo Features", "Gamification")
+        ]
+        
+        for label, page_key in guest_pages:
+            if st.button(f"{label}", use_container_width=True, key=f"guest_{page_key}"):
+                st.session_state.selected_page = page_key
+                st.rerun()
     
     def route_to_page(self, page: str):
-        """Route to selected page"""
+        """Route to selected page with role-based access control"""
+        current_user = self.auth.get_current_user()
+        
+        # Define role-based access permissions
+        admin_only_pages = ["New Applicant", "Risk Assessment", "Admin Panel", "All Applicants"]
+        user_only_pages = ["My Profile", "My Journey", "Trust Score", "Apply for Credit"]
+        public_pages = ["Dashboard", "Gamification", "Compliance"]
+        
+        # Check access permissions
+        if page in admin_only_pages:
+            if not current_user or current_user['role'] != 'admin':
+                st.error("🔒 Access Denied: Admin privileges required")
+                st.info("Please login as an administrator to access this feature.")
+                return
+        
+        elif page in user_only_pages:
+            if not current_user or current_user['role'] != 'applicant':
+                st.error("🔒 Access Denied: User account required")
+                st.info("Please login as a user to access this feature.")
+                return
+        
+        # Route to appropriate page
         if page == "Dashboard":
-            self.show_dashboard()
+            if current_user and current_user['role'] == 'admin':
+                self.show_admin_dashboard()
+            elif current_user and current_user['role'] == 'applicant':
+                self.show_user_dashboard()
+            else:
+                self.show_public_dashboard()
         elif page == "New Applicant":
             self.show_new_applicant()
         elif page == "Risk Assessment":
@@ -467,12 +651,14 @@ class ZScoreApp:
             self.show_apply_credit()
         elif page == "All Applicants":
             self.show_all_applicants()
+        else:
+            st.error(f"Page '{page}' not found")
     
-    def show_dashboard(self):
-        """Main dashboard page - minimalistic design"""
-        st.markdown('<h1 class="main-header">Z-Score Dashboard</h1>', unsafe_allow_html=True)
+    def show_admin_dashboard(self):
+        """Admin dashboard with system overview"""
+        st.markdown('<h1 class="main-header">🔧 Admin Dashboard</h1>', unsafe_allow_html=True)
         
-        # Clean metrics row
+        # System metrics
         applicants = self.db.get_all_applicants()
         
         col1, col2, col3, col4 = st.columns(4)
@@ -492,7 +678,26 @@ class ZScoreApp:
             applications = [a for a in applicants if a.get('credit_application_status') != 'not_applied']
             st.metric("Credit Applications", len(applications))
         
-        # Recent applications
+        # Quick actions for admin
+        st.subheader("⚡ Quick Actions")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("➕ Add New Applicant", use_container_width=True):
+                st.session_state.selected_page = "New Applicant"
+                st.rerun()
+        
+        with col2:
+            if st.button("🔍 Assess Risk", use_container_width=True):
+                st.session_state.selected_page = "Risk Assessment"
+                st.rerun()
+        
+        with col3:
+            if st.button("👥 View All Users", use_container_width=True):
+                st.session_state.selected_page = "All Applicants"
+                st.rerun()
+        
+        # Recent applications table
         if applicants:
             st.subheader("📋 Recent Applications")
             
@@ -513,21 +718,104 @@ class ZScoreApp:
                         )
                     }
                 )
-        
-        # Trust score distribution
-        if scored_applicants:
-            st.subheader("📊 Trust Score Distribution")
-            
-            trust_scores = [a.get('overall_trust_score', 0) * 100 for a in scored_applicants]
-            
-            fig = px.histogram(
-                x=trust_scores,
-                nbins=20,
-                title="Distribution of Trust Scores",
-                labels={'x': 'Trust Score (%)', 'y': 'Number of Applicants'}
-            )
-            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("No applicants found. Add some sample data to get started!")
     
+    def show_user_dashboard(self):
+        """User dashboard with personal overview"""
+        current_user = self.auth.get_current_user()
+        if not current_user:
+            st.error("Please login to view your dashboard")
+            return
+            
+        applicant = self.get_user_applicant_profile(current_user['id'])
+        
+        if not applicant:
+            self.show_profile_completion(None)
+            return
+        
+        st.markdown('<h1 class="main-header">📊 My Dashboard</h1>', unsafe_allow_html=True)
+        
+        # Personal metrics
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            trust_score = applicant.get('overall_trust_score', 0) * 100
+            st.metric("My Trust Score", f"{trust_score:.1f}%")
+        
+        with col2:
+            z_credits = applicant.get('z_credits', 0)
+            st.metric("Z-Credits Earned", z_credits)
+        
+        with col3:
+            app_status = applicant.get('credit_application_status', 'not_applied')
+            status_display = app_status.replace('_', ' ').title()
+            st.metric("Application Status", status_display)
+        
+        # Quick actions for user
+        st.subheader("⚡ My Actions")
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("👤 Update Profile", use_container_width=True):
+                st.session_state.selected_page = "My Profile"
+                st.rerun()
+        
+        with col2:
+            if st.button("🎮 Continue Journey", use_container_width=True):
+                st.session_state.selected_page = "My Journey"
+                st.rerun()
+        
+        with col3:
+            if st.button("💳 Apply for Credit", use_container_width=True):
+                st.session_state.selected_page = "Apply for Credit"
+                st.rerun()
+        
+        # Professional Trust Score visualization
+        st.markdown("---")
+        self.render_professional_trust_bar(applicant)
+    
+    def show_public_dashboard(self):
+        """Public dashboard for unauthenticated users"""
+        st.markdown('<h1 class="main-header">Welcome to Z-Score</h1>', unsafe_allow_html=True)
+        st.markdown("### Revolutionizing Credit Assessment for the Underbanked")
+        
+        # Feature highlights
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown("""
+            #### Trust-Based Scoring
+            Our AI analyzes behavioral patterns, social proof, and digital footprints 
+            to create comprehensive trust scores for applicants without traditional credit history.
+            """)
+        
+        with col2:
+            st.markdown("""
+            #### Explainable AI
+            Every credit decision comes with clear explanations using SHAP technology, 
+            ensuring transparency and helping applicants understand their assessment.
+            """)
+        
+        with col3:
+            st.markdown("""
+            #### Gamified Journey
+            Earn Z-Credits through financial literacy missions and responsible behavior, 
+            improving your trust score while learning.
+            """)
+        
+        # Call to action
+        st.markdown("---")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        
+        with col2:
+            st.markdown("### Ready to Get Started?")
+            st.info("Please login or contact an administrator to access the full Z-Score platform")
+            
+            if st.button("Explore Demo Features", use_container_width=True):
+                st.session_state.selected_page = "Gamification"
+                st.rerun()
+
     def show_new_applicant(self):
         """New applicant registration page"""
         st.markdown('<h1 class="main-header">New Applicant Registration</h1>', unsafe_allow_html=True)
@@ -687,7 +975,8 @@ class ZScoreApp:
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader(f"Assessment for {applicant['name']}")
+            applicant_name = applicant.get('name', 'Unknown Applicant')
+            st.subheader(f"Assessment for {applicant_name}")
             
             # Current trust score
             trust_percentage = (applicant.get('overall_trust_score', 0) * 100)
@@ -717,11 +1006,17 @@ class ZScoreApp:
         
         with col2:
             st.subheader("📋 Applicant Details")
-            st.write(f"**Phone:** {applicant['phone']}")
-            st.write(f"**Age:** {applicant['age']}")
-            st.write(f"**Location:** {applicant['location']}")
-            st.write(f"**Occupation:** {applicant['occupation']}")
-            st.write(f"**Monthly Income:** ₹{applicant['monthly_income']:,.0f}")
+            st.write(f"**Phone:** {applicant.get('phone', 'N/A')}")
+            st.write(f"**Age:** {applicant.get('age', 'N/A')}")
+            st.write(f"**Location:** {applicant.get('location', 'N/A')}")
+            st.write(f"**Occupation:** {applicant.get('occupation', 'N/A')}")
+            
+            # Safe formatting for monthly income
+            monthly_income = applicant.get('monthly_income')
+            if monthly_income is not None:
+                st.write(f"**Monthly Income:** ₹{monthly_income:,.0f}")
+            else:
+                st.write("**Monthly Income:** Not provided")
         
         # ML Prediction
         st.subheader("AI Risk Assessment")
@@ -745,10 +1040,12 @@ class ZScoreApp:
                             st.markdown(f'<div class="risk-high">🔴 {risk_category}</div>', unsafe_allow_html=True)
                     
                     with col2:
-                        st.metric("Default Probability", f"{prediction_result['risk_probability']:.1%}")
+                        risk_probability = prediction_result.get('risk_probability', 0)
+                        st.metric("Default Probability", f"{risk_probability:.1%}" if risk_probability is not None else "N/A")
                     
                     with col3:
-                        st.metric("Confidence Score", f"{prediction_result['confidence_score']:.1%}")
+                        confidence_score = prediction_result.get('confidence_score', 0)
+                        st.metric("Confidence Score", f"{confidence_score:.1%}" if confidence_score is not None else "N/A")
                     
                     # SHAP Explanation
                     st.subheader("AI Decision Explanation")
@@ -770,7 +1067,7 @@ class ZScoreApp:
                                 y=features,
                                 orientation='h',
                                 marker_color=colors,
-                                text=[f"{v:.3f}" for v in shap_values],
+                                text=[f"{v:.3f}" if v is not None else "N/A" for v in shap_values],
                                 textposition='auto'
                             )
                         ])
@@ -843,103 +1140,425 @@ class ZScoreApp:
             eligibility = "Eligible" if trust_percentage >= 70 else "Not Eligible"
             st.metric("Credit Eligibility", eligibility)
         
-        # Trust progression bar
-        st.subheader("Trust Progression")
+        # Professional animated Trust Bar
+        current_trust = self.render_professional_trust_bar(applicant)
         
-        progress_val = trust_percentage / 100
-        st.progress(progress_val, text=f"Trust Score: {trust_percentage:.1f}% (Threshold: 70%)")
+        # Available missions section
+        st.markdown("---")
+        st.markdown('<h2 style="color: #2E4A62; font-weight: 600; margin-top: 30px;">Available Growth Missions</h2>', unsafe_allow_html=True)
         
-        if trust_percentage < 70:
-            remaining = 70 - trust_percentage
-            st.info(f"📈 You need {remaining:.1f}% more to become credit eligible!")
+    def calculate_behavioral_trust_fallback(self, applicant_data):
+        """Calculate Behavioral Trust (50% weight) per LOGIC.md - Payment History + Loan Performance"""
+        score = 0
+        
+        # Payment consistency simulation (0-50 points)
+        # In real implementation, this would analyze F1 (Payment History)
+        if applicant_data.get('phone'):  # Phone suggests payment capability
+            score += 25  # Base payment score for having contact info
+        
+        # Loan performance simulation (0-50 points)  
+        # In real implementation, this would analyze F2 (Loan Performance)
+        if applicant_data.get('monthly_income'):
+            try:
+                income = float(applicant_data.get('monthly_income', 0))
+                if income > 15000:  # Good income suggests loan repayment ability
+                    score += 25
+                elif income > 10000:
+                    score += 15
+                else:
+                    score += 10
+            except (TypeError, ValueError):
+                score += 10  # Minimal score for having income data
         else:
-            st.success("Congratulations! You are eligible for credit assessment!")
+            score += 15  # Neutral for new-to-credit per LOGIC.md
+            
+        # Add small variance for demo purposes
+        variance = hash(str(applicant_data.get('id', 1))) % 10
+        score += variance
+        
+        return min(100, max(0, score))
+    
+    def calculate_social_trust_fallback(self, applicant_data):
+        """Calculate Social Trust (30% weight) per LOGIC.md - Social Proof from SHG/NGO endorsements"""
+        score = 0
+        
+        # Endorsement strength simulation (0-40 points)
+        # In real implementation, this would analyze F3 (Social Proof)
+        if applicant_data.get('location'):  # Location suggests community ties
+            score += 20  # Community presence
+            
+        # Community standing simulation (0-30 points)
+        if applicant_data.get('occupation'):  # Occupation suggests social role
+            score += 20
+            
+        # Age-based community standing (older = more established)
+        age = applicant_data.get('age', 25)
+        if age > 30:
+            score += 15
+        elif age > 25:
+            score += 10
+        else:
+            score += 5
+            
+        # Add small variance for demo purposes
+        variance = hash(str(applicant_data.get('name', 'user'))) % 8
+        score += variance
+        
+        return min(100, max(0, score))
+    
+    def calculate_digital_trust_fallback(self, applicant_data):
+        """Calculate Digital Trust (20% weight) per LOGIC.md - Digital Footprint Analysis"""
+        score = 0
+        
+        # Stability indicators simulation (0-40 points)
+        # In real implementation, this would analyze F4 (Digital Footprint)
+        if applicant_data.get('phone'):  # Phone ownership = digital presence
+            score += 20
+            
+        if applicant_data.get('email'):  # Email = digital sophistication
+            score += 15
+            
+        # Financial behavior signals simulation (0-40 points)
+        # Location consistency suggests stability
+        if applicant_data.get('location'):
+            score += 10
+            
+        # Age suggests device tenure (older = longer device usage)
+        age = applicant_data.get('age', 25)
+        if age > 30:
+            score += 15
+        elif age > 25:
+            score += 10
+        else:
+            score += 5
+            
+        # Add small variance for demo purposes  
+        variance = hash(str(applicant_data.get('phone', '123'))) % 12
+        score += variance
+        
+        return min(100, max(0, score))
+
+    def render_professional_trust_bar(self, applicant_data):
+        """Render professional Trust Bar with correct Z-Score logic per LOGIC.md"""
+        
+        # Get stored trust scores (should be calculated by proper ML pipeline)
+        overall_trust = applicant_data.get('overall_trust_score', 0) * 100
+        behavioral_score = applicant_data.get('behavioral_score', 0) * 100
+        social_score = applicant_data.get('social_score', 0) * 100
+        digital_score = applicant_data.get('digital_score', 0) * 100
+        
+        # If no ML-calculated scores exist, use fallback logic that follows LOGIC.md structure
+        if overall_trust == 0 and behavioral_score == 0 and social_score == 0 and digital_score == 0:
+            behavioral_score = self.calculate_behavioral_trust_fallback(applicant_data)
+            social_score = self.calculate_social_trust_fallback(applicant_data)
+            digital_score = self.calculate_digital_trust_fallback(applicant_data)
+            
+            # Apply correct weighting per LOGIC.md: 50% behavioral, 30% social, 20% digital
+            overall_trust = (behavioral_score * 0.5 + social_score * 0.3 + digital_score * 0.2)
+            
+            # Update the database with calculated scores for persistence
+            try:
+                applicant_id = applicant_data.get('id')
+                if applicant_id:
+                    self.db.update_trust_score(
+                        applicant_id, 
+                        behavioral_score / 100,  # Convert back to 0-1 scale
+                        social_score / 100,
+                        digital_score / 100
+                    )
+            except Exception as e:
+                pass  # Silently fail if DB update doesn't work
+        
+        # Display the Trust Bar with enhanced visual prominence using native Streamlit components
+        st.markdown("---")
+        st.markdown("## 🎯 **CREDIT TRUST ASSESSMENT DASHBOARD**")
+        st.markdown("---")
+        
+        # Create columns for better layout
+        col1, col2, col3 = st.columns([1, 2, 1])
+        
+        with col2:
+            # Display a prominent progress bar using Streamlit's native progress
+            st.markdown(f"### **Overall Trust Score: {overall_trust:.1f}%**")
+            progress_value = min(overall_trust / 100, 1.0)
+            st.progress(progress_value)
+            
+            # Status indicator
+            if overall_trust >= 70:
+                st.success("✅ **CREDIT ASSESSMENT ELIGIBLE**")
+            else:
+                st.warning(f"⚠️ **BUILDING TRUST PROFILE** - {70 - overall_trust:.1f}% more needed")
+        
+        # Component breakdown in columns
+        st.markdown("### **Trust Components Breakdown**")
+        comp_col1, comp_col2, comp_col3 = st.columns(3)
+        
+        with comp_col1:
+            st.metric(
+                label="🎭 Behavioral Trust",
+                value=f"{behavioral_score:.0f}%",
+                delta=f"{behavioral_score - 30:.1f}% vs baseline"
+            )
+            st.progress(min(behavioral_score / 100, 1.0))
+        
+        with comp_col2:
+            st.metric(
+                label="👥 Social Trust", 
+                value=f"{social_score:.0f}%",
+                delta=f"{social_score - 25:.1f}% vs baseline"
+            )
+            st.progress(min(social_score / 100, 1.0))
+        
+        with comp_col3:
+            st.metric(
+                label="💻 Digital Trust",
+                value=f"{digital_score:.0f}%", 
+                delta=f"{digital_score - 35:.1f}% vs baseline"
+            )
+            st.progress(min(digital_score / 100, 1.0))
+        
+        # Display the correct Z-Score formula per LOGIC.md
+        st.markdown("---")
+        st.markdown("### **📊 Z-Score Calculation Formula (per LOGIC.md)**")
+        st.latex(r'''
+        Trust\_Score = 0.5 \times Behavioral + 0.3 \times Social + 0.2 \times Digital
+        ''')
+        st.markdown(f"**Current Calculation:** {overall_trust:.1f}% = 0.5×{behavioral_score:.0f}% + 0.3×{social_score:.0f}% + 0.2×{digital_score:.0f}%")
+        
+        # Small debug indicator
+        st.caption(f"✅ Trust Bar Active - Overall Score: {overall_trust:.1f}% | Components: Behavioral: {behavioral_score:.0f}%, Social: {social_score:.0f}%, Digital: {digital_score:.0f}%")
+        
+        return overall_trust
         
         # Available missions
-        st.subheader("Available Missions")
+        # Professional missions grid
+        missions_css = """
+        <style>
+        .missions-container {
+            margin-top: 30px;
+        }
+        
+        .missions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .mission-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+        
+        .mission-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+        
+        .mission-description {
+            font-size: 14px;
+            color: #e8f4f8;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .mission-reward {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .mission-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mission-button:hover {
+            background: linear-gradient(90deg, #0072ff 0%, #00c6ff 100%);
+            transform: translateY(-2px);
+        }
+        
+        .achievement-section {
+            margin-top: 40px;
+            padding: 24px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 16px;
+            color: #8b2635;
+        }
+        
+        .achievement-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .achievement-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .no-achievements {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+        </style>
+        """
         
         missions = [
             {
-                'title': 'Financial Literacy Quiz',
-                'description': 'Complete basic financial literacy assessment',
+                'title': 'Financial Literacy Assessment',
+                'description': 'Complete comprehensive financial knowledge evaluation covering budgeting, savings, and credit fundamentals',
                 'reward': '+15% Trust Score, 50 Z-Credits',
-                'type': 'quiz'
+                'type': 'quiz',
+                'id': 'quiz'
             },
             {
-                'title': 'Pay Utility Bill On Time',
-                'description': 'Submit proof of on-time utility payment',
+                'title': 'Utility Payment Verification',
+                'description': 'Submit documented proof of consistent on-time utility bill payments',
                 'reward': '+20% Trust Score, 75 Z-Credits',
-                'type': 'payment'
+                'type': 'payment',
+                'id': 'payment'
             },
             {
-                'title': 'Get Community Endorsement',
-                'description': 'Obtain endorsement from community leader',
+                'title': 'Community Endorsement',
+                'description': 'Obtain verified endorsement from recognized community leader or local authority',
                 'reward': '+25% Trust Score, 100 Z-Credits',
-                'type': 'social'
+                'type': 'social',
+                'id': 'social'
             },
             {
-                'title': 'Connect Bank Account',
-                'description': 'Provide consent for bank transaction history',
+                'title': 'Banking Integration',
+                'description': 'Provide consent and connect bank account for transaction history analysis',
                 'reward': '+30% Trust Score, 150 Z-Credits',
-                'type': 'data'
+                'type': 'data',
+                'id': 'banking'
             }
         ]
         
-        for i, mission in enumerate(missions):
-            with st.expander(f"Mission {i+1}: {mission['title']}"):
-                st.write(mission['description'])
-                st.success(f"**Reward:** {mission['reward']}")
-                
-                if st.button(f"Complete Mission {i+1}", key=f"mission_{i}"):
-                    # Simulate mission completion
-                    with st.spinner("Processing mission..."):
-                        time.sleep(2)
-                    
-                    # Update trust score and credits
-                    current_trust = applicant.get('overall_trust_score', 0)
-                    if mission['type'] == 'quiz':
-                        new_trust = min(current_trust + 0.15, 1.0)
-                        credits_earned = 50
-                    elif mission['type'] == 'payment':
-                        new_trust = min(current_trust + 0.20, 1.0)
-                        credits_earned = 75
-                    elif mission['type'] == 'social':
-                        new_trust = min(current_trust + 0.25, 1.0)
-                        credits_earned = 100
-                    else:  # data
-                        new_trust = min(current_trust + 0.30, 1.0)
-                        credits_earned = 150
-                    
-                    # Update database (simplified for demo)
-                    behavioral = applicant.get('behavioral_score', 0) + 0.1
-                    social = applicant.get('social_score', 0) + 0.1
-                    digital = applicant.get('digital_score', 0) + 0.1
-                    
-                    self.db.update_trust_score(applicant_id, behavioral, social, digital)
-                    
-                    st.success(f"🎉 Mission completed! +{credits_earned} Z-Credits earned!")
-                    st.balloons()
-                    time.sleep(2)
-                    st.rerun()
+        st.markdown(missions_css, unsafe_allow_html=True)
         
-        # Achievement showcase
-        st.subheader("🏆 Achievements")
+        missions_html = """
+        <div class="missions-container">
+            <div class="missions-grid">
+        """
+        
+        for i, mission in enumerate(missions):
+            missions_html += f"""
+                <div class="mission-card">
+                    <div class="mission-title">{mission['title']}</div>
+                    <div class="mission-description">{mission['description']}</div>
+                    <div class="mission-reward">Reward: {mission['reward']}</div>
+                </div>
+            """
+        
+        missions_html += """
+            </div>
+        </div>
+        """
+        
+        st.markdown(missions_html, unsafe_allow_html=True)
+        
+        # Interactive mission completion
+        st.markdown("---")
+        selected_mission = st.selectbox(
+            "Select Mission to Complete",
+            [f"{mission['title']}" for mission in missions],
+            help="Choose a mission to simulate completion"
+        )
+        
+        if st.button("Complete Selected Mission", use_container_width=True, type="primary"):
+            mission_idx = next(i for i, m in enumerate(missions) if m['title'] == selected_mission)
+            mission = missions[mission_idx]
+            
+            with st.spinner("Processing mission completion..."):
+                import time
+                time.sleep(2)
+            
+            # Update trust score and credits
+            current_trust = applicant.get('overall_trust_score', 0)
+            if mission['type'] == 'quiz':
+                new_trust = min(current_trust + 0.15, 1.0)
+                credits_earned = 50
+            elif mission['type'] == 'payment':
+                new_trust = min(current_trust + 0.20, 1.0)
+                credits_earned = 75
+            elif mission['type'] == 'social':
+                new_trust = min(current_trust + 0.25, 1.0)
+                credits_earned = 100
+            else:  # data
+                new_trust = min(current_trust + 0.30, 1.0)
+                credits_earned = 150
+            
+            # Update database (simplified for demo)
+            behavioral = applicant.get('behavioral_score', 0) + 0.1
+            social = applicant.get('social_score', 0) + 0.1
+            digital = applicant.get('digital_score', 0) + 0.1
+            
+            self.db.update_trust_score(applicant_id, behavioral, social, digital)
+            
+            st.success(f"Mission completed successfully! +{credits_earned} Z-Credits earned!")
+            st.balloons()
+            time.sleep(2)
+            st.rerun()
+        
+        # Professional achievement showcase
+        st.markdown("---")
+        st.markdown('<h2 style="color: #2E4A62; font-weight: 600; margin-top: 30px;">Achievement Milestones</h2>', unsafe_allow_html=True)
         
         achievements = []
         if trust_percentage >= 30:
-            achievements.append("🌱 First Steps - Reached 30% Trust")
+            achievements.append("Foundation Builder - Reached 30% Trust Score")
         if trust_percentage >= 50:
-            achievements.append("Growing Trust - Reached 50% Trust")
+            achievements.append("Trust Developer - Reached 50% Trust Score")
         if trust_percentage >= 70:
-            achievements.append("Credit Ready - Reached 70% Trust")
+            achievements.append("Credit Ready - Reached 70% Trust Score")
         if z_credits >= 100:
-            achievements.append("Credit Collector - Earned 100+ Z-Credits")
+            achievements.append("Credit Advocate - Earned 100+ Z-Credits")
+        
+        achievement_html = """
+        <div class="achievement-section">
+            <div class="achievement-title">Your Progress Milestones</div>
+        """
         
         if achievements:
             for achievement in achievements:
-                st.success(achievement)
+                achievement_html += f'<div class="achievement-item">{achievement}</div>'
         else:
-            st.info("Complete missions to unlock achievements!")
+            achievement_html += '<div class="no-achievements">Complete missions to unlock achievement milestones</div>'
+        
+        achievement_html += "</div>"
+        st.markdown(achievement_html, unsafe_allow_html=True)
     
     def show_compliance(self):
         """DPDPA compliance and consent management"""
@@ -1079,6 +1698,41 @@ class ZScoreApp:
                     st.session_state.admin_confirm_reset = True
                     st.warning("⚠️ Click again to confirm database reset")
         
+        # Demo Data Enhancement
+        st.subheader("Demo Data Enhancement")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if st.button("Generate Realistic Trust Scores", use_container_width=True):
+                updated_count = 0
+                for applicant in applicants:
+                    if applicant.get('overall_trust_score', 0) == 0:
+                        # Use correct LOGIC.md calculations for consistency
+                        behavioral = self.calculate_behavioral_trust_fallback(applicant) / 100
+                        social = self.calculate_social_trust_fallback(applicant) / 100  
+                        digital = self.calculate_digital_trust_fallback(applicant) / 100
+                        
+                        self.db.update_trust_score(applicant['id'], behavioral, social, digital)
+                        updated_count += 1
+                
+                st.success(f"Generated realistic trust scores for {updated_count} applicants using correct LOGIC.md formula!")
+                st.rerun()
+        
+        with col2:
+            if st.button("Boost Random Applicant", use_container_width=True):
+                if applicants:
+                    import random
+                    selected = random.choice(applicants)
+                    # Give them a boost towards credit eligibility
+                    new_behavioral = min(selected.get('behavioral_score', 0) + 0.15, 0.8)
+                    new_social = min(selected.get('social_score', 0) + 0.12, 0.75)
+                    new_digital = min(selected.get('digital_score', 0) + 0.18, 0.85)
+                    
+                    self.db.update_trust_score(selected['id'], new_behavioral, new_social, new_digital)
+                    st.success(f"Boosted trust scores for {selected.get('name', 'Unknown')}!")
+                    st.rerun()
+        
         # Model management
         st.subheader("Model Management")
         
@@ -1118,7 +1772,8 @@ class ZScoreApp:
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.subheader(f"Welcome, {applicant['name']}! 👋")
+            applicant_name = applicant.get('name', 'User')
+            st.subheader(f"Welcome, {applicant_name}! 👋")
             
             # Profile completeness
             required_fields = ['phone', 'age', 'gender', 'location', 'occupation', 'monthly_income']
@@ -1389,7 +2044,7 @@ class ZScoreApp:
             st.error("Access denied. Admin role required.")
             return
         
-        st.markdown('<h1 class="main-header">👥 All Applicants</h1>', unsafe_allow_html=True)
+        st.markdown('<h1 class="main-header">All Applicants</h1>', unsafe_allow_html=True)
         
         # This reuses the admin panel applicants table
         applicants = self.db.get_all_applicants()
