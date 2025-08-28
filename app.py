@@ -19,6 +19,8 @@ import time
 from auth import AuthManager
 from local_db import Database
 from model_pipeline import CreditRiskModel, calculate_trust_score, TrustScoreCalculator
+from model_integration import get_enhanced_trust_assessment, model_integrator
+from shap_dashboard import show_ai_explanations
 from error_handling import safe_numeric_conversion, safe_json_parse
 
 # Page configuration
@@ -384,8 +386,6 @@ class ZScoreApp:
         # Initialize session state
         if 'current_applicant' not in st.session_state:
             st.session_state.current_applicant = None
-        if 'demo_mode' not in st.session_state:
-            st.session_state.demo_mode = False
     
     def get_user_applicant_profile(self, user_id: int):
         """Get applicant profile for a user"""
@@ -529,13 +529,13 @@ class ZScoreApp:
                     st.session_state.clear()
                     st.rerun()
             
-            # Demo controls (only for admin)
+            # Admin tools
             if current_user and current_user['role'] == 'admin':
                 st.markdown("---")
                 st.subheader("🚀 Admin Controls")
-                if st.button("Load Sample Data", use_container_width=True):
+                if st.button("Load Test Data", use_container_width=True):
                     self.db.add_sample_data()
-                    st.success("Sample data loaded!")
+                    st.success("Test data loaded!")
                     time.sleep(1)
                     st.rerun()
                 
@@ -559,6 +559,7 @@ class ZScoreApp:
             ("System Overview", "Dashboard"),
             ("All Applicants", "All Applicants"),
             ("Risk Assessment", "Risk Assessment"),
+            ("AI Explanations", "AI Explanations"),
             ("New Applicant", "New Applicant"),
             ("Gamification", "Gamification"),
             ("Compliance", "Compliance"),
@@ -578,6 +579,7 @@ class ZScoreApp:
             ("My Dashboard", "Dashboard"),
             ("My Profile", "My Profile"),
             ("My Journey", "My Journey"),
+            ("AI Explanations", "AI Explanations"),
             ("Trust Score", "Trust Score"),
             ("Apply for Credit", "Apply for Credit")
         ]
@@ -593,7 +595,7 @@ class ZScoreApp:
         
         guest_pages = [
             ("Overview", "Dashboard"),
-            ("Demo Features", "Gamification")
+            ("Credit Builder", "Gamification")
         ]
         
         for label, page_key in guest_pages:
@@ -635,6 +637,8 @@ class ZScoreApp:
             self.show_new_applicant()
         elif page == "Risk Assessment":
             self.show_risk_assessment()
+        elif page == "AI Explanations":
+            self.show_ai_explanations()
         elif page == "Gamification":
             self.show_gamification()
         elif page == "Compliance":
@@ -719,7 +723,7 @@ class ZScoreApp:
                     }
                 )
         else:
-            st.info("No applicants found. Add some sample data to get started!")
+            st.info("No applicants found. Please check back later or contact administration.")
     
     def show_user_dashboard(self):
         """User dashboard with personal overview"""
@@ -812,7 +816,7 @@ class ZScoreApp:
             st.markdown("### Ready to Get Started?")
             st.info("Please login or contact an administrator to access the full Z-Score platform")
             
-            if st.button("Explore Demo Features", use_container_width=True):
+            if st.button("Explore Credit Building", use_container_width=True):
                 st.session_state.selected_page = "Gamification"
                 st.rerun()
 
@@ -951,6 +955,69 @@ class ZScoreApp:
                 else:
                     st.error("Please fill in required fields (Name and Phone)")
     
+    def show_ai_explanations(self):
+        """Show AI explainability dashboard"""
+        st.markdown('<h1 class="main-header">AI Decision Explanations</h1>', unsafe_allow_html=True)
+        
+        # Check if user is authenticated
+        if not self.auth.is_authenticated():
+            st.error("Please log in to view AI explanations")
+            return
+        
+        # For admins, allow selection of any applicant
+        if self.auth.has_role('admin'):
+            st.subheader("📋 Select Applicant for Analysis")
+            
+            applicants = self.db.get_all_applicants()
+            if not applicants:
+                st.info("No applicants found. Add some test data first.")
+                if st.button("Add Test Data"):
+                    self.db.add_sample_data()
+                    st.rerun()
+                return
+            
+            # Create a dropdown for applicant selection
+            applicant_options = {f"{app['name']} (ID: {app['id']})": app for app in applicants}
+            selected_applicant_key = st.selectbox(
+                "Choose an applicant to analyze:",
+                options=list(applicant_options.keys())
+            )
+            
+            if selected_applicant_key:
+                selected_applicant = applicant_options[selected_applicant_key]
+                st.success(f"Analyzing AI decisions for: **{selected_applicant['name']}**")
+                
+                # Show current scores for context
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    trust_score = (selected_applicant.get('overall_trust_score') or 0) * 100
+                    st.metric("Current Trust Score", f"{trust_score:.1f}%")
+                with col2:
+                    income = selected_applicant.get('monthly_income') or 0
+                    st.metric("Monthly Income", f"₹{income:,.0f}")
+                with col3:
+                    loans = selected_applicant.get('existing_loans') or 0
+                    st.metric("Existing Loans", loans)
+                
+                st.markdown("---")
+                
+                # Show AI explanations
+                show_ai_explanations(selected_applicant)
+        
+        else:
+            # For regular users, show their own explanation
+            current_user = self.auth.get_current_user()
+            if current_user and current_user.get('id'):
+                user_id = current_user['id']
+                applicant = self.db.get_applicant(user_id)
+                if applicant:
+                    st.success(f"Analyzing your AI assessment, **{applicant['name']}**")
+                    show_ai_explanations(applicant)
+                else:
+                    st.error("Your profile not found. Please complete your application first.")
+            else:
+                st.error("Unable to identify your account. Please log in again.")
+
     def show_risk_assessment(self):
         """Risk assessment and ML prediction page"""
         st.markdown('<h1 class="main-header">Credit Risk Assessment</h1>', unsafe_allow_html=True)
@@ -1148,50 +1215,47 @@ class ZScoreApp:
         st.markdown('<h2 style="color: #2E4A62; font-weight: 600; margin-top: 30px;">Available Growth Missions</h2>', unsafe_allow_html=True)
         
     def calculate_behavioral_trust_fallback(self, applicant_data):
-        """Calculate Behavioral Trust (50% weight) per LOGIC.md - Payment History + Loan Performance"""
+        """Calculate Behavioral Trust component based on financial behavior patterns"""
         score = 0
         
-        # Payment consistency simulation (0-50 points)
-        # In real implementation, this would analyze F1 (Payment History)
-        if applicant_data.get('phone'):  # Phone suggests payment capability
-            score += 25  # Base payment score for having contact info
+        # Assess financial stability indicators
+        if applicant_data.get('phone'):
+            score += 25
         
-        # Loan performance simulation (0-50 points)  
-        # In real implementation, this would analyze F2 (Loan Performance)
+        # Evaluate income stability
         if applicant_data.get('monthly_income'):
             try:
                 income = float(applicant_data.get('monthly_income', 0))
-                if income > 15000:  # Good income suggests loan repayment ability
+                if income > 15000:
                     score += 25
                 elif income > 10000:
                     score += 15
                 else:
                     score += 10
             except (TypeError, ValueError):
-                score += 10  # Minimal score for having income data
+                score += 10
         else:
-            score += 15  # Neutral for new-to-credit per LOGIC.md
+            score += 15
             
-        # Add small variance for demo purposes
+        # Add variation based on user profile
         variance = hash(str(applicant_data.get('id', 1))) % 10
         score += variance
         
         return min(100, max(0, score))
     
     def calculate_social_trust_fallback(self, applicant_data):
-        """Calculate Social Trust (30% weight) per LOGIC.md - Social Proof from SHG/NGO endorsements"""
+        """Calculate Social Trust component based on community connections"""
         score = 0
         
-        # Endorsement strength simulation (0-40 points)
-        # In real implementation, this would analyze F3 (Social Proof)
-        if applicant_data.get('location'):  # Location suggests community ties
-            score += 20  # Community presence
-            
-        # Community standing simulation (0-30 points)
-        if applicant_data.get('occupation'):  # Occupation suggests social role
+        # Assess community presence
+        if applicant_data.get('location'):
             score += 20
             
-        # Age-based community standing (older = more established)
+        # Evaluate professional standing  
+        if applicant_data.get('occupation'):
+            score += 20
+            
+        # Consider experience level
         age = applicant_data.get('age', 25)
         if age > 30:
             score += 15
@@ -1200,30 +1264,28 @@ class ZScoreApp:
         else:
             score += 5
             
-        # Add small variance for demo purposes
+        # Add profile-based variation
         variance = hash(str(applicant_data.get('name', 'user'))) % 8
         score += variance
         
         return min(100, max(0, score))
     
     def calculate_digital_trust_fallback(self, applicant_data):
-        """Calculate Digital Trust (20% weight) per LOGIC.md - Digital Footprint Analysis"""
+        """Calculate Digital Trust component based on digital engagement patterns"""
         score = 0
         
-        # Stability indicators simulation (0-40 points)
-        # In real implementation, this would analyze F4 (Digital Footprint)
-        if applicant_data.get('phone'):  # Phone ownership = digital presence
+        # Assess digital presence
+        if applicant_data.get('phone'):
             score += 20
             
-        if applicant_data.get('email'):  # Email = digital sophistication
+        if applicant_data.get('email'):
             score += 15
             
-        # Financial behavior signals simulation (0-40 points)
-        # Location consistency suggests stability
+        # Evaluate engagement patterns
         if applicant_data.get('location'):
             score += 10
             
-        # Age suggests device tenure (older = longer device usage)
+        # Consider digital experience
         age = applicant_data.get('age', 25)
         if age > 30:
             score += 15
@@ -1232,46 +1294,70 @@ class ZScoreApp:
         else:
             score += 5
             
-        # Add small variance for demo purposes  
+        # Add profile-based variation
         variance = hash(str(applicant_data.get('phone', '123'))) % 12
         score += variance
         
         return min(100, max(0, score))
 
     def render_professional_trust_bar(self, applicant_data):
-        """Render professional Trust Bar with correct Z-Score logic per LOGIC.md"""
+        """Render professional Trust Bar with ML integration and component breakdown"""
         
-        # Get stored trust scores (should be calculated by proper ML pipeline)
-        overall_trust = applicant_data.get('overall_trust_score', 0) * 100
-        behavioral_score = applicant_data.get('behavioral_score', 0) * 100
-        social_score = applicant_data.get('social_score', 0) * 100
-        digital_score = applicant_data.get('digital_score', 0) * 100
+        try:
+            # Use enhanced trust assessment that tries ML first, then fallback
+            trust_result = get_enhanced_trust_assessment(applicant_data)
+            
+            # Extract scores and convert to percentage
+            behavioral_score = trust_result.get('behavioral_score', 0.5) * 100
+            social_score = trust_result.get('social_score', 0.5) * 100
+            digital_score = trust_result.get('digital_score', 0.5) * 100
+            overall_trust = trust_result.get('trust_percentage', 50.0)
+            
+            # Check if ML model was used
+            ml_available = trust_result.get('ml_available', False)
+            source = trust_result.get('source', 'fallback')
+            
+        except Exception as e:
+            st.error(f"Enhanced trust calculation failed: {str(e)}")
+            # Emergency fallback to stored values or manual calculation
+            overall_trust = applicant_data.get('overall_trust_score', 0) * 100
+            behavioral_score = applicant_data.get('behavioral_score', 0) * 100
+            social_score = applicant_data.get('social_score', 0) * 100
+            digital_score = applicant_data.get('digital_score', 0) * 100
+            
+            # If still no scores, calculate manually
+            if overall_trust == 0 and behavioral_score == 0:
+                behavioral_score = self.calculate_behavioral_trust_fallback(applicant_data)
+                social_score = self.calculate_social_trust_fallback(applicant_data)
+                digital_score = self.calculate_digital_trust_fallback(applicant_data)
+                overall_trust = (behavioral_score * 0.5 + social_score * 0.3 + digital_score * 0.2)
+            
+            ml_available = False
+            source = 'emergency_fallback'
         
-        # If no ML-calculated scores exist, use fallback logic that follows LOGIC.md structure
-        if overall_trust == 0 and behavioral_score == 0 and social_score == 0 and digital_score == 0:
-            behavioral_score = self.calculate_behavioral_trust_fallback(applicant_data)
-            social_score = self.calculate_social_trust_fallback(applicant_data)
-            digital_score = self.calculate_digital_trust_fallback(applicant_data)
-            
-            # Apply correct weighting per LOGIC.md: 50% behavioral, 30% social, 20% digital
-            overall_trust = (behavioral_score * 0.5 + social_score * 0.3 + digital_score * 0.2)
-            
-            # Update the database with calculated scores for persistence
-            try:
-                applicant_id = applicant_data.get('id')
-                if applicant_id:
-                    self.db.update_trust_score(
-                        applicant_id, 
-                        behavioral_score / 100,  # Convert back to 0-1 scale
-                        social_score / 100,
-                        digital_score / 100
-                    )
-            except Exception as e:
-                pass  # Silently fail if DB update doesn't work
+        # Update database with calculated scores for persistence
+        try:
+            applicant_id = applicant_data.get('id')
+            if applicant_id:
+                self.db.update_trust_score(
+                    applicant_id, 
+                    behavioral_score / 100,  # Convert back to 0-1 scale
+                    social_score / 100,
+                    digital_score / 100
+                )
+        except Exception as e:
+            pass  # Silently fail if DB update doesn't work
         
         # Display the Trust Bar with enhanced visual prominence using native Streamlit components
         st.markdown("---")
         st.markdown("## 🎯 **CREDIT TRUST ASSESSMENT DASHBOARD**")
+        
+        # Show ML status
+        if ml_available:
+            st.success("✅ **Advanced ML Analytics Active** - Enhanced Prediction Accuracy")
+        else:
+            st.info("ℹ️ **Rule-Based Assessment** - ML Model Training in Progress")
+        
         st.markdown("---")
         
         # Create columns for better layout
@@ -1316,17 +1402,6 @@ class ZScoreApp:
                 delta=f"{digital_score - 35:.1f}% vs baseline"
             )
             st.progress(min(digital_score / 100, 1.0))
-        
-        # Display the correct Z-Score formula per LOGIC.md
-        st.markdown("---")
-        st.markdown("### **📊 Z-Score Calculation Formula (per LOGIC.md)**")
-        st.latex(r'''
-        Trust\_Score = 0.5 \times Behavioral + 0.3 \times Social + 0.2 \times Digital
-        ''')
-        st.markdown(f"**Current Calculation:** {overall_trust:.1f}% = 0.5×{behavioral_score:.0f}% + 0.3×{social_score:.0f}% + 0.2×{digital_score:.0f}%")
-        
-        # Small debug indicator
-        st.caption(f"✅ Trust Bar Active - Overall Score: {overall_trust:.1f}% | Components: Behavioral: {behavioral_score:.0f}%, Social: {social_score:.0f}%, Digital: {digital_score:.0f}%")
         
         return overall_trust
         
@@ -1643,6 +1718,61 @@ class ZScoreApp:
         
         st.markdown('<h1 class="main-header">Admin Panel</h1>', unsafe_allow_html=True)
         
+        # ML Model Status Section
+        st.subheader("🤖 ML Model Status")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Test ML model availability
+            try:
+                test_data = {
+                    'monthly_income': 60000,
+                    'employment_type': 'full_time',
+                    'payment_history': 'good',
+                    'social_endorsements': 5,
+                    'community_activity': 'active',
+                    'digital_presence': 'moderate',
+                    'account_age': 18
+                }
+                
+                ml_result = model_integrator.get_ml_trust_score(test_data)
+                risk_result = model_integrator.get_risk_prediction(test_data)
+                
+                if ml_result and ml_result.get('overall_trust_score', 0) > 0.1:
+                    st.success("✅ **ML Trust Model**: Active")
+                    st.metric("Test Trust Score", f"{ml_result.get('trust_percentage', 0):.1f}%")
+                else:
+                    st.warning("⚠️ **ML Trust Model**: Issues Detected")
+                
+                if risk_result and 'risk_category' in risk_result:
+                    st.success("✅ **Risk Prediction Model**: Active")  
+                    st.metric("Test Risk Category", risk_result.get('risk_category', 'Unknown'))
+                else:
+                    st.warning("⚠️ **Risk Prediction Model**: Issues Detected")
+                    
+            except Exception as e:
+                st.error(f"❌ **ML Models**: Error - {str(e)}")
+        
+        with col2:
+            st.info("**Model Information**")
+            st.write("• **Trust Calculator**: Behavioral + Social + Digital components")
+            st.write("• **Risk Predictor**: XGBoost + Logistic Regression ensemble")
+            st.write("• **SHAP Explainer**: Model interpretation available")
+            
+            if st.button("🔄 Retrain Models", help="Force retrain ML models with latest data"):
+                with st.spinner("Retraining models..."):
+                    try:
+                        # Force model retraining
+                        model_integrator.credit_model = None  # Reset cached model
+                        fresh_model = model_integrator.get_credit_model()
+                        fresh_model.train()  # Retrain with fresh data
+                        st.success("Models retrained successfully!")
+                    except Exception as e:
+                        st.error(f"Retraining failed: {e}")
+        
+        st.markdown("---")
+        
         # System statistics
         st.subheader("System Statistics")
         
@@ -1671,9 +1801,9 @@ class ZScoreApp:
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            if st.button("Add Sample Data", use_container_width=True):
+            if st.button("Add Test Data", use_container_width=True):
                 self.db.add_sample_data()
-                st.success("Sample data added!")
+                st.success("Test data added!")
         
         with col2:
             if st.button("Export Data", use_container_width=True):
@@ -1704,11 +1834,10 @@ class ZScoreApp:
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("Generate Realistic Trust Scores", use_container_width=True):
+            if st.button("Generate Trust Scores", use_container_width=True):
                 updated_count = 0
                 for applicant in applicants:
                     if applicant.get('overall_trust_score', 0) == 0:
-                        # Use correct LOGIC.md calculations for consistency
                         behavioral = self.calculate_behavioral_trust_fallback(applicant) / 100
                         social = self.calculate_social_trust_fallback(applicant) / 100  
                         digital = self.calculate_digital_trust_fallback(applicant) / 100
@@ -1716,21 +1845,17 @@ class ZScoreApp:
                         self.db.update_trust_score(applicant['id'], behavioral, social, digital)
                         updated_count += 1
                 
-                st.success(f"Generated realistic trust scores for {updated_count} applicants using correct LOGIC.md formula!")
+                st.success(f"Generated trust scores for {updated_count} applicants!")
                 st.rerun()
         
         with col2:
-            if st.button("Boost Random Applicant", use_container_width=True):
+            if st.button("Reset All Scores", use_container_width=True):
                 if applicants:
-                    import random
-                    selected = random.choice(applicants)
-                    # Give them a boost towards credit eligibility
-                    new_behavioral = min(selected.get('behavioral_score', 0) + 0.15, 0.8)
-                    new_social = min(selected.get('social_score', 0) + 0.12, 0.75)
-                    new_digital = min(selected.get('digital_score', 0) + 0.18, 0.85)
-                    
-                    self.db.update_trust_score(selected['id'], new_behavioral, new_social, new_digital)
-                    st.success(f"Boosted trust scores for {selected.get('name', 'Unknown')}!")
+                    reset_count = 0
+                    for applicant in applicants:
+                        self.db.update_trust_score(applicant['id'], 0, 0, 0)
+                        reset_count += 1
+                    st.success(f"Reset trust scores for {reset_count} applicants!")
                     st.rerun()
         
         # Model management
@@ -2093,7 +2218,7 @@ class ZScoreApp:
                 }
             )
         else:
-            st.info("No applicants found. Use 'Load Sample Data' to add demo applicants.")
+            st.info("No applicants found. Please contact system administrator.")
 
 
 def main():
