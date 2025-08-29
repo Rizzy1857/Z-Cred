@@ -68,16 +68,21 @@ class AuthManager:
         
         return user_role == required_role
     
-    def require_auth(self):
-        """Decorator-like function to require authentication"""
+    def require_auth(self, context: str = 'both'):
+        """Decorator-like function to require authentication.
+
+        context: 'user' | 'admin' | 'both' - controls which demo credentials are shown
+        """
         if not self.is_authenticated():
-            self.show_login_form()
+            self.show_login_form(context=context)
             return False
         return True
     
     def require_role(self, required_role: str):
         """Require specific role for access"""
-        if not self.require_auth():
+        # Show role-appropriate demo credentials during auth
+        context = 'admin' if required_role == 'admin' else 'user'
+        if not self.require_auth(context=context):
             return False
         
         if not self.has_role(required_role):
@@ -86,8 +91,14 @@ class AuthManager:
         
         return True
     
-    def show_login_form(self):
-        """Display clean minimalistic login/signup interface"""
+    def show_login_form(self, context: str = 'both'):
+        """Display clean minimalistic login/signup interface.
+
+        context controls which demo credentials are visible:
+        - 'user': show only demo user credentials
+        - 'admin': show only demo admin credentials
+        - 'both': show both (default, preserves backward compatibility)
+        """
         # Clean welcome header
         st.markdown("""
         <div style="text-align: center; padding: 3rem 2rem;">
@@ -131,15 +142,23 @@ class AuthManager:
                         else:
                             st.warning("⚠️ Please enter both username and password")
                 
-                # Demo credentials in clean format
+                # Demo credentials in clean format (context-aware)
                 with st.expander("🔓 Demo Access"):
-                    st.markdown("""
-                    **Default Admin Login:**  
-                    Username: `admin`  
-                    Password: `admin123`
-                    
-                    *Demo app for PSB FinTech Hackathon 2025*
-                    """)
+                    md_lines = []
+                    if context in ('user', 'both'):
+                        md_lines.append("**Demo User Login:**  ")
+                        md_lines.append("Username: `demo_user`  ")
+                        md_lines.append("Password: `user123`  ")
+                        md_lines.append("Role: Credit Applicant")
+                        md_lines.append("")
+                    if context in ('admin', 'both'):
+                        md_lines.append("**Demo Admin Login:**  ")
+                        md_lines.append("Username: `admin`  ")
+                        md_lines.append("Password: `admin123`  ")
+                        md_lines.append("Role: Administrator")
+                        md_lines.append("")
+                    md_lines.append("*Demo accounts for PSB FinTech Hackathon 2025*")
+                    st.markdown("\n".join(md_lines))
             
             with tab2:
                 self.show_signup_form()

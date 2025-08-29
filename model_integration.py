@@ -3,7 +3,7 @@ Model Integration Module
 
 Provides seamless integration between the application data structure
 and the ML model pipeline, handling data format transformation and
-fallback mechanisms.
+fallback mechanisms. Enhanced with SHAP caching for optimal performance.
 """
 
 import json
@@ -17,12 +17,100 @@ class ModelIntegrator:
     def __init__(self):
         self.credit_model = None
         self.trust_calculator = TrustScoreCalculator()
+        self._shap_cache_initialized = False
         
     def get_credit_model(self):
-        """Lazy initialization of credit model"""
+        """Lazy initialization of credit model with training if needed"""
         if self.credit_model is None:
             self.credit_model = CreditRiskModel()
+            
+            # Try to load saved models first
+            try:
+                self.credit_model.load_model("test_models/")
+                print("✅ Loaded pre-trained models successfully")
+            except Exception as e:
+                print(f"⚠️ Could not load saved models ({e}), training new model...")
+                # Train the model if loading fails
+                self.credit_model.train()
+                # Save the trained model
+                try:
+                    self.credit_model.save_model("test_models/")
+                    print("✅ Trained model saved successfully")
+                except Exception as save_error:
+                    print(f"⚠️ Could not save model: {save_error}")
+            
+            # Initialize SHAP cache after model is loaded
+            self._initialize_shap_cache()
+                    
         return self.credit_model
+    
+    def _initialize_shap_cache(self):
+        """Initialize SHAP cache for faster explanations"""
+        if self._shap_cache_initialized:
+            return
+            
+        try:
+            from shap_cache import cache_shap_explainers
+            print("🚀 Initializing SHAP cache for faster explanations...")
+            cache_shap_explainers(self.credit_model)
+            self._shap_cache_initialized = True
+            print("✅ SHAP cache initialized successfully")
+        except Exception as e:
+            print(f"⚠️ SHAP cache initialization failed: {e}")
+            print("   Continuing without cache - explanations may be slower")
+    
+    def get_shap_explanation(self, features: Dict[str, Any], model_type: str = 'xgboost') -> Optional[Dict]:
+        """
+        Get SHAP explanation for predictions with caching
+        
+        Args:
+            features: Feature dictionary for explanation
+            model_type: Type of model to explain ('xgboost' or 'logistic')
+            
+        Returns:
+            Dictionary with SHAP values and explanation data
+        """
+        try:
+            from shap_cache import get_cached_shap_values
+            import numpy as np
+            
+            # Ensure model is loaded
+            model = self.get_credit_model()
+            
+            # Prepare features for SHAP
+            feature_names = list(features.keys())
+            feature_values = np.array([list(features.values())])
+            
+            # Get model for explanation
+            if model_type == 'xgboost' and hasattr(model, 'xgb_model'):
+                target_model = model.xgb_model
+            elif model_type == 'logistic' and hasattr(model, 'logistic_model'):
+                target_model = model.logistic_model
+            else:
+                print(f"⚠️ Model type {model_type} not available")
+                return None
+            
+            # Get cached SHAP values
+            shap_values = get_cached_shap_values(
+                target_model, 
+                feature_values, 
+                model_type, 
+                feature_names
+            )
+            
+            if shap_values is not None:
+                return {
+                    'shap_values': shap_values[0] if len(shap_values.shape) > 1 else shap_values,
+                    'feature_names': feature_names,
+                    'feature_values': feature_values[0],
+                    'model_type': model_type,
+                    'base_value': getattr(shap_values, 'base_values', [0])[0] if hasattr(shap_values, 'base_values') else 0
+                }
+            
+        except Exception as e:
+            print(f"❌ Error generating SHAP explanation: {e}")
+            
+        return None
     
     def transform_applicant_data(self, applicant_data: Dict) -> Dict:
         """Transform application data format to model expected format"""

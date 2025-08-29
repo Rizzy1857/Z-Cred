@@ -573,7 +573,14 @@ class CreditRiskModel:
             with open(f"{filepath}/feature_names.json", 'r') as f:
                 self.feature_names = json.load(f)
             
-            self.shap_explainer = shap.Explainer(self.xgb_model)
+            # Initialize SHAP explainer with better error handling
+            try:
+                self.shap_explainer = shap.Explainer(self.xgb_model)
+                print("SHAP explainer initialized successfully")
+            except Exception as shap_error:
+                print(f"Warning: SHAP explainer initialization failed: {shap_error}")
+                self.shap_explainer = None
+            
             self.is_trained = True
             print("Models loaded successfully!")
             

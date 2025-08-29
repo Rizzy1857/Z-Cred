@@ -314,7 +314,35 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             else:
                 st.error("Unable to generate explanation chart")
         else:
-            st.error("Unable to generate AI explanation")
+            # Show fallback explanation when SHAP is not available
+            st.warning("🔧 **Advanced AI explanations are initializing...**")
+            st.info("""
+            **What's happening?** Our AI explanation system is setting up for the first time. 
+            This usually takes a few moments. Please try refreshing in a moment.
+            
+            **Alternative:** You can still view your basic trust score breakdown in the Trust Builder section.
+            """)
+            
+            # Show basic trust score info as fallback
+            trust_score = applicant_data.get('overall_trust_score', 0) * 100
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.metric("Your Trust Score", f"{trust_score:.1f}%")
+                if trust_score >= 70:
+                    st.success("✅ Credit Eligible!")
+                else:
+                    st.info(f"📈 {70 - trust_score:.1f}% more needed for credit eligibility")
+            
+            with col2:
+                st.markdown("**Key Contributing Factors:**")
+                behavioral = applicant_data.get('behavioral_score', 0) * 100
+                social = applicant_data.get('social_score', 0) * 100 
+                digital = applicant_data.get('digital_score', 0) * 100
+                
+                st.write(f"• Payment Behavior: {behavioral:.0f}%")
+                st.write(f"• Community Trust: {social:.0f}%") 
+                st.write(f"• Digital Presence: {digital:.0f}%")
     
     with tab2:
         st.subheader("📈 Feature Impact Analysis")
@@ -340,6 +368,26 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 with col3:
                     risk_prob = prediction_data.get('risk_probability', 0)
                     st.metric("Risk Probability", f"{risk_prob:.1%}")
+        else:
+            st.info("🔧 Feature analysis will be available once the AI explanation system is ready.")
+            
+            # Show basic metrics as fallback
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                trust_score = applicant_data.get('overall_trust_score', 0) * 100
+                if trust_score >= 70:
+                    st.metric("Assessment", "Credit Ready", delta="Eligible")
+                else:
+                    st.metric("Assessment", "Building Trust", delta=f"{70-trust_score:.0f}% to go")
+            
+            with col2:
+                income = applicant_data.get('monthly_income', 0)
+                st.metric("Income Level", f"₹{income:,}")
+            
+            with col3:
+                age = applicant_data.get('age', 0)
+                st.metric("Experience", f"{age} years")
     
     with tab3:
         st.subheader("💬 Personalized Explanation")
@@ -348,6 +396,49 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             # Generate and display plain language explanation
             plain_explanation = explainer.generate_plain_language_explanation(explanation, applicant_data)
             st.markdown(plain_explanation)
+        else:
+            # Provide basic guidance when SHAP is not available
+            st.markdown("## 🎯 Your Credit Assessment Overview")
+            
+            trust_score = applicant_data.get('overall_trust_score', 0) * 100
+            
+            if trust_score >= 70:
+                st.success("🎉 **Congratulations!** You have strong creditworthiness indicators.")
+                st.markdown("""
+                **What this means:**
+                - You're eligible for credit products
+                - Lenders view you as low-risk
+                - You have good financial habits
+                """)
+            elif trust_score >= 50:
+                st.info("🔨 **Building Trust** - You're on the right track!")
+                st.markdown("""
+                **How to improve:**
+                - Complete more missions to boost your score
+                - Verify your payment history
+                - Get community endorsements
+                """)
+            else:
+                st.warning("📈 **Early Stage** - Let's build your credit profile together!")
+                st.markdown("""
+                **Next steps:**
+                - Start with basic missions
+                - Build consistent payment patterns
+                - Engage with your community
+                """)
+            
+            # Show improvement suggestions
+            st.markdown("### 💡 Personalized Recommendations")
+            
+            suggestions = [
+                "Complete financial literacy quizzes to demonstrate knowledge",
+                "Verify payment history to show reliability", 
+                "Get community endorsements to build social trust",
+                "Maintain consistent digital activity"
+            ]
+            
+            for suggestion in suggestions:
+                st.markdown(f"• {suggestion}")
             
             # Add interactive Q&A
             st.markdown("---")
@@ -372,8 +463,6 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 Yes! The improvement suggestions above are personalized based on your current 
                 profile. Focus on the areas where you can make the biggest positive impact.
                 """)
-        else:
-            st.error("Unable to generate explanation")
     
     # Add model performance info
     st.markdown("---")

@@ -25,7 +25,6 @@ if not exist data\applicants.db (
 REM start streamlit app
 echo "🌐 Starting Streamlit application..."
 echo "📱 Open your browser to: http://localhost:8501"
-echo "🔐 Default login: admin / admin123"
 echo ""
 echo "Press Ctrl+C to stop the application"
 echo ""
