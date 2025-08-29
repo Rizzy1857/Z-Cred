@@ -1,0 +1,28 @@
+# Core web framework
+streamlit==1.39.0
+
+# Data processing
+pandas==2.2.3
+numpy==1.26.4
+scipy==1.14.1
+
+# Machine learning
+scikit-learn==1.5.2
+xgboost==2.1.1
+shap==0.46.0
+
+# Visualization
+plotly==5.24.1
+matplotlib==3.9.2
+seaborn==0.13.2
+
+# Authentication and security
+bcrypt==4.2.0
+passlib==1.7.4
+
+# Utilities
+python-dotenv==1.0.1
+
+# Additional performance dependencies
+joblib==1.4.2
+pickle5==0.0.12; python_version < '3.8'
