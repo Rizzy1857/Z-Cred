@@ -14,16 +14,19 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
+# Add project root to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 # Local imports
-from ..core.auth import AuthManager
-from ..database.local_db import Database
-from ..models.model_integration import get_enhanced_trust_assessment
-from ..models.model_pipeline import (
+from src.core.auth import AuthManager
+from src.database.local_db import Database
+from src.models.model_integration import get_enhanced_trust_assessment
+from src.models.model_pipeline import (
     CreditRiskModel,
 )
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-from scripts.shap_dashboard import show_ai_explanations
+# Temporarily comment out problematic script import
+# from scripts.shap_dashboard import show_ai_explanations
 from trust_score_utils import format_trust_display, get_unified_trust_scores
 
 # Page configuration
@@ -1633,7 +1636,9 @@ class ZScoreUserApp:
 
         # Show SHAP explanations
         try:
-            show_ai_explanations(applicant)
+            # Temporarily disabled - AI explanations feature under maintenance
+            st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
+            # show_ai_explanations(applicant)
         except Exception as e:
             st.error(f"AI insights temporarily unavailable: {str(e)}")
 

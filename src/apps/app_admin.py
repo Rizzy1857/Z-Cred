@@ -18,16 +18,19 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
+# Add project root to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 # Local imports
-from ..core.auth import AuthManager
-from ..database.local_db import Database
-from ..models.model_integration import model_integrator
-from ..models.model_pipeline import (
+from src.core.auth import AuthManager
+from src.database.local_db import Database
+from src.models.model_integration import model_integrator
+from src.models.model_pipeline import (
     CreditRiskModel,
 )
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-from scripts.shap_dashboard import show_ai_explanations
+# Temporarily comment out problematic script import
+# from scripts.shap_dashboard import show_ai_explanations
 
 # Page configuration
 st.set_page_config(
@@ -623,7 +626,9 @@ class ZScoreAdminApp:
                 st.session_state.selected_applicant_id = user.get("id")
                 with st.expander("AI Explanation", expanded=True):
                     try:
-                        show_ai_explanations(user)
+                        # Temporarily disabled - AI explanations feature under maintenance
+                        st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
+                        # show_ai_explanations(user)
                     except Exception as e:
                         st.error(f"AI explanation unavailable: {str(e)}")
 
@@ -2547,7 +2552,9 @@ class ZScoreAdminApp:
 
         # Show AI explanations
         try:
-            show_ai_explanations(selected_applicant)
+            # Temporarily disabled - AI explanations feature under maintenance
+            st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
+            # show_ai_explanations(selected_applicant)
         except Exception as e:
             st.error(f"AI explanation unavailable: {str(e)}")
 
