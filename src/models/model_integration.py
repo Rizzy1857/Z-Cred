@@ -8,7 +8,14 @@ fallback mechanisms. Enhanced with SHAP caching for optimal performance.
 
 import json
 from typing import Dict, Any, Optional
-from model_pipeline import calculate_trust_score, CreditRiskModel, TrustScoreCalculator
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.models.model_pipeline import calculate_trust_score, CreditRiskModel, TrustScoreCalculator
 
 
 class ModelIntegrator:

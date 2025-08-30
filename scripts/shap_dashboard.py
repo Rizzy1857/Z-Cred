@@ -13,7 +13,14 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from typing import Dict, List, Any, Optional
 import shap
-from model_integration import model_integrator
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.models.model_integration import model_integrator
 
 
 class SHAPExplainer:

@@ -5,11 +5,18 @@ Ensures consistent trust score calculation and display across the application.
 Enhanced with caching for optimal performance.
 """
 
-from model_pipeline import calculate_trust_score
+import sys
+from pathlib import Path
 from typing import Dict, Any
 import hashlib
 import json
 import time
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.models.model_pipeline import calculate_trust_score
 
 # Global cache for trust scores
 _trust_score_cache = {}

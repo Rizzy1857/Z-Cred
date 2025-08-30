@@ -18,10 +18,16 @@ import joblib
 import json
 from typing import Dict, List, Tuple, Optional
 import warnings
+import sys
+from pathlib import Path
 warnings.filterwarnings('ignore')
 
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
 # Import our error handling module
-from error_handling import (
+from src.core.error_handling import (
     ModelError, FeatureExtractionError, ValidationError,
     handle_exceptions, safe_json_parse, safe_numeric_conversion,
     confidence_interval_calculator, error_handler

@@ -9,7 +9,14 @@ import streamlit as st
 import bcrypt
 import time
 from typing import Optional, Dict
-from local_db import Database
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.database.local_db import Database
 
 
 class AuthManager:

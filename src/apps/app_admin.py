@@ -15,13 +15,22 @@ from datetime import datetime, timedelta
 import time
 import numpy as np
 
-# Local imports
-from auth import AuthManager
-from local_db import Database
-from model_pipeline import CreditRiskModel, calculate_trust_score, TrustScoreCalculator
-from model_integration import get_enhanced_trust_assessment, model_integrator
-from shap_dashboard import show_ai_explanations
-from error_handling import safe_numeric_conversion, safe_json_parse
+# Local imports - using proper paths
+import sys
+import os
+from pathlib import Path
+
+# Add project root to path for imports
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(project_root / "src"))
+
+from src.core.auth import AuthManager
+from src.database.local_db import Database
+from src.models.model_pipeline import CreditRiskModel, calculate_trust_score, TrustScoreCalculator
+from src.models.model_integration import get_enhanced_trust_assessment, model_integrator
+from scripts.shap_dashboard import show_ai_explanations
+from src.core.error_handling import safe_numeric_conversion, safe_json_parse
 
 # Page configuration
 st.set_page_config(
