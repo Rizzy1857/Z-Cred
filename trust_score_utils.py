@@ -120,7 +120,6 @@ def get_unified_trust_scores(applicant_data: Dict[str, Any]) -> Dict[str, Any]:
 
 def clear_trust_score_cache():
     """Clear the trust score cache"""
-    global _trust_score_cache, _cache_timestamps
     _trust_score_cache.clear()
     _cache_timestamps.clear()
     print("🗑️ Trust score cache cleared")
