@@ -46,12 +46,12 @@ def launch_app(
     try:
         current_dir = os.getcwd()
 
-        # map apps to script names
+        # map apps to script names with correct paths
         if app_name == "user":
-            script = "app_user.py"
+            script = os.path.join("src", "apps", "app_user.py")
             preferred = preferred_port or 8503
         elif app_name == "admin":
-            script = "app_admin.py"
+            script = os.path.join("src", "apps", "app_admin.py")
             preferred = preferred_port or 8504
         else:
             return False, "Invalid app name", None
