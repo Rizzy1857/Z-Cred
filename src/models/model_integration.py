@@ -8,7 +8,7 @@ fallback mechanisms. Enhanced with SHAP caching for optimal performance.
 
 import json
 from typing import Dict, Any, Optional
-from model_pipeline import calculate_trust_score, CreditRiskModel, TrustScoreCalculator
+from .model_pipeline import calculate_trust_score, CreditRiskModel, TrustScoreCalculator
 
 
 class ModelIntegrator:
@@ -50,7 +50,7 @@ class ModelIntegrator:
             return
             
         try:
-            from shap_cache import cache_shap_explainers
+            from .shap_cache import cache_shap_explainers
             print("🚀 Initializing SHAP cache for faster explanations...")
             cache_shap_explainers(self.credit_model)
             self._shap_cache_initialized = True
@@ -71,7 +71,7 @@ class ModelIntegrator:
             Dictionary with SHAP values and explanation data
         """
         try:
-            from shap_cache import get_cached_shap_values
+            from .shap_cache import get_cached_shap_values
             import numpy as np
             
             # Ensure model is loaded

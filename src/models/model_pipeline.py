@@ -21,11 +21,54 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Import our error handling module
-from error_handling import (
+from ..core.error_handling import (
     ModelError, FeatureExtractionError, ValidationError,
-    handle_exceptions, safe_json_parse, safe_numeric_conversion,
-    confidence_interval_calculator, error_handler
+    handle_exceptions
 )
+
+# Helper functions for safe data conversion
+def safe_numeric_conversion(value, default=0.0, min_val=None, max_val=None):
+    """Safely convert value to numeric with bounds checking"""
+    try:
+        result = float(value) if value is not None else default
+        if min_val is not None and result < min_val:
+            result = min_val
+        if max_val is not None and result > max_val:
+            result = max_val
+        return result
+    except (ValueError, TypeError):
+        return default
+
+def safe_json_parse(value, default=None):
+    """Safely parse JSON string"""
+    try:
+        import json
+        return json.loads(value) if isinstance(value, str) else value
+    except (json.JSONDecodeError, TypeError):
+        return default or {}
+
+# Create a simple error handler instance
+class SimpleErrorHandler:
+    def log_error(self, error, context=None):
+        # Simple logging - in production this would be more sophisticated
+        print(f"Error: {error}")
+        if context:
+            print(f"Context: {context}")
+
+error_handler = SimpleErrorHandler()
+
+def confidence_interval_calculator(predictions):
+    """Calculate simple confidence interval"""
+    import numpy as np
+    if not predictions:
+        return {'lower': 0.8, 'upper': 0.99, 'confidence': 0.95}
+    std_dev = float(np.std(predictions))
+    confidence = min(0.99, max(0.8, std_dev + 0.8))
+    return {
+        'lower': max(0.0, confidence - 0.1), 
+        'upper': min(1.0, confidence + 0.1),
+        'confidence': confidence
+    }
 
 
 class TrustScoreCalculator:

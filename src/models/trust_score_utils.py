@@ -5,7 +5,7 @@ Ensures consistent trust score calculation and display across the application.
 Enhanced with caching for optimal performance.
 """
 
-from model_pipeline import calculate_trust_score
+from .model_pipeline import calculate_trust_score
 from typing import Dict, Any
 import hashlib
 import json
