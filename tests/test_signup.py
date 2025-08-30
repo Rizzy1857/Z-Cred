@@ -3,22 +3,25 @@
 Test the new sign-up functionality
 """
 
-import sys
 import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 
 def test_signup():
     """Test user registration"""
     print("🧪 Testing Sign-up Functionality...")
     try:
         from auth import create_user
+
         from local_db import Database
-        
+
         # Test creating a new applicant user
         success = create_user("test_applicant", "TestPass123!", "applicant")
         if success:
             print("   ✅ User creation working")
-            
+
             # Test authentication
             db = Database()
             user = db.authenticate_user("test_applicant", "TestPass123!")
@@ -32,16 +35,17 @@ def test_signup():
         else:
             print("   ❌ User creation failed")
             return False
-            
+
     except Exception as e:
         print(f"   ❌ Sign-up test failed: {e}")
         return False
+
 
 def main():
     """Run sign-up tests"""
     print("🚀 Z-Score Sign-up System Test")
     print("=" * 40)
-    
+
     if test_signup():
         print("\n🎉 Sign-up system is working correctly!")
         print("\n📱 To test in the app:")
@@ -53,8 +57,9 @@ def main():
     else:
         print("\n❌ Sign-up system needs fixing")
         return False
-    
+
     return True
+
 
 if __name__ == "__main__":
     success = main()

@@ -208,3 +208,10 @@ __marimo__/
 
 
 data/
+
+# Project-specific cache and generated files
+cache/
+*.pkl
+*.pickle
+logs/
+*.log

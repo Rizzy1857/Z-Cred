@@ -2,21 +2,18 @@
 Z-Score Application Launcher
 """
 
-import streamlit as st
-import subprocess
 import os
-import time
 import socket
-import signal
+import subprocess
+import time
 import webbrowser
 from typing import Optional, Tuple
 
+import streamlit as st
+
 # Page configuration
-st.set_page_config(
-    page_title="Z-Score Launcher",
-    page_icon="⚡",
-    layout="centered"
-)
+st.set_page_config(page_title="Z-Score Launcher", page_icon="⚡", layout="centered")
+
 
 def _is_port_free(port: int) -> bool:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,7 +36,9 @@ def _find_free_port(preferred: int) -> int:
     return port
 
 
-def launch_app(app_name: str, preferred_port: Optional[int] = None) -> Tuple[bool, str, Optional[subprocess.Popen]]:
+def launch_app(
+    app_name: str, preferred_port: Optional[int] = None
+) -> Tuple[bool, str, Optional[subprocess.Popen]]:
     """Launch the specified application and return (success, url, process).
 
     Uses the workspace venv python if available to run streamlit deterministically.
@@ -64,13 +63,21 @@ def launch_app(app_name: str, preferred_port: Optional[int] = None) -> Tuple[boo
         venv_python = os.path.join(current_dir, ".venv", "bin", "python")
         python_exec = venv_python if os.path.exists(venv_python) else "python"
 
-        cmd = [python_exec, "-m", "streamlit", "run", os.path.join(current_dir, script), "--server.port", str(port)]
+        cmd = [
+            python_exec,
+            "-m",
+            "streamlit",
+            "run",
+            os.path.join(current_dir, script),
+            "--server.port",
+            str(port),
+        ]
 
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            preexec_fn=os.setsid if os.name != 'nt' else None
+            preexec_fn=os.setsid if os.name != "nt" else None,
         )
 
         # Wait briefly for server to start
@@ -87,8 +94,10 @@ def launch_app(app_name: str, preferred_port: Optional[int] = None) -> Tuple[boo
     except Exception as e:
         return False, str(e), None
 
+
 # Purple theme CSS for Z-Score launcher
-st.markdown("""
+st.markdown(
+    """
 <style>
     :root {
         --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -117,10 +126,10 @@ st.markdown("""
 
     h1, h2, h3 { color: var(--text) !important; text-align: left; }
 
-    .app-card { 
-        background: rgba(255, 255, 255, 0.7) !important; 
-        border: 1px solid rgba(128, 90, 213, 0.2) !important; 
-        padding: 1rem !important; 
+    .app-card {
+        background: rgba(255, 255, 255, 0.7) !important;
+        border: 1px solid rgba(128, 90, 213, 0.2) !important;
+        padding: 1rem !important;
         border-radius: 8px !important;
         backdrop-filter: blur(5px);
     }
@@ -141,25 +150,31 @@ st.markdown("""
 
     footer, #MainMenu, .stToolbar { visibility: hidden !important; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
+
 
 def main():
     """Main launcher interface"""
-    
+
     st.markdown("# Z-Score Platform")
     st.markdown("### Select Application")
     st.markdown("---")
-    
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="app-card">
             <h3>User Application</h3>
             <p>Credit building and assessment</p>
         </div>
-        """, unsafe_allow_html=True)
-        
+        """,
+            unsafe_allow_html=True,
+        )
+
         if st.button("Launch User App", key="user_app", use_container_width=True):
             with st.spinner("Starting User App..."):
                 success, result, proc = launch_app("user")
@@ -171,26 +186,32 @@ def main():
                 else:
                     st.error(f"Launch failed: {result}")
                     st.code("streamlit run app_user.py", language="bash")
-    
+
     with col2:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="app-card">
             <h3>Admin Application</h3>
             <p>Analytics and management</p>
         </div>
-        """, unsafe_allow_html=True)
-        
+        """,
+            unsafe_allow_html=True,
+        )
+
         if st.button("Launch Admin App", key="admin_app", use_container_width=True):
             with st.spinner("Starting Admin App..."):
                 success, result, proc = launch_app("admin")
                 if success:
                     st.success("Admin App launched!")
                     # Use link button to open in new tab
-                    st.link_button("🚀 Open Admin App", result, use_container_width=True)
+                    st.link_button(
+                        "🚀 Open Admin App", result, use_container_width=True
+                    )
                     st.info(f"URL: {result}")
                 else:
                     st.error(f"Launch failed: {result}")
                     st.code("streamlit run app_admin.py", language="bash")
+
 
 if __name__ == "__main__":
     main()

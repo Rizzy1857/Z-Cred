@@ -1,5 +1,11 @@
 # Project Z-Score: Dynamic Trust-Based Credit Framework
 
+[![CI/CD Pipeline](https://github.com/Rizzy1857/Z-Cred/actions/workflows/ci.yml/badge.svg)](https://github.com/Rizzy1857/Z-Cred/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Rizzy1857/Z-Cred/branch/main/graph/badge.svg)](https://codecov.io/gh/Rizzy1857/Z-Cred)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 A hackathon prototype for PSB's FinTech Cybersecurity Hackathon 2025 - Credit Risk Management Track
 
 ## Overview
@@ -19,6 +25,32 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
 - Hrisheekesh  
 - Alvin
 - Anjana
+
+## Quick Start
+
+### Installation
+
+1. **Clone and setup:**
+   ```bash
+   git clone https://github.com/Rizzy1857/Z-Cred.git
+   cd Z-Cred
+   make setup-dev
+   ```
+
+2. **Run the application:**
+   ```bash
+   make run          # Main application
+   make run-user     # User interface
+   make run-admin    # Admin dashboard
+   ```
+
+3. **Run tests:**
+   ```bash
+   make test         # Run all tests
+   make test-cov     # With coverage
+   ```
+
+For detailed setup instructions, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Features
 
