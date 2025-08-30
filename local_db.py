@@ -370,6 +370,41 @@ class Database:
         
         return self.execute_with_retry(_create_applicant)
     
+    def update_applicant_profile(self, user_id: int, applicant_data: Dict) -> bool:
+        """Update applicant profile data"""
+        def _update_applicant():
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    UPDATE applicants SET
+                        name = ?,
+                        phone = ?,
+                        email = ?,
+                        age = ?,
+                        gender = ?,
+                        location = ?,
+                        occupation = ?,
+                        monthly_income = ?,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE user_id = ?
+                """, (
+                    applicant_data['name'],
+                    applicant_data['phone'],
+                    applicant_data.get('email'),
+                    applicant_data.get('age'),
+                    applicant_data.get('gender'),
+                    applicant_data.get('location'),
+                    applicant_data.get('occupation'),
+                    applicant_data.get('monthly_income'),
+                    user_id
+                ))
+                
+                conn.commit()
+                return cursor.rowcount > 0
+        
+        return self.execute_with_retry(_update_applicant)
+    
     def update_trust_score(self, applicant_id: int, behavioral: float, 
                           social: float, digital: float) -> None:
         """Update trust score components"""

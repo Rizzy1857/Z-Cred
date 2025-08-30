@@ -10,143 +10,155 @@
 - "Banks reject her loan application - she's credit invisible"
 - Show traditional banking rejection scenario
 
-### **Act 2: Z-Score Solution (2.5 minutes)**
+# 🎯 Z-Score Hackathon Demo Script
 
-#### **User Journey Demo:**
-1. **Quick Onboarding** (20 seconds)
-   - Show streamlined signup process
-   - Emphasize data minimization and privacy
+## 🚀 Elevator pitch (30 seconds)
+"Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-2. **Trust Score Assessment** (45 seconds)
-   - Live ML model generating trust score
-   - **KEY DIFFERENTIATOR:** Show SHAP explanations
-   - "Here's exactly WHY your score is X and HOW to improve it"
+## 📊 Demo flow (4 minutes)
 
-3. **Gamified Improvement** (45 seconds)
-   - Show missions, achievements, Z-credits
-   - Demonstrate score improvement in real-time
-   - "Financial wellness becomes engaging, not intimidating"
+### Act 1 — The problem (30 seconds)
+- "Meet Sarah, a freelancer with no traditional credit history."
+- "Banks reject her loan application — she's credit invisible."
+- Visual: short slide showing rejection + stat about credit invisibility.
+# 🎯 Z-Score Hackathon Demo Script
 
-4. **Explainable AI Dashboard** (30 seconds)
-   - Show factor importance
-   - Personalized recommendations
-   - Transparent decision making
+## 🚀 Elevator pitch (30 seconds)
 
-### **Act 3: Business Impact (45 seconds)**
+"Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-#### **Admin Dashboard:**
-- Show population-level analytics
-- Demonstrate model performance
-- Highlight inclusion metrics
+## 📊 Demo flow (4 minutes)
 
-#### **Value Proposition:**
-- **For Users:** "Transparent path to creditworthiness"
-- **For Lenders:** "Confident lending with explainable AI"
-- **For Society:** "Financial inclusion at scale"
+### Act 1 — The problem (30 seconds)
 
-### **Act 4: Technical Excellence (30 seconds)**
-- "Built with production-ready ML pipeline"
-- "Real-time SHAP explanations"
-- "Scalable cloud architecture"
+- "Meet Sarah, a freelancer with no traditional credit history."
+- "Banks reject her loan application — she's credit invisible."
+- Visual: short slide showing rejection + stat about credit invisibility.
 
-## 🎪 **Presentation Tips**
+### Act 2 — Z-Score solution (2.5 minutes)
 
-### **Opening Hook:**
-"Raise your hand if you've ever been frustrated by a loan rejection without explanation... Z-Score solves that."
+# 🎯 Z-Score Hackathon Demo Script
 
-### **Key Phrases to Use:**
-- "Explainable AI"
-- "Financial Inclusion"
-- "Trust-building journey"
-- "Transparent credit assessment"
-- "190 million underbanked Indians"
+## 🚀 Elevator pitch (30 seconds)
 
-### **Visual Highlights:**
-1. **Trust Score Animation** - Show the circular progress
-2. **SHAP Waterfall Chart** - Key differentiator
-3. **Gamification Elements** - Show missions completing
-4. **Real-time Updates** - Live score changes
+"Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-### **Technical Depth (if asked):**
-- XGBoost + Logistic Regression ensemble
-- SHAP for model interpretability
-- Streamlit for rapid prototyping
-- Local deployment with cloud readiness
+## 📊 Demo flow (4 minutes)
 
-## 🏆 **Winning Factors**
+### Act 1 — The problem (30 seconds)
 
-### **Innovation:**
-- First explainable AI credit platform in India
-- Gamification for financial behavior change
-- Trust-building vs. traditional scoring
+- "Meet Sarah, a freelancer with no traditional credit history."
+- "Banks reject her loan application — she's credit invisible."
+- Visual: short slide showing rejection + stat about credit invisibility.
 
-### **Technical Excellence:**
-- Working ML models with real predictions
-- Interactive visualizations
-- Clean, professional interface
+### Act 2 — Z-Score solution (2.5 minutes)
 
-### **Market Opportunity:**
-- $1.3 trillion credit gap in India
-- RBI mandate for inclusive finance
-- Growing fintech ecosystem
+User journey demo
 
-### **Competitive Advantage:**
-- Transparency builds user trust
-- Gamification drives engagement
-- Explainable AI reduces regulatory risk
+1. Quick onboarding (20s)
 
-## 🎬 **Demo Environment Setup**
+   - Show streamlined signup and emphasize minimal data & privacy.
 
-### **Preparation Checklist:**
-- [ ] User app running on port 8502
-- [ ] Admin app ready on port 8503
-- [ ] Sample user profiles prepared
-- [ ] SHAP models loaded and working
-- [ ] Internet connection for smooth demo
-- [ ] Backup slides ready
+2. Trust score assessment (45s)
 
-### **Sample Demo Users:**
-1. **Sarah** - Freelancer, improving score
-2. **Raj** - Small business owner, established credit
-3. **Priya** - Student, building first credit
+   - Generate a live trust score for demo user (Sarah).
+   - Show SHAP explanation and say: "Here's exactly why the score is X and how to improve it." Point to the top 3 drivers.
 
-### **Backup Plan:**
-- Screenshots of key screens
-- Pre-recorded video demo (2 minutes)
-- Static presentation with key insights
+3. Gamified improvement (35s)
 
-## 🚨 **Common Hackathon Mistakes to Avoid**
+   - Trigger a mission (e.g., pay a bill), show Z-credits and trust bar animation.
+   - Narrate: "Small guided steps that move behavior and score."
 
-❌ **Don't:** Spend time explaining infrastructure  
-✅ **Do:** Show user value immediately  
+4. Explainable AI dashboard (30s)
 
-❌ **Don't:** Get lost in technical details  
-✅ **Do:** Focus on business impact  
+   - Show factor importance, recommendations, and transparent decision insights.
 
-❌ **Don't:** Demo every feature  
-✅ **Do:** Tell a compelling story  
+### Act 3 — Admin & business impact (45s)
 
-❌ **Don't:** Ignore the judges' backgrounds  
-✅ **Do:** Adapt technical depth accordingly  
+- Switch to admin dashboard and show population-level uplift, inclusion metric, and model performance (AUC/precision).
+- Script example: "Pilot results: +20% approvals among previously invisible users while default rate was maintained." (Replace with real pilot numbers if available.)
 
-## 💡 **Judge Q&A Preparation**
+### Act 4 — Tech credibility & ask (45s)
 
-### **Expected Questions:**
-1. **"How is this different from CIBIL?"**
-   - "We build credit for the credit-invisible, with explainable AI"
+- Say: "Built on XGBoost + logistic regression ensemble, SHAP for interpretability, Streamlit for demo, and a production-ready pipeline."
+- Close: "We’re seeking pilot partners and early customers to scale — join us."
 
-2. **"What's your business model?"**
-   - "B2B2C: Partner with fintechs/banks, subscription for users"
+## Short narrator cheat-sheet (one-liners)
 
-3. **"How do you ensure data privacy?"**
-   - "DPDPA compliant, minimal data collection, user control"
+- Opening: "We turn credit invisibility into creditworthiness — with transparency and simple actions."
+- SHAP: "This chart explains exactly why the score is what it is and how to improve it."
+- Gamification: "Missions create small habit wins that move the score and the user's life."
+- Close: "Transparent models, measurable inclusion — that's Z-Score."
 
-4. **"What's your go-to-market strategy?"**
-   - "Pilot with microfinance institutions, scale to digital lenders"
+## Demo environment — exact run steps (macOS / zsh)
 
-5. **"How accurate are your models?"**
-   - "85%+ accuracy with continuous learning, benchmarked against industry"
+Make sure your virtualenv is active and dependencies are installed.
 
----
+1) Activate your venv (if present):
 
-**Remember: Judges decide in the first 60 seconds. Make them care about the problem, then show your brilliant solution!**
+```bash
+source .venv/bin/activate
+```
+
+2) Install (if needed):
+
+```bash
+pip install -r requirements.txt
+```
+
+3) Launch options (preferred: `start.sh`):
+
+```bash
+./start.sh --app=user    # user app → http://localhost:8502
+./start.sh --app=admin   # admin app → http://localhost:8503
+```
+
+Or run directly:
+
+```bash
+streamlit run src/apps/app.py --server.port 8501   # main launcher UI
+streamlit run src/apps/app_user.py --server.port 8502
+streamlit run src/apps/app_admin.py --server.port 8503
+```
+
+Quick verification before you present:
+
+- Visit `http://localhost:8502` and log in as `demo_user` (UI shows demo credentials).
+- Visit `http://localhost:8503` for the admin overview.
+
+If a port is in use, run with `--server.port <alt-port>` and update the URL in your slides.
+
+## Pre-demo checklist
+
+- [ ] `.venv` activated and dependencies installed
+- [ ] `./start.sh --app=user` opens `http://localhost:8502`
+- [ ] `./start.sh --app=admin` opens `http://localhost:8503`
+- [ ] Sample profiles loaded (Sarah, Raj, Priya)
+- [ ] SHAP visuals render in the Explain panel
+- [ ] Recording/screenshots ready as backup
+
+## Backup plan (when live fails)
+
+- Have screenshots of onboarding, SHAP waterfall, trust bar and mission completion.
+- Have a 2-minute recorded demo ready to play.
+- If Streamlit stalls, switch to slides and narrate the demo while showing screenshots.
+
+## Judge Q&A (short crisp answers)
+
+- "How is this different from CIBIL?" → "CIBIL records credit history; we create transparent, actionable credit signals for the credit-invisible using behavioral and alternative data, explained with SHAP."
+- "Business model?" → "B2B2C: subscription + per-evaluation pricing for lenders, plus analytics for risk teams."
+- "Data privacy?" → "Minimal data collection, opt-in flows, and DPDPA-aware controls."
+- "Go-to-market?" → "Pilot with MFIs and NBFCs, followed by integrations with digital lenders and fintechs."
+- "Model accuracy?" → "Validated on held-out data; thresholds tuned with partners to balance inclusion and risk (example pilot: +20% approvals among previously invisible users)."
+
+## Presentation tips — delivery and visuals
+
+- Use the first 30s to make judges care about the human story.
+- Show SHAP and walk through 2–3 concrete recommendations.
+- Demonstrate one mission live — judges like tangible behavior change.
+- Keep technical depth to a single backup slide unless asked.
+
+## Final notes
+
+- Keep to 4 minutes. Practice transitions (user → admin → ask) so tab switching is smooth.
+- Want a 2-slide "judge cheat sheet" with URLs and run commands? I can add `docs/JUDGE_CHEATSHEET.md` to the repo.

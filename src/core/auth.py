@@ -263,13 +263,15 @@ class AuthManager:
 
 
 def create_user(username: str, password: str, role: str = "user") -> bool:
-    """Create new user account"""
+    """Create new user account and applicant profile if role is applicant"""
     db = Database()
 
     try:
         with db.get_connection() as conn:
             cursor = conn.cursor()
             password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+            
+            # Create user account
             cursor.execute(
                 """
                 INSERT INTO users (username, password_hash, role)
@@ -277,9 +279,23 @@ def create_user(username: str, password: str, role: str = "user") -> bool:
             """,
                 (username, password_hash.decode("utf-8"), role),
             )
+            
+            user_id = cursor.lastrowid
+            
+            # If role is applicant, create a basic applicant profile
+            if role == "applicant":
+                cursor.execute(
+                    """
+                    INSERT INTO applicants (user_id, name, phone)
+                    VALUES (?, ?, ?)
+                """,
+                    (user_id, username, f"pending_{user_id}"),  # Temporary values to be completed later
+                )
+            
             conn.commit()
         return True
-    except Exception:
+    except Exception as e:
+        print(f"Error creating user: {e}")  # For debugging
         return False
 
 

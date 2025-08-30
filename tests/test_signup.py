@@ -6,29 +6,49 @@ Test the new sign-up functionality
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Add the project root directory to the path
+project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+sys.path.insert(0, project_root)
 
 
 def test_signup():
     """Test user registration"""
     print("🧪 Testing Sign-up Functionality...")
     try:
-        from auth import create_user
-
+        from src.core.auth import create_user
         from local_db import Database
+        import time
+        
+        # Use timestamp to create unique username
+        test_username = f"test_user_{int(time.time())}"
 
         # Test creating a new applicant user
-        success = create_user("test_applicant", "TestPass123!", "applicant")
+        success = create_user(test_username, "TestPass123!", "applicant")
         if success:
             print("   ✅ User creation working")
 
             # Test authentication
             db = Database()
-            user = db.authenticate_user("test_applicant", "TestPass123!")
+            user = db.authenticate_user(test_username, "TestPass123!")
             if user:
                 print("   ✅ New user authentication working")
                 print(f"   📋 User details: {user}")
-                return True
+                
+                # Check if applicant profile was created
+                applicants = db.get_all_applicants()
+                user_applicant = None
+                for applicant in applicants:
+                    if applicant.get("user_id") == user["id"]:
+                        user_applicant = applicant
+                        break
+                
+                if user_applicant:
+                    print("   ✅ Applicant profile automatically created")
+                    print(f"   📋 Profile: name={user_applicant.get('name')}, phone={user_applicant.get('phone')}")
+                    return True
+                else:
+                    print("   ❌ Applicant profile not created")
+                    return False
             else:
                 print("   ❌ New user authentication failed")
                 return False
@@ -38,6 +58,8 @@ def test_signup():
 
     except Exception as e:
         print(f"   ❌ Sign-up test failed: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 

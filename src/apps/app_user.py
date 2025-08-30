@@ -778,8 +778,9 @@ class ZScoreUserApp:
 
         st.session_state.current_applicant = applicant
 
-        # Check if profile is complete
-        if not applicant.get("phone"):
+        # Check if profile is complete (needs real data, not placeholder)
+        phone = applicant.get("phone", "")
+        if not phone or phone.startswith("pending_") or not applicant.get("age"):
             self.show_profile_completion(applicant)
             return
 
@@ -855,36 +856,35 @@ class ZScoreUserApp:
                     and occupation
                     and monthly_income
                 ):
-                    # Update applicant profile
-                    with self.db.get_connection() as conn:
-                        cursor = conn.cursor()
-
-                        cursor.execute(
-                            """
-                            UPDATE applicants SET
-                                phone = ?, age = ?, gender = ?, location = ?,
-                                occupation = ?, monthly_income = ?, updated_at = CURRENT_TIMESTAMP
-                            WHERE id = ?
-                        """,
-                            (
-                                phone,
-                                age,
-                                gender,
-                                location,
-                                occupation,
-                                monthly_income,
-                                applicant["id"],
-                            ),
-                        )
-
-                        conn.commit()
-
-                    # Award completion bonus
-                    st.balloons()
-                    st.success("🎉 Profile Complete! +50 Z-Credits earned!")
-                    st.session_state.z_credits += 50
-                    time.sleep(2)
-                    st.rerun()
+                    # Update applicant profile using the new method
+                    current_user = self.auth.get_current_user()
+                    if current_user:
+                        profile_data = {
+                            'name': applicant.get('name', current_user['username']),  # Keep existing name or use username
+                            'phone': phone,
+                            'email': applicant.get('email'),
+                            'age': age,
+                            'gender': gender,
+                            'location': location,
+                            'occupation': occupation,
+                            'monthly_income': monthly_income
+                        }
+                        
+                        success = self.db.update_applicant_profile(current_user['id'], profile_data)
+                        
+                        if success:
+                            # Award completion bonus
+                            st.balloons()
+                            st.success("🎉 Profile Complete! +50 Z-Credits earned!")
+                            if "z_credits" not in st.session_state:
+                                st.session_state.z_credits = 0
+                            st.session_state.z_credits += 50
+                            time.sleep(2)
+                            st.rerun()
+                        else:
+                            st.error("Failed to update profile. Please try again.")
+                    else:
+                        st.error("Authentication error. Please log in again.")
                 else:
                     st.error(
                         "Please fill all required fields to continue your journey!"
