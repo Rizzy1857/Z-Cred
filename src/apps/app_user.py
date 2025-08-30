@@ -10,24 +10,20 @@ import random
 import sys
 import time
 
+# Add project root to path for imports FIRST
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
-
-# Add project root to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-# Local imports
 from src.core.auth import AuthManager
 from src.database.local_db import Database
 from src.models.model_integration import get_enhanced_trust_assessment
-from src.models.model_pipeline import (
-    CreditRiskModel,
-)
+from src.models.model_pipeline import CreditRiskModel
+from trust_score_utils import format_trust_display, get_unified_trust_scores
 
 # Temporarily comment out problematic script import
 # from scripts.shap_dashboard import show_ai_explanations
-from trust_score_utils import format_trust_display, get_unified_trust_scores
 
 # Page configuration
 st.set_page_config(
@@ -1365,7 +1361,7 @@ class ZScoreUserApp:
 
         for i, q in enumerate(questions):
             st.markdown(
-                f'<div class="quiz-question">Question {i+1}: {q["question"]}</div>',
+                f'<div class="quiz-question">Question {i + 1}: {q["question"]}</div>',
                 unsafe_allow_html=True,
             )
 
@@ -1373,7 +1369,7 @@ class ZScoreUserApp:
                 "Select your answer:", q["options"], key=f"q_{i}_{mission['id']}"
             )
 
-            if st.button(f"Submit Answer {i+1}", key=f"submit_{i}_{mission['id']}"):
+            if st.button(f"Submit Answer {i + 1}", key=f"submit_{i}_{mission['id']}"):
                 if q["options"].index(answer) == q["correct"]:
                     st.success(f"✅ Correct! {q['explanation']}")
                     correct_answers += 1
@@ -1834,7 +1830,7 @@ class ZScoreUserApp:
         """Behavioral trust analysis"""
         st.markdown("#### 🎭 Behavioral Trust Analysis")
 
-        applicant.get("behavioral_score", 0) * 100
+        behavioral_score = applicant.get("behavioral_score", 0) * 100
 
         factors = [
             ("Payment Consistency", 85, "Strong track record of timely payments"),
@@ -1855,7 +1851,7 @@ class ZScoreUserApp:
         """Social trust analysis"""
         st.markdown("#### 👥 Social Trust Analysis")
 
-        applicant.get("social_score", 0) * 100
+        social_score = applicant.get("social_score", 0) * 100
 
         factors = [
             ("Community Standing", 80, "Active community member"),
@@ -1876,7 +1872,7 @@ class ZScoreUserApp:
         """Digital trust analysis"""
         st.markdown("#### 💻 Digital Trust Analysis")
 
-        applicant.get("digital_score", 0) * 100
+        digital_score = applicant.get("digital_score", 0) * 100
 
         factors = [
             ("Digital Footprint", 70, "Established online presence"),
@@ -1942,7 +1938,7 @@ class ZScoreUserApp:
                     f"""
                 <div class="metric-container">
                     <h3>🎯 Peer Ranking</h3>
-                    <h2 style="color: var(--primary)">Top {100-percentile:.0f}%</h2>
+                    <h2 style="color: var(--primary)">Top {100 - percentile:.0f}%</h2>
                     <p>Better than {percentile:.0f}% of users</p>
                 </div>
                 """,

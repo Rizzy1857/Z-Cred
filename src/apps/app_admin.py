@@ -11,23 +11,19 @@ import sys
 import time
 from datetime import datetime
 
+# Add project root to path for imports FIRST
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
-
-# Add project root to path for imports
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
-
-# Local imports
 from src.core.auth import AuthManager
 from src.database.local_db import Database
 from src.models.model_integration import model_integrator
-from src.models.model_pipeline import (
-    CreditRiskModel,
-)
+from src.models.model_pipeline import CreditRiskModel
 
 # Temporarily comment out problematic script import
 # from scripts.shap_dashboard import show_ai_explanations
