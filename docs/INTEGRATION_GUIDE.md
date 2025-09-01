@@ -47,9 +47,9 @@ try:
         # Display enhanced SHAP explanation
         st.write("### Top Contributing Factors")
         for contrib in explanation.get('top_contributors', {}).get('positive', [])[:3]:
-            st.write(f"✅ {contrib['feature']}: +{contrib['impact']:.3f}")
+            st.write(f" {contrib['feature']}: +{contrib['impact']:.3f}")
         for contrib in explanation.get('top_contributors', {}).get('negative', [])[:3]:
-            st.write(f"❌ {contrib['feature']}: -{contrib['impact']:.3f}")
+            st.write(f" {contrib['feature']}: -{contrib['impact']:.3f}")
     
 except (ModelError, FeatureExtractionError) as e:
     error_response = error_handler.handle_error(e)
@@ -176,12 +176,12 @@ def show_system_health(self):
 
 ## Benefits of Integration
 
-1. **🛡️ Robust Error Handling**: Graceful recovery from all error conditions
-2. **📊 Enhanced Predictions**: Confidence intervals and uncertainty quantification
-3. **🔍 Better Explanations**: Rich SHAP explanations with fallback mechanisms
-4. **✅ Input Validation**: Automatic data sanitization and validation
-5. **📱 User Experience**: Clear, actionable error messages
-6. **🔧 Maintainability**: Centralized error handling and logging
+1. ** Robust Error Handling**: Graceful recovery from all error conditions
+2. ** Enhanced Predictions**: Confidence intervals and uncertainty quantification
+3. ** Better Explanations**: Rich SHAP explanations with fallback mechanisms
+4. ** Input Validation**: Automatic data sanitization and validation
+5. ** User Experience**: Clear, actionable error messages
+6. ** Maintainability**: Centralized error handling and logging
 
 ## Next Steps
 

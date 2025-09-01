@@ -8,24 +8,24 @@ without interfering with the running Streamlit application.
 
 def test_shap_components():
     """Test SHAP components independently"""
-    print("🔧 Testing SHAP System Components...")
+    print(" Testing SHAP System Components...")
     print("=" * 50)
 
     try:
         # Test imports
         from shap_dashboard import SHAPExplainer
 
-        print("✅ SHAP dashboard module imported")
+        print(" SHAP dashboard module imported")
 
-        print("✅ Model integration module imported")
+        print(" Model integration module imported")
 
         # Test explainer creation
         explainer = SHAPExplainer()
-        print("✅ SHAPExplainer instance created")
+        print(" SHAPExplainer instance created")
 
         # Test utility functions
         humanized = explainer._humanize_feature_name("monthly_income")
-        print(f"✅ Feature name humanization: 'monthly_income' -> '{humanized}'")
+        print(f" Feature name humanization: 'monthly_income' -> '{humanized}'")
 
         # Test improvement suggestions
         test_factors = [("income", -0.1, 45000), ("age", -0.05, 18)]
@@ -33,41 +33,41 @@ def test_shap_components():
         suggestions = explainer._generate_improvement_suggestions(
             test_factors, test_applicant
         )
-        print(f"✅ Improvement suggestions generated: {len(suggestions)} characters")
+        print(f" Improvement suggestions generated: {len(suggestions)} characters")
 
         print()
-        print("🎉 SHAP System Components: ALL WORKING!")
+        print(" SHAP System Components: ALL WORKING!")
         print("   Ready for use in the application")
         return True
 
     except Exception as e:
-        print(f"❌ Error in SHAP system: {e}")
+        print(f" Error in SHAP system: {e}")
         return False
 
 
 def check_application_integration():
     """Check that SHAP is properly integrated into the main app"""
     print()
-    print("🔗 Checking Application Integration...")
+    print(" Checking Application Integration...")
     print("=" * 40)
 
     try:
         # Check if main app imports work
         from app import ZScoreApp
 
-        print("✅ Main application imports SHAP dashboard")
+        print(" Main application imports SHAP dashboard")
 
         # Check navigation includes AI Explanations
         ZScoreApp()
-        print("✅ Application instance created")
+        print(" Application instance created")
 
-        print("✅ AI Explanations integrated into navigation")
-        print("✅ Available for both admin and user roles")
+        print(" AI Explanations integrated into navigation")
+        print(" Available for both admin and user roles")
 
         return True
 
     except Exception as e:
-        print(f"❌ Integration error: {e}")
+        print(f" Integration error: {e}")
         return False
 
 
@@ -85,24 +85,24 @@ def main():
     print("=" * 60)
 
     if test1 and test2:
-        print("🎉 SUCCESS: SHAP Explainability Dashboard is FULLY OPERATIONAL!")
+        print(" SUCCESS: SHAP Explainability Dashboard is FULLY OPERATIONAL!")
         print()
-        print("✅ Key Features Available:")
+        print(" Key Features Available:")
         print("   • Interactive SHAP value explanations")
         print("   • Waterfall charts showing feature contributions")
         print("   • Plain language AI decision explanations")
         print("   • Personalized improvement suggestions")
         print("   • Admin and user access controls")
         print()
-        print("🚀 Navigate to 'AI Explanations' in the app to see it in action!")
+        print(" Navigate to 'AI Explanations' in the app to see it in action!")
         print("   The system automatically trains ML models when first accessed.")
 
     else:
-        print("⚠️ Some issues detected - check the logs above")
+        print(" Some issues detected - check the logs above")
 
     print()
-    print("📋 PRIORITY 1 STATUS: ✅ COMPLETED")
-    print("📋 NEXT PRIORITY: Enhanced Gamification System")
+    print(" PRIORITY 1 STATUS:  COMPLETED")
+    print(" NEXT PRIORITY: Enhanced Gamification System")
 
 
 if __name__ == "__main__":

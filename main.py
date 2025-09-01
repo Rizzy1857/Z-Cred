@@ -20,20 +20,20 @@ sys.path.insert(0, str(project_root))
 
 def health_check():
     """Perform system health check"""
-    print("🔍 Checking system components...")
+    print(" Checking system components...")
     
     # Check Python version
     python_version = sys.version_info
-    print(f"✅ Python {python_version.major}.{python_version.minor}.{python_version.micro}")
+    print(f" Python {python_version.major}.{python_version.minor}.{python_version.micro}")
     
     # Check required directories
     required_dirs = ["src", "tests", "scripts", "data"]
     for dir_name in required_dirs:
         dir_path = project_root / dir_name
         if dir_path.exists():
-            print(f"✅ Directory: {dir_name}/")
+            print(f" Directory: {dir_name}/")
         else:
-            print(f"❌ Missing directory: {dir_name}/")
+            print(f" Missing directory: {dir_name}/")
     
     # Check key application files
     key_files = [
@@ -46,24 +46,24 @@ def health_check():
     for file_path in key_files:
         full_path = project_root / file_path
         if full_path.exists():
-            print(f"✅ File: {file_path}")
+            print(f" File: {file_path}")
         else:
-            print(f"❌ Missing file: {file_path}")
+            print(f" Missing file: {file_path}")
     
     # Check if virtual environment is active
     if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):
-        print("✅ Virtual environment active")
+        print(" Virtual environment active")
     else:
-        print("⚠️  Virtual environment not detected")
+        print("  Virtual environment not detected")
     
     # Check database
     db_path = project_root / "data" / "applicants.db"
     if db_path.exists():
-        print(f"✅ Database: {db_path}")
+        print(f" Database: {db_path}")
     else:
-        print(f"⚠️  Database not found: {db_path}")
+        print(f"  Database not found: {db_path}")
     
-    print("🏥 Health check complete!")
+    print(" Health check complete!")
 
 def main():
     """Main application launcher"""
@@ -138,18 +138,18 @@ Examples:
         return
     
     if args.health:
-        print("🏥 Running Z-Cred health check...")
+        print(" Running Z-Cred health check...")
         health_check()
         return
     
     if args.setup:
-        print("🔧 Running Z-Cred setup...")
+        print(" Running Z-Cred setup...")
         from scripts.setup_demo_data import setup_demo_data
         setup_demo_data()
         return
     
     if args.test:
-        print("🧪 Running Z-Cred test suite...")
+        print(" Running Z-Cred test suite...")
         # Change to tests directory and run tests
         test_script = project_root / "tests" / "test_unified_scoring.py"
         import subprocess
@@ -158,14 +158,14 @@ Examples:
         ], cwd=str(project_root), capture_output=True, text=True)
         
         if result.returncode != 0:
-            print(f"❌ Tests failed:\n{result.stderr}")
+            print(f" Tests failed:\n{result.stderr}")
             sys.exit(1)
         else:
-            print("✅ All tests passed!")
+            print(" All tests passed!")
         return
     
     if args.profile:
-        print("📊 Running Z-Cred performance profiling...")
+        print(" Running Z-Cred performance profiling...")
         # Run profiling script
         profile_script = project_root / "scripts" / "performance_profiler.py"
         import subprocess
@@ -191,12 +191,12 @@ Examples:
     
     # Check if the app file exists
     if not app_file.exists():
-        print(f"❌ Application file not found: {app_file}")
+        print(f" Application file not found: {app_file}")
         sys.exit(1)
     
-    print(f"🚀 Launching Z-Cred {args.app} interface on port {port}")
-    print(f"📱 Access at: http://localhost:{port}")
-    print(f"📄 Running: {app_file}")
+    print(f" Launching Z-Cred {args.app} interface on port {port}")
+    print(f" Access at: http://localhost:{port}")
+    print(f" Running: {app_file}")
     
     # Use streamlit run command
     import subprocess
@@ -208,9 +208,9 @@ Examples:
     try:
         subprocess.run(cmd, check=True)
     except KeyboardInterrupt:
-        print("\n👋 Z-Cred application stopped")
+        print("\n Z-Cred application stopped")
     except Exception as e:
-        print(f"❌ Error launching application: {e}")
+        print(f" Error launching application: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

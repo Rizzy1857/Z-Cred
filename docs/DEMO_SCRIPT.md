@@ -1,33 +1,33 @@
-# 🎯 Z-Score Hackathon Demo Script
+#  Z-Score Hackathon Demo Script
 
-## 🚀 **Elevator Pitch (30 seconds)**
+##  **Elevator Pitch (30 seconds)**
 "Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-## 📊 **Demo Flow (4 minutes)**
+##  **Demo Flow (4 minutes)**
 
 ### **Act 1: The Problem (30 seconds)**
 - "Meet Sarah, a freelancer with no traditional credit history"
 - "Banks reject her loan application - she's credit invisible"
 - Show traditional banking rejection scenario
 
-# 🎯 Z-Score Hackathon Demo Script
+#  Z-Score Hackathon Demo Script
 
-## 🚀 Elevator pitch (30 seconds)
+##  Elevator pitch (30 seconds)
 "Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-## 📊 Demo flow (4 minutes)
+##  Demo flow (4 minutes)
 
 ### Act 1 — The problem (30 seconds)
 - "Meet Sarah, a freelancer with no traditional credit history."
 - "Banks reject her loan application — she's credit invisible."
 - Visual: short slide showing rejection + stat about credit invisibility.
-# 🎯 Z-Score Hackathon Demo Script
+#  Z-Score Hackathon Demo Script
 
-## 🚀 Elevator pitch (30 seconds)
+##  Elevator pitch (30 seconds)
 
 "Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-## 📊 Demo flow (4 minutes)
+##  Demo flow (4 minutes)
 
 ### Act 1 — The problem (30 seconds)
 
@@ -37,13 +37,13 @@
 
 ### Act 2 — Z-Score solution (2.5 minutes)
 
-# 🎯 Z-Score Hackathon Demo Script
+#  Z-Score Hackathon Demo Script
 
-## 🚀 Elevator pitch (30 seconds)
+##  Elevator pitch (30 seconds)
 
 "Z-Score revolutionizes credit assessment for India's 190 million underbanked population using explainable AI and gamified financial journeys. We turn credit invisibility into creditworthiness."
 
-## 📊 Demo flow (4 minutes)
+##  Demo flow (4 minutes)
 
 ### Act 1 — The problem (30 seconds)
 

@@ -27,17 +27,17 @@ class ModelIntegrator:
             # Try to load saved models first
             try:
                 self.credit_model.load_model("test_models/")
-                print("✅ Loaded pre-trained models successfully")
+                print(" Loaded pre-trained models successfully")
             except Exception as e:
-                print(f"⚠️ Could not load saved models ({e}), training new model...")
+                print(f" Could not load saved models ({e}), training new model...")
                 # Train the model if loading fails
                 self.credit_model.train()
                 # Save the trained model
                 try:
                     self.credit_model.save_model("test_models/")
-                    print("✅ Trained model saved successfully")
+                    print(" Trained model saved successfully")
                 except Exception as save_error:
-                    print(f"⚠️ Could not save model: {save_error}")
+                    print(f" Could not save model: {save_error}")
             
             # Initialize SHAP cache after model is loaded
             self._initialize_shap_cache()
@@ -51,12 +51,12 @@ class ModelIntegrator:
             
         try:
             from shap_cache import cache_shap_explainers
-            print("🚀 Initializing SHAP cache for faster explanations...")
+            print(" Initializing SHAP cache for faster explanations...")
             cache_shap_explainers(self.credit_model)
             self._shap_cache_initialized = True
-            print("✅ SHAP cache initialized successfully")
+            print(" SHAP cache initialized successfully")
         except Exception as e:
-            print(f"⚠️ SHAP cache initialization failed: {e}")
+            print(f" SHAP cache initialization failed: {e}")
             print("   Continuing without cache - explanations may be slower")
     
     def get_shap_explanation(self, features: Dict[str, Any], model_type: str = 'xgboost') -> Optional[Dict]:
@@ -87,7 +87,7 @@ class ModelIntegrator:
             elif model_type == 'logistic' and hasattr(model, 'logistic_model'):
                 target_model = model.logistic_model
             else:
-                print(f"⚠️ Model type {model_type} not available")
+                print(f" Model type {model_type} not available")
                 return None
             
             # Get cached SHAP values
@@ -108,7 +108,7 @@ class ModelIntegrator:
                 }
             
         except Exception as e:
-            print(f"❌ Error generating SHAP explanation: {e}")
+            print(f" Error generating SHAP explanation: {e}")
             
         return None
     

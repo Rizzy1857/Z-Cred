@@ -36,7 +36,7 @@ except ImportError as e:
 # Page configuration
 st.set_page_config(
     page_title="Z-Score Admin Dashboard",
-    page_icon="⚙️",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -353,7 +353,7 @@ class ZScoreAdminApp:
         # Ensure only admins can access
         current_user = self.auth.get_current_user()
         if not current_user or current_user["role"] != "admin":
-            st.error("🔒 Admin access required. Please use the user application.")
+            st.error(" Admin access required. Please use the user application.")
             st.info("This is the administrative interface for system management.")
             return
 
@@ -364,7 +364,7 @@ class ZScoreAdminApp:
         """Main admin interface"""
         # Sidebar navigation
         with st.sidebar:
-            st.markdown(f"### ⚙️ Admin: {admin_user['username']}")
+            st.markdown(f"###  Admin: {admin_user['username']}")
             st.markdown("**System Administration Dashboard**")
 
             # Navigation menu
@@ -372,50 +372,50 @@ class ZScoreAdminApp:
             selected_view = st.radio(
                 "Dashboard Sections",
                 [
-                    "📊 System Overview",
-                    "👥 User Management",
-                    "🤖 ML Analytics",
-                    "📈 Performance Metrics",
-                    "🔍 Risk Assessment",
-                    "🎯 SHAP Explanations",
-                    "⚙️ System Settings",
-                    "📋 Compliance Monitor",
-                    "🔄 Data Management",
+                    " System Overview",
+                    " User Management",
+                    " ML Analytics",
+                    " Performance Metrics",
+                    " Risk Assessment",
+                    " SHAP Explanations",
+                    " System Settings",
+                    " Compliance Monitor",
+                    " Data Management",
                 ],
                 key="admin_nav",
             )
 
             # System status
             st.markdown("---")
-            st.markdown("#### 🏥 System Health")
+            st.markdown("####  System Health")
             self.show_system_status()
 
             # Quick actions
             st.markdown("---")
-            st.markdown("#### ⚡ Quick Actions")
+            st.markdown("####  Quick Actions")
 
-            if st.button("🔄 Refresh Data", use_container_width=True):
+            if st.button(" Refresh Data", use_container_width=True):
                 st.rerun()
 
-            if st.button("📊 Generate Report", use_container_width=True):
+            if st.button(" Generate Report", use_container_width=True):
                 self.generate_system_report()
 
-            if st.button("🚪 Logout", use_container_width=True):
+            if st.button(" Logout", use_container_width=True):
                 self.auth.logout()
                 st.session_state.clear()
                 st.rerun()
 
         # Main content based on selected view
         view_map = {
-            "📊 System Overview": self.show_system_overview,
-            "👥 User Management": self.show_user_management,
-            "🤖 ML Analytics": self.show_ml_analytics,
-            "📈 Performance Metrics": self.show_performance_metrics,
-            "🔍 Risk Assessment": self.show_risk_assessment,
-            "🎯 SHAP Explanations": self.show_shap_dashboard,
-            "⚙️ System Settings": self.show_system_settings,
-            "📋 Compliance Monitor": self.show_compliance_monitor,
-            "🔄 Data Management": self.show_data_management,
+            " System Overview": self.show_system_overview,
+            " User Management": self.show_user_management,
+            " ML Analytics": self.show_ml_analytics,
+            " Performance Metrics": self.show_performance_metrics,
+            " Risk Assessment": self.show_risk_assessment,
+            " SHAP Explanations": self.show_shap_dashboard,
+            " System Settings": self.show_system_settings,
+            " Compliance Monitor": self.show_compliance_monitor,
+            " Data Management": self.show_data_management,
         }
 
         if selected_view in view_map:
@@ -435,17 +435,17 @@ class ZScoreAdminApp:
 
             if ml_result and ml_result.get("overall_trust_score", 0) > 0.1:
                 st.markdown(
-                    '<span class="status-active">🤖 ML Active</span>',
+                    '<span class="status-active"> ML Active</span>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    '<span class="status-warning">🤖 ML Limited</span>',
+                    '<span class="status-warning"> ML Limited</span>',
                     unsafe_allow_html=True,
                 )
         except Exception:
             st.markdown(
-                '<span class="status-error">🤖 ML Error</span>', unsafe_allow_html=True
+                '<span class="status-error"> ML Error</span>', unsafe_allow_html=True
             )
 
         # Database status
@@ -453,23 +453,23 @@ class ZScoreAdminApp:
             applicants = self.db.get_all_applicants()
             if len(applicants) > 0:
                 st.markdown(
-                    '<span class="status-active">💾 DB Active</span>',
+                    '<span class="status-active"> DB Active</span>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    '<span class="status-warning">💾 DB Empty</span>',
+                    '<span class="status-warning"> DB Empty</span>',
                     unsafe_allow_html=True,
                 )
         except Exception:
             st.markdown(
-                '<span class="status-error">💾 DB Error</span>', unsafe_allow_html=True
+                '<span class="status-error"> DB Error</span>', unsafe_allow_html=True
             )
 
     def show_system_overview(self):
         """System overview dashboard"""
         st.markdown(
-            '<h1 class="admin-header">📊 System Overview Dashboard</h1>',
+            '<h1 class="admin-header"> System Overview Dashboard</h1>',
             unsafe_allow_html=True,
         )
 
@@ -504,7 +504,7 @@ class ZScoreAdminApp:
 
         # Trust score distribution
         st.markdown(
-            '<h2 class="section-header">📈 Trust Score Distribution</h2>',
+            '<h2 class="section-header"> Trust Score Distribution</h2>',
             unsafe_allow_html=True,
         )
 
@@ -554,7 +554,7 @@ class ZScoreAdminApp:
 
         # Recent activity
         st.markdown(
-            '<h2 class="section-header">🕐 Recent Activity</h2>', unsafe_allow_html=True
+            '<h2 class="section-header"> Recent Activity</h2>', unsafe_allow_html=True
         )
 
         recent_applicants = sorted(
@@ -588,7 +588,7 @@ class ZScoreAdminApp:
     def show_user_management(self):
         """User management interface"""
         st.markdown(
-            '<h1 class="admin-header">👥 User Management</h1>', unsafe_allow_html=True
+            '<h1 class="admin-header"> User Management</h1>', unsafe_allow_html=True
         )
 
         # User statistics
@@ -645,7 +645,7 @@ class ZScoreAdminApp:
             )
 
         # Display users
-        st.markdown(f"### 📋 Users ({len(filtered_applicants)} of {len(applicants)})")
+        st.markdown(f"###  Users ({len(filtered_applicants)} of {len(applicants)})")
 
         if filtered_applicants:
             # Create detailed DataFrame
@@ -697,31 +697,31 @@ class ZScoreAdminApp:
 
         # Bulk actions
         st.markdown("---")
-        st.markdown("### ⚙️ Bulk Actions")
+        st.markdown("###  Bulk Actions")
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            if st.button("📊 Recalculate All Trust Scores"):
+            if st.button(" Recalculate All Trust Scores"):
                 self.recalculate_all_trust_scores()
 
         with col2:
-            if st.button("📧 Send Notifications"):
+            if st.button(" Send Notifications"):
                 st.success("Notifications sent to eligible users!")
 
         with col3:
-            if st.button("📁 Export User Data"):
+            if st.button(" Export User Data"):
                 self.export_user_data(filtered_applicants)
 
     def show_user_details(self, user):
         """Show detailed user information"""
         st.markdown("---")
-        st.markdown(f"### 👤 User Details: {user.get('name', 'Unknown')}")
+        st.markdown(f"###  User Details: {user.get('name', 'Unknown')}")
 
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("#### 📊 Trust Analysis")
+            st.markdown("####  Trust Analysis")
             trust_score = user.get("overall_trust_score", 0) * 100
             behavioral = user.get("behavioral_score", 0) * 100
             social = user.get("social_score", 0) * 100
@@ -733,7 +733,7 @@ class ZScoreAdminApp:
             st.metric("Digital", f"{digital:.1f}%")
 
         with col2:
-            st.markdown("#### 📋 Personal Information")
+            st.markdown("####  Personal Information")
             st.write(f"**Phone:** {user.get('phone', 'N/A')}")
             st.write(f"**Age:** {user.get('age', 'N/A')}")
             st.write(f"**Location:** {user.get('location', 'N/A')}")
@@ -747,11 +747,11 @@ class ZScoreAdminApp:
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            if st.button("🔄 Recalculate Trust"):
+            if st.button(" Recalculate Trust"):
                 self.recalculate_user_trust(user)
 
         with col2:
-            if st.button("🤖 View AI Explanation"):
+            if st.button(" View AI Explanation"):
                 st.session_state.selected_applicant_id = user.get("id")
                 with st.expander("AI Explanation", expanded=True):
                     try:
@@ -759,20 +759,20 @@ class ZScoreAdminApp:
                             # Show AI explanations with proper user data
                             show_ai_explanations(user)
                         else:
-                            st.warning("🔧 AI explanations feature requires SHAP library installation.")
+                            st.warning(" AI explanations feature requires SHAP library installation.")
                             st.info("Install with: `pip install shap` to enable advanced AI insights.")
                     except Exception as e:
                         st.error(f"AI explanation error: {str(e)}")
-                        st.info("💡 Fallback: This user's trust score is based on behavioral patterns, social connections, and digital footprint analysis.")
+                        st.info(" Fallback: This user's trust score is based on behavioral patterns, social connections, and digital footprint analysis.")
 
         with col3:
-            if st.button("✏️ Edit User"):
+            if st.button(" Edit User"):
                 self.show_user_edit_form(user)
 
     def show_ml_analytics(self):
         """Advanced ML Analytics & Intelligence Platform"""
         st.markdown(
-            '<h1 class="analytics-header">🧠 Advanced ML Intelligence Platform</h1>',
+            '<h1 class="analytics-header"> Advanced ML Intelligence Platform</h1>',
             unsafe_allow_html=True,
         )
 
@@ -788,7 +788,7 @@ class ZScoreAdminApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>🚀 Model Status</h3>
+                    <h3> Model Status</h3>
                     <h2 class="status-online pulse">ONLINE</h2>
                     <p>99.7% Uptime</p>
                 </div>
@@ -800,9 +800,9 @@ class ZScoreAdminApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>🎯 Accuracy</h3>
+                    <h3> Accuracy</h3>
                     <h2 style="color: var(--success)">94.3%</h2>
-                    <p>↗️ +2.1% vs last week</p>
+                    <p>↗ +2.1% vs last week</p>
                 </div>
                 """,
                     unsafe_allow_html=True,
@@ -812,7 +812,7 @@ class ZScoreAdminApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>⚡ Latency</h3>
+                    <h3> Latency</h3>
                     <h2 style="color: var(--primary)">12ms</h2>
                     <p>Avg response time</p>
                 </div>
@@ -827,9 +827,9 @@ class ZScoreAdminApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>🔄 Predictions/Hr</h3>
+                    <h3> Predictions/Hr</h3>
                     <h2 style="color: var(--secondary)">2,847</h2>
-                    <p>↗️ +18% traffic</p>
+                    <p>↗ +18% traffic</p>
                 </div>
                 """,
                     unsafe_allow_html=True,
@@ -839,9 +839,9 @@ class ZScoreAdminApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>🛡️ Drift Score</h3>
+                    <h3> Drift Score</h3>
                     <h2 class="status-online">0.02</h2>
-                    <p>Model stability ✓</p>
+                    <p>Model stability </p>
                 </div>
                 """,
                     unsafe_allow_html=True,
@@ -851,12 +851,12 @@ class ZScoreAdminApp:
         # Advanced Analytics Tabs
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
             [
-                "🎯 Model Performance",
-                "📊 Feature Analysis",
-                "🔍 Drift Detection",
-                "🧪 A/B Testing",
-                "⚠️ Alerts & Monitoring",
-                "🔮 Predictive Insights",
+                " Model Performance",
+                " Feature Analysis",
+                " Drift Detection",
+                " A/B Testing",
+                " Alerts & Monitoring",
+                " Predictive Insights",
             ]
         )
 
@@ -1049,7 +1049,7 @@ class ZScoreAdminApp:
 
     def show_feature_analysis(self):
         """Advanced feature importance and analysis"""
-        st.markdown("### 🎯 Feature Importance & Impact Analysis")
+        st.markdown("###  Feature Importance & Impact Analysis")
 
         col1, col2 = st.columns(2)
 
@@ -1118,7 +1118,7 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_corr, use_container_width=True)
 
         # Feature drift over time
-        st.markdown("### 📈 Feature Distribution Analysis")
+        st.markdown("###  Feature Distribution Analysis")
 
         # Generate sample data for feature drift
         dates = pd.date_range(start="2024-01-01", periods=30, freq="D")
@@ -1158,7 +1158,7 @@ class ZScoreAdminApp:
 
     def show_drift_detection(self):
         """Model drift detection and alerts"""
-        st.markdown("### 🔍 Model Drift Detection & Data Quality")
+        st.markdown("###  Model Drift Detection & Data Quality")
 
         # Drift score indicators
         col1, col2, col3, col4 = st.columns(4)
@@ -1166,36 +1166,36 @@ class ZScoreAdminApp:
         with col1:
             drift_score = 0.02
             status = (
-                "🟢 STABLE"
+                " STABLE"
                 if drift_score < 0.05
-                else "🟡 MONITOR" if drift_score < 0.1 else "🔴 ALERT"
+                else " MONITOR" if drift_score < 0.1 else " ALERT"
             )
             st.metric("Population Drift", f"{drift_score:.3f}", delta=f"{status}")
 
         with col2:
             concept_drift = 0.008
             status = (
-                "🟢 STABLE"
+                " STABLE"
                 if concept_drift < 0.02
-                else "🟡 MONITOR" if concept_drift < 0.05 else "🔴 ALERT"
+                else " MONITOR" if concept_drift < 0.05 else " ALERT"
             )
             st.metric("Concept Drift", f"{concept_drift:.3f}", delta=f"{status}")
 
         with col3:
             data_quality = 0.97
             status = (
-                "🟢 EXCELLENT"
+                " EXCELLENT"
                 if data_quality > 0.95
-                else "🟡 GOOD" if data_quality > 0.90 else "� POOR"
+                else " GOOD" if data_quality > 0.90 else " POOR"
             )
             st.metric("Data Quality", f"{data_quality:.2%}", delta=f"{status}")
 
         with col4:
             prediction_stability = 0.94
             status = (
-                "🟢 STABLE"
+                " STABLE"
                 if prediction_stability > 0.90
-                else "🟡 MONITOR" if prediction_stability > 0.85 else "🔴 UNSTABLE"
+                else " MONITOR" if prediction_stability > 0.85 else " UNSTABLE"
             )
             st.metric(
                 "Prediction Stability", f"{prediction_stability:.2%}", delta=f"{status}"
@@ -1290,7 +1290,7 @@ class ZScoreAdminApp:
 
     def show_ab_testing_results(self):
         """A/B testing analytics for model versions"""
-        st.markdown("### 🧪 A/B Testing & Experimentation Platform")
+        st.markdown("###  A/B Testing & Experimentation Platform")
 
         # Test summary
         col1, col2, col3, col4 = st.columns(4)
@@ -1380,7 +1380,7 @@ class ZScoreAdminApp:
 
     def show_alerts_monitoring(self):
         """Real-time alerts and monitoring"""
-        st.markdown("### ⚠️ Real-time Alerts & Monitoring")
+        st.markdown("###  Real-time Alerts & Monitoring")
 
         # Alert summary
         col1, col2, col3, col4 = st.columns(4)
@@ -1389,7 +1389,7 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>🔴 Critical</h3>
+                <h3> Critical</h3>
                 <h2 style="color: var(--danger)">0</h2>
                 <p>All systems normal</p>
             </div>
@@ -1401,7 +1401,7 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>🟡 Warning</h3>
+                <h3> Warning</h3>
                 <h2 style="color: var(--warning)">2</h2>
                 <p>Minor performance dips</p>
             </div>
@@ -1413,7 +1413,7 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>🔵 Info</h3>
+                <h3> Info</h3>
                 <h2 style="color: var(--primary)">5</h2>
                 <p>Routine notifications</p>
             </div>
@@ -1425,7 +1425,7 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>📊 SLA Status</h3>
+                <h3> SLA Status</h3>
                 <h2 style="color: var(--success)">99.7%</h2>
                 <p>Uptime this month</p>
             </div>
@@ -1434,7 +1434,7 @@ class ZScoreAdminApp:
             )
 
         # Recent alerts
-        st.markdown("### 📋 Recent Alerts")
+        st.markdown("###  Recent Alerts")
 
         alert_data = {
             "Timestamp": [
@@ -1442,14 +1442,14 @@ class ZScoreAdminApp:
                 "2024-08-29 12:30:22",
                 "2024-08-29 11:15:45",
             ],
-            "Severity": ["🟡 Warning", "🔵 Info", "🟡 Warning"],
+            "Severity": [" Warning", " Info", " Warning"],
             "Component": ["Model Inference", "Data Pipeline", "Feature Store"],
             "Message": [
                 "Response time increased to 15ms (threshold: 10ms)",
                 "Daily data refresh completed successfully",
                 "Feature drift detected in income_stability (PSI: 0.06)",
             ],
-            "Status": ["🔄 Investigating", "✅ Resolved", "🔄 Monitoring"],
+            "Status": [" Investigating", " Resolved", " Monitoring"],
         }
 
         st.dataframe(pd.DataFrame(alert_data), use_container_width=True)
@@ -1524,7 +1524,7 @@ class ZScoreAdminApp:
 
     def show_predictive_insights(self):
         """Predictive insights and forecasting"""
-        st.markdown("### 🔮 Predictive Insights & Forecasting")
+        st.markdown("###  Predictive Insights & Forecasting")
 
         # Prediction metrics
         col1, col2, col3, col4 = st.columns(4)
@@ -1637,7 +1637,7 @@ class ZScoreAdminApp:
 
         # Feature importance analysis
         st.markdown(
-            '<h2 class="section-header">🎯 Feature Importance Analysis</h2>',
+            '<h2 class="section-header"> Feature Importance Analysis</h2>',
             unsafe_allow_html=True,
         )
 
@@ -1660,28 +1660,28 @@ class ZScoreAdminApp:
 
         # Model retraining section
         st.markdown(
-            '<h2 class="section-header">🔄 Model Management</h2>',
+            '<h2 class="section-header"> Model Management</h2>',
             unsafe_allow_html=True,
         )
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            if st.button("🔄 Retrain Models", use_container_width=True):
+            if st.button(" Retrain Models", use_container_width=True):
                 self.retrain_models()
 
         with col2:
-            if st.button("📊 Validate Models", use_container_width=True):
+            if st.button(" Validate Models", use_container_width=True):
                 self.validate_models()
 
         with col3:
-            if st.button("💾 Export Model Stats", use_container_width=True):
+            if st.button(" Export Model Stats", use_container_width=True):
                 self.export_model_stats()
 
     def show_performance_metrics(self):
         """Advanced Business Intelligence & Performance Analytics"""
         st.markdown(
-            '<h1 class="analytics-header">📈 Business Intelligence Platform</h1>',
+            '<h1 class="analytics-header"> Business Intelligence Platform</h1>',
             unsafe_allow_html=True,
         )
 
@@ -1693,9 +1693,9 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>💰 Revenue (MTD)</h3>
+                <h3> Revenue (MTD)</h3>
                 <h2 style="color: var(--success)">$127,450</h2>
-                <p>↗️ +23% vs last month</p>
+                <p>↗ +23% vs last month</p>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -1705,9 +1705,9 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>👥 Active Users</h3>
+                <h3> Active Users</h3>
                 <h2 style="color: var(--primary)">8,924</h2>
-                <p>↗️ +15% growth rate</p>
+                <p>↗ +15% growth rate</p>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -1717,9 +1717,9 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>🎯 Conversion Rate</h3>
+                <h3> Conversion Rate</h3>
                 <h2 style="color: var(--secondary)">12.7%</h2>
-                <p>↗️ +2.3% improvement</p>
+                <p>↗ +2.3% improvement</p>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -1729,9 +1729,9 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>⚡ Avg Response</h3>
+                <h3> Avg Response</h3>
                 <h2 style="color: var(--accent)">247ms</h2>
-                <p>🟢 Under SLA target</p>
+                <p> Under SLA target</p>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -1741,9 +1741,9 @@ class ZScoreAdminApp:
             st.markdown(
                 """
             <div class="metric-container">
-                <h3>🛡️ System Health</h3>
+                <h3> System Health</h3>
                 <h2 class="status-online">99.8%</h2>
-                <p>↗️ +0.2% uptime</p>
+                <p>↗ +0.2% uptime</p>
             </div>
             """,
                 unsafe_allow_html=True,
@@ -1753,11 +1753,11 @@ class ZScoreAdminApp:
         # Advanced Analytics Tabs
         tab1, tab2, tab3, tab4, tab5 = st.tabs(
             [
-                "💼 Business Metrics",
-                "👥 User Analytics",
-                "💰 Revenue Intelligence",
-                "🎯 Conversion Funnel",
-                "� Performance Optimization",
+                " Business Metrics",
+                " User Analytics",
+                " Revenue Intelligence",
+                " Conversion Funnel",
+                " Performance Optimization",
             ]
         )
 
@@ -1871,7 +1871,7 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_cac_ltv, use_container_width=True)
 
         # Cohort analysis
-        st.markdown("### 📊 Cohort Retention Analysis")
+        st.markdown("###  Cohort Retention Analysis")
 
         # Generate cohort data
         cohorts = [
@@ -1992,7 +1992,7 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_segments, use_container_width=True)
 
         # User journey heatmap
-        st.markdown("### 🗺️ User Journey Flow Analysis")
+        st.markdown("###  User Journey Flow Analysis")
 
         # Simulate user flow data
         pages = [
@@ -2112,7 +2112,7 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_mrr, use_container_width=True)
 
         # Revenue forecasting
-        st.markdown("### � Revenue Forecasting Model")
+        st.markdown("###  Revenue Forecasting Model")
 
         # Historical and forecasted revenue
         historical_months = list(range(1, 9))
@@ -2175,7 +2175,7 @@ class ZScoreAdminApp:
 
     def show_conversion_funnel(self):
         """Detailed conversion funnel analysis"""
-        st.markdown("### 🎯 Advanced Conversion Funnel Intelligence")
+        st.markdown("###  Advanced Conversion Funnel Intelligence")
 
         # Multi-step conversion analysis
         col1, col2 = st.columns(2)
@@ -2273,7 +2273,7 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_bubble, use_container_width=True)
 
         # Time-based conversion analysis
-        st.markdown("### ⏰ Conversion Rate Trends")
+        st.markdown("###  Conversion Rate Trends")
 
         # Hourly conversion patterns
         hours = list(range(24))
@@ -2342,7 +2342,7 @@ class ZScoreAdminApp:
 
     def show_performance_optimization(self):
         """Performance optimization insights"""
-        st.markdown("### 🚀 Performance Optimization Dashboard")
+        st.markdown("###  Performance Optimization Dashboard")
 
         # System performance metrics
         col1, col2, col3 = st.columns(3)
@@ -2471,25 +2471,25 @@ class ZScoreAdminApp:
             st.plotly_chart(fig_cache, use_container_width=True)
 
         # Performance recommendations
-        st.markdown("### 💡 Optimization Recommendations")
+        st.markdown("###  Optimization Recommendations")
 
         recommendations = [
             {
-                "Priority": "🔴 High",
+                "Priority": " High",
                 "Component": "Analytics API",
                 "Issue": "Response time exceeding SLA (234ms > 200ms)",
                 "Recommendation": "Implement query result caching",
                 "Impact": "Reduce latency by ~40%",
             },
             {
-                "Priority": "🟡 Medium",
+                "Priority": " Medium",
                 "Component": "Database Joins",
                 "Issue": "Complex JOIN queries taking 67ms average",
                 "Recommendation": "Add composite indexes on frequently joined columns",
                 "Impact": "Improve query speed by ~25%",
             },
             {
-                "Priority": "🟢 Low",
+                "Priority": " Low",
                 "Component": "Application Cache",
                 "Issue": "Cache hit rate at 87.3%",
                 "Recommendation": "Increase cache TTL for static data",
@@ -2500,7 +2500,7 @@ class ZScoreAdminApp:
         st.dataframe(pd.DataFrame(recommendations), use_container_width=True)
 
         # Resource utilization forecast
-        st.markdown("### 📈 Resource Utilization Forecast")
+        st.markdown("###  Resource Utilization Forecast")
 
         days = list(range(1, 31))
         cpu_usage = [
@@ -2562,7 +2562,7 @@ class ZScoreAdminApp:
     def show_risk_assessment(self):
         """Risk assessment dashboard"""
         st.markdown(
-            '<h1 class="admin-header">🔍 Risk Assessment Dashboard</h1>',
+            '<h1 class="admin-header"> Risk Assessment Dashboard</h1>',
             unsafe_allow_html=True,
         )
 
@@ -2570,7 +2570,7 @@ class ZScoreAdminApp:
 
         # Risk distribution
         st.markdown(
-            '<h2 class="section-header">⚠️ Risk Distribution</h2>',
+            '<h2 class="section-header"> Risk Distribution</h2>',
             unsafe_allow_html=True,
         )
 
@@ -2596,21 +2596,21 @@ class ZScoreAdminApp:
 
             with col1:
                 low_risk_count = len(risk_categories["Low Risk (70-100%)"])
-                st.metric("🟢 Low Risk Users", low_risk_count)
+                st.metric(" Low Risk Users", low_risk_count)
                 st.success(
                     f"{low_risk_count / len(applicants) * 100:.1f}% of total users"
                 )
 
             with col2:
                 med_risk_count = len(risk_categories["Medium Risk (40-69%)"])
-                st.metric("🟡 Medium Risk Users", med_risk_count)
+                st.metric(" Medium Risk Users", med_risk_count)
                 st.warning(
                     f"{med_risk_count / len(applicants) * 100:.1f}% of total users"
                 )
 
             with col3:
                 high_risk_count = len(risk_categories["High Risk (0-39%)"])
-                st.metric("🔴 High Risk Users", high_risk_count)
+                st.metric(" High Risk Users", high_risk_count)
                 st.error(
                     f"{high_risk_count / len(applicants) * 100:.1f}% of total users"
                 )
@@ -2643,7 +2643,7 @@ class ZScoreAdminApp:
 
                 # Risk mitigation suggestions
                 if selected_risk_category == "High Risk (0-39%)":
-                    st.markdown("#### 🎯 Risk Mitigation Strategies")
+                    st.markdown("####  Risk Mitigation Strategies")
                     st.markdown(
                         """
                     - **Enhanced Verification**: Require additional documentation
@@ -2653,7 +2653,7 @@ class ZScoreAdminApp:
                     """
                     )
                 elif selected_risk_category == "Medium Risk (40-69%)":
-                    st.markdown("#### 📈 Trust Building Recommendations")
+                    st.markdown("####  Trust Building Recommendations")
                     st.markdown(
                         """
                     - **Skills Development**: Financial education programs
@@ -2666,7 +2666,7 @@ class ZScoreAdminApp:
     def show_shap_dashboard(self):
         """SHAP explanations dashboard"""
         st.markdown(
-            '<h1 class="admin-header">🎯 AI Explanations Dashboard</h1>',
+            '<h1 class="admin-header"> AI Explanations Dashboard</h1>',
             unsafe_allow_html=True,
         )
 
@@ -2692,35 +2692,35 @@ class ZScoreAdminApp:
         # Show AI explanations
         try:
             # Temporarily disabled - AI explanations feature under maintenance
-            st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
+            st.info(" AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
             # show_ai_explanations(selected_applicant)
         except Exception as e:
             st.error(f"AI explanation unavailable: {str(e)}")
 
             # Fallback explanation
-            st.markdown("### 📊 Basic Analysis")
+            st.markdown("###  Basic Analysis")
             trust_score = selected_applicant.get("overall_trust_score", 0) * 100
 
             if trust_score >= 70:
                 st.success(
-                    "✅ **High Trust Score** - Strong creditworthiness indicators"
+                    " **High Trust Score** - Strong creditworthiness indicators"
                 )
             elif trust_score >= 40:
                 st.warning(
-                    "⚠️ **Medium Trust Score** - Some improvement areas identified"
+                    " **Medium Trust Score** - Some improvement areas identified"
                 )
             else:
-                st.error("❌ **Low Trust Score** - Significant risk factors present")
+                st.error(" **Low Trust Score** - Significant risk factors present")
 
     def show_system_settings(self):
         """System settings and configuration"""
         st.markdown(
-            '<h1 class="admin-header">⚙️ System Settings</h1>', unsafe_allow_html=True
+            '<h1 class="admin-header"> System Settings</h1>', unsafe_allow_html=True
         )
 
         # Model configuration
         st.markdown(
-            '<h2 class="section-header">🤖 Model Configuration</h2>',
+            '<h2 class="section-header"> Model Configuration</h2>',
             unsafe_allow_html=True,
         )
 
@@ -2752,39 +2752,39 @@ class ZScoreAdminApp:
             )
 
         # Save settings
-        if st.button("💾 Save Configuration"):
+        if st.button(" Save Configuration"):
             st.success("Settings saved successfully!")
 
         # Database settings
         st.markdown(
-            '<h2 class="section-header">💾 Database Management</h2>',
+            '<h2 class="section-header"> Database Management</h2>',
             unsafe_allow_html=True,
         )
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            if st.button("🔄 Backup Database"):
+            if st.button(" Backup Database"):
                 st.success("Database backup created!")
 
         with col2:
-            if st.button("📊 Optimize Database"):
+            if st.button(" Optimize Database"):
                 st.success("Database optimized!")
 
         with col3:
-            if st.button("🧹 Clean Logs"):
+            if st.button(" Clean Logs"):
                 st.success("System logs cleaned!")
 
     def show_compliance_monitor(self):
         """Compliance monitoring dashboard"""
         st.markdown(
-            '<h1 class="admin-header">📋 Compliance Monitor</h1>',
+            '<h1 class="admin-header"> Compliance Monitor</h1>',
             unsafe_allow_html=True,
         )
 
         # DPDPA compliance status
         st.markdown(
-            '<h2 class="section-header">🛡️ DPDPA 2023 Compliance</h2>',
+            '<h2 class="section-header"> DPDPA 2023 Compliance</h2>',
             unsafe_allow_html=True,
         )
 
@@ -2808,12 +2808,12 @@ class ZScoreAdminApp:
             with col2:
                 if status == "Active":
                     st.markdown(
-                        '<span class="status-active">✅ Active</span>',
+                        '<span class="status-active"> Active</span>',
                         unsafe_allow_html=True,
                     )
                 else:
                     st.markdown(
-                        '<span class="status-warning">⚠️ Issues</span>',
+                        '<span class="status-warning"> Issues</span>',
                         unsafe_allow_html=True,
                     )
 
@@ -2822,7 +2822,7 @@ class ZScoreAdminApp:
 
         # RBI compliance
         st.markdown(
-            '<h2 class="section-header">🏛️ RBI Guidelines Compliance</h2>',
+            '<h2 class="section-header"> RBI Guidelines Compliance</h2>',
             unsafe_allow_html=True,
         )
 
@@ -2842,7 +2842,7 @@ class ZScoreAdminApp:
 
             with col2:
                 st.markdown(
-                    '<span class="status-active">✅ Compliant</span>',
+                    '<span class="status-active"> Compliant</span>',
                     unsafe_allow_html=True,
                 )
 
@@ -2851,7 +2851,7 @@ class ZScoreAdminApp:
 
         # Compliance metrics
         st.markdown(
-            '<h2 class="section-header">📊 Compliance Metrics</h2>',
+            '<h2 class="section-header"> Compliance Metrics</h2>',
             unsafe_allow_html=True,
         )
 
@@ -2872,14 +2872,14 @@ class ZScoreAdminApp:
     def show_data_management(self):
         """Data management interface"""
         st.markdown(
-            '<h1 class="admin-header">🔄 Data Management</h1>', unsafe_allow_html=True
+            '<h1 class="admin-header"> Data Management</h1>', unsafe_allow_html=True
         )
 
         # Data overview
         applicants = self.db.get_all_applicants()
 
         st.markdown(
-            '<h2 class="section-header">📊 Data Overview</h2>', unsafe_allow_html=True
+            '<h2 class="section-header"> Data Overview</h2>', unsafe_allow_html=True
         )
 
         col1, col2, col3, col4 = st.columns(4)
@@ -2905,25 +2905,25 @@ class ZScoreAdminApp:
 
         # Data operations
         st.markdown(
-            '<h2 class="section-header">⚙️ Data Operations</h2>', unsafe_allow_html=True
+            '<h2 class="section-header"> Data Operations</h2>', unsafe_allow_html=True
         )
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            st.markdown("#### 📥 Import Data")
+            st.markdown("####  Import Data")
             uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
             if uploaded_file and st.button("Import"):
                 st.success("Data imported successfully!")
 
         with col2:
-            st.markdown("#### 📤 Export Data")
+            st.markdown("####  Export Data")
             export_format = st.selectbox("Format", ["CSV", "JSON", "Excel"])
             if st.button("Export"):
                 self.export_all_data(export_format.lower())
 
         with col3:
-            st.markdown("#### 🧹 Data Cleanup")
+            st.markdown("####  Data Cleanup")
             if st.button("Remove Incomplete"):
                 st.success("Incomplete records removed!")
             if st.button("Deduplicate"):
@@ -2931,19 +2931,19 @@ class ZScoreAdminApp:
 
         # Sample data management
         st.markdown(
-            '<h2 class="section-header">🔬 Sample Data Management</h2>',
+            '<h2 class="section-header"> Sample Data Management</h2>',
             unsafe_allow_html=True,
         )
 
         col1, col2 = st.columns(2)
 
         with col1:
-            if st.button("🎲 Generate Sample Data"):
+            if st.button(" Generate Sample Data"):
                 self.db.add_sample_data()
                 st.success("Sample data generated!")
 
         with col2:
-            if st.button("🗑️ Clear All Data"):
+            if st.button(" Clear All Data"):
                 if st.checkbox("I confirm deletion"):
                     from local_db import reset_database
 
@@ -2959,9 +2959,9 @@ class ZScoreAdminApp:
             if "Trust" in model_name:
                 test_data = {"monthly_income": 50000}
                 result = model_integrator.get_ml_trust_score(test_data)
-                status = "🟢 Active" if result else "🔴 Error"
+                status = " Active" if result else " Error"
             else:
-                status = "🟢 Active"  # Simulated
+                status = " Active"  # Simulated
 
             accuracy = "94.2%"  # Simulated
             last_trained = "2024-08-28"  # Simulated
@@ -2983,7 +2983,7 @@ class ZScoreAdminApp:
                 f"""
             <div class="analytics-card">
                 <h4>{model_name}</h4>
-                <p><strong>Status:</strong> 🔴 Error</p>
+                <p><strong>Status:</strong>  Error</p>
                 <p><strong>Error:</strong> {str(e)[:50]}...</p>
             </div>
             """,
@@ -3020,7 +3020,7 @@ class ZScoreAdminApp:
     def show_system_alerts(self):
         """Show system alerts"""
         st.markdown(
-            '<h2 class="section-header">🚨 System Alerts</h2>', unsafe_allow_html=True
+            '<h2 class="section-header"> System Alerts</h2>', unsafe_allow_html=True
         )
 
         alerts = [
@@ -3031,11 +3031,11 @@ class ZScoreAdminApp:
 
         for alert_type, message in alerts:
             if alert_type == "info":
-                st.info(f"ℹ️ {message}")
+                st.info(f"ℹ {message}")
             elif alert_type == "success":
-                st.success(f"✅ {message}")
+                st.success(f" {message}")
             elif alert_type == "warning":
-                st.warning(f"⚠️ {message}")
+                st.warning(f" {message}")
 
     def is_recent(self, date_string):
         """Check if date is recent (within 7 days)"""
@@ -3158,7 +3158,7 @@ class ZScoreAdminApp:
     def show_user_edit_form(self, user):
         """Show user edit form"""
         with st.form(f"edit_user_{user['id']}"):
-            st.markdown("#### ✏️ Edit User Information")
+            st.markdown("####  Edit User Information")
 
             name = st.text_input("Name", value=user.get("name", ""))
             phone = st.text_input("Phone", value=user.get("phone", ""))
@@ -3168,7 +3168,7 @@ class ZScoreAdminApp:
                 "Monthly Income", value=user.get("monthly_income", 0)
             )
 
-            if st.form_submit_button("💾 Save Changes"):
+            if st.form_submit_button(" Save Changes"):
                 # Update database logic would go here
                 st.success("User information updated successfully!")
 

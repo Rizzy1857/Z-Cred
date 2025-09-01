@@ -56,15 +56,15 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
 
 ```
 zscore/
-├── app.py                 # Main Streamlit application
-├── auth.py               # Authentication system
-├── local_db.py           # Database operations
-├── model_pipeline.py     # ML models and training
-├── requirements.txt      # Dependencies
-├── README.md            # This file
-└── data/
-    ├── applicants.db    # Main SQLite database
-    └── sample_data/     # Demo datasets
+ app.py                 # Main Streamlit application
+ auth.py               # Authentication system
+ local_db.py           # Database operations
+ model_pipeline.py     # ML models and training
+ requirements.txt      # Dependencies
+ README.md            # This file
+ data/
+     applicants.db    # Main SQLite database
+     sample_data/     # Demo datasets
 ```
 
 ## Installation & Setup
@@ -129,7 +129,7 @@ cd Z-Cred
    from shap_cache import cache_shap_explainers
    model = model_integrator.get_credit_model()
    cache_shap_explainers(model)
-   print('✅ SHAP explainers cached for optimal performance')
+   print(' SHAP explainers cached for optimal performance')
    "
    ```
 
@@ -248,13 +248,13 @@ For optimal performance:
 
 ### Verified Environments
 
-✅ **Tested Configurations:**
+ **Tested Configurations:**
 - macOS 12+ with Python 3.10+
 - Ubuntu 20.04+ with Python 3.8+
 - Windows 10+ with Python 3.9+
 - Docker on Linux/macOS
 
-📈 **Performance Benchmarks:**
+ **Performance Benchmarks:**
 - Cold start: <30 seconds
 - Warm start: <5 seconds  
 - Trust score calculation: <1 second
@@ -303,44 +303,44 @@ For optimal performance:
 
 ### DPDPA 2023 Compliance
 
-- ✅ Valid consent (free, specific, informed, unambiguous)
-- ✅ Purpose limitation (credit assessment only)
-- ✅ Data minimization (collect only necessary data)
-- ✅ Data localization (India-based storage)
-- ✅ Consent withdrawal mechanisms
+-  Valid consent (free, specific, informed, unambiguous)
+-  Purpose limitation (credit assessment only)
+-  Data minimization (collect only necessary data)
+-  Data localization (India-based storage)
+-  Consent withdrawal mechanisms
 
 ### RBI Digital Lending Guidelines 2025
 
-- ✅ LSP partnership model with regulated entities
-- ✅ Direct fund flow (no intermediary handling)
-- ✅ Key Fact Statement generation
-- ✅ Mandatory cooling-off period
-- ✅ Grievance redressal mechanism
+-  LSP partnership model with regulated entities
+-  Direct fund flow (no intermediary handling)
+-  Key Fact Statement generation
+-  Mandatory cooling-off period
+-  Grievance redressal mechanism
 
 ## Development Status
 
 ### Completed Features
 
-- ✅ Authentication system with role management
-- ✅ SQLite database with offline-first architecture
-- ✅ ML pipeline with Logistic Regression + XGBoost
-- ✅ Trust scoring framework (Behavioral, Social, Digital components)
-- ✅ Basic gamification (Z-Credits, Trust Bar)
-- ✅ DPDPA-compliant consent management
-- ✅ Professional Streamlit UI
+-  Authentication system with role management
+-  SQLite database with offline-first architecture
+-  ML pipeline with Logistic Regression + XGBoost
+-  Trust scoring framework (Behavioral, Social, Digital components)
+-  Basic gamification (Z-Credits, Trust Bar)
+-  DPDPA-compliant consent management
+-  Professional Streamlit UI
 
 ### In Progress
 
-- 🔄 SHAP integration for explainable AI
-- 🔄 Advanced visualizations (Trust Bar animations, SHAP plots)
-- 🔄 Demo data scenarios refinement
+-  SHAP integration for explainable AI
+-  Advanced visualizations (Trust Bar animations, SHAP plots)
+-  Demo data scenarios refinement
 
 ### Planned Enhancements
 
-- 📋 PDF credit reports generation
-- 📋 Offline/online data synchronization
-- 📋 Mobile-optimized interface for field agents
-- 📋 Account Aggregator framework integration
+-  PDF credit reports generation
+-  Offline/online data synchronization
+-  Mobile-optimized interface for field agents
+-  Account Aggregator framework integration
 
 ## Usage Guide
 

@@ -1,6 +1,6 @@
-# 🎯 Z-Score: Hackathon Focus Strategy
+#  Z-Score: Hackathon Focus Strategy
 
-## ✅ **What We Have (KEEP & POLISH)**
+##  **What We Have (KEEP & POLISH)**
 
 ### **Core Strengths:**
 1. **Working ML Pipeline** - Real XGBoost + Logistic models
@@ -9,16 +9,16 @@
 4. **Dual Interfaces** - User + Admin dashboards
 5. **Real-time Analytics** - Live scoring and insights
 
-## 🚫 **What to SKIP for Hackathon**
+##  **What to SKIP for Hackathon**
 
 ### **Over-Engineering to Avoid:**
-- ❌ Advanced compliance features (too complex for demo)
-- ❌ API server (unless judges need integration)  
-- ❌ Mobile responsiveness (desktop demo is fine)
-- ❌ Continuous learning pipeline (nice-to-have)
-- ❌ Complex authentication (basic is enough)
+-  Advanced compliance features (too complex for demo)
+-  API server (unless judges need integration)  
+-  Mobile responsiveness (desktop demo is fine)
+-  Continuous learning pipeline (nice-to-have)
+-  Complex authentication (basic is enough)
 
-## 🎯 **Hackathon Winning Strategy**
+##  **Hackathon Winning Strategy**
 
 ### **1. Problem-Solution Clarity**
 **Problem:** 190M Indians are credit-invisible → loan rejections  
@@ -36,7 +36,7 @@
 3. **Scale** (1m): Admin dashboard shows population impact
 4. **Business** (30s): Market size + revenue model
 
-## 🔧 **Polish Tasks (2-3 hours max)**
+##  **Polish Tasks (2-3 hours max)**
 
 ### **High-Impact, Low-Effort Improvements:**
 
@@ -58,7 +58,7 @@
 3. **Backup Plan** - Screenshots if live demo fails
 4. **Judge-Friendly** - Clear value prop on first screen
 
-## 🏆 **Competitive Advantage**
+##  **Competitive Advantage**
 
 ### **vs Traditional Credit Scoring:**
 - "We explain decisions, they don't"
@@ -70,7 +70,7 @@
 - "Gamification that actually works"  
 - "Focus on financial inclusion"
 
-## 🎬 **Demo Success Metrics**
+##  **Demo Success Metrics**
 
 ### **What Judges Should Feel:**
 1. **Problem Recognition** - "Yes, this is a real issue"
@@ -84,7 +84,7 @@
 3. **Admin Analytics** - "Look at the population impact"
 4. **Business Model** - "Clear path to revenue"
 
-## ⚡ **Next 2 Hours Action Plan**
+##  **Next 2 Hours Action Plan**
 
 ### **Priority 1: Demo Reliability (45 mins)**
 - Test both apps end-to-end
@@ -106,16 +106,16 @@
 - Technical architecture overview  
 - Market size and go-to-market
 
-## 💡 **Remember**
+##  **Remember**
 
 **Hackathon judges care about:**
-1. **Does it solve a real problem?** ✅ Credit invisibility
-2. **Is it technically impressive?** ✅ ML + SHAP + Real-time
-3. **Can it become a business?** ✅ Clear market + revenue model
-4. **Is the team capable?** ✅ Working prototype proves it
+1. **Does it solve a real problem?**  Credit invisibility
+2. **Is it technically impressive?**  ML + SHAP + Real-time
+3. **Can it become a business?**  Clear market + revenue model
+4. **Is the team capable?**  Working prototype proves it
 
 **Your winning formula:**
-**Real Problem + Innovative Solution + Technical Excellence + Clear Business Case = 🏆**
+**Real Problem + Innovative Solution + Technical Excellence + Clear Business Case = **
 
 ---
 

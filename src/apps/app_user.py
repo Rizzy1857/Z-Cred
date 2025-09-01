@@ -28,7 +28,7 @@ from trust_score_utils import format_trust_display, get_unified_trust_scores
 # Page configuration
 st.set_page_config(
     page_title="Z-Score: Your Credit Journey",
-    page_icon="🎯",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -765,7 +765,7 @@ class ZScoreUserApp:
         current_user = self.auth.get_current_user()
         if not current_user or current_user["role"] != "applicant":
             st.error(
-                "🔒 This is the user application. Please use the admin version for administrative access."
+                "This is the user application. Please use the admin version for administrative access."
             )
             st.info("Contact your administrator for proper access.")
             return
@@ -790,7 +790,7 @@ class ZScoreUserApp:
     def show_profile_completion(self, applicant):
         """Gamified profile completion"""
         st.markdown(
-            '<h1 class="game-header">🎮 Welcome to Your Credit Journey!</h1>',
+            '<h1 class="game-header"> Welcome to Your Credit Journey!</h1>',
             unsafe_allow_html=True,
         )
         st.markdown(
@@ -803,48 +803,48 @@ class ZScoreUserApp:
         st.markdown("**Quest Progress:** Profile Setup (10% Complete)")
 
         with st.form("profile_completion"):
-            st.markdown("### 📋 Your Character Sheet")
+            st.markdown("###  Your Character Sheet")
 
             col1, col2 = st.columns(2)
 
             with col1:
-                phone = st.text_input("📱 Phone Number*", placeholder="+91-XXXXXXXXXX")
-                age = st.number_input("🎂 Age*", min_value=18, max_value=80, value=25)
-                gender = st.selectbox("👤 Gender*", ["Male", "Female", "Other"])
-                location = st.text_input("📍 Location*", placeholder="City, State")
+                phone = st.text_input(" Phone Number*", placeholder="+91-XXXXXXXXXX")
+                age = st.number_input(" Age*", min_value=18, max_value=80, value=25)
+                gender = st.selectbox(" Gender*", ["Male", "Female", "Other"])
+                location = st.text_input(" Location*", placeholder="City, State")
 
             with col2:
                 occupation = st.text_input(
-                    "💼 Occupation*", placeholder="Your profession"
+                    " Occupation*", placeholder="Your profession"
                 )
                 monthly_income = st.number_input(
-                    "💰 Monthly Income (₹)*", min_value=0, value=15000
+                    " Monthly Income (₹)*", min_value=0, value=15000
                 )
                 education = st.selectbox(
-                    "🎓 Education",
+                    " Education",
                     ["High School", "Graduate", "Post Graduate", "Professional"],
                 )
                 marital_status = st.selectbox(
-                    "💑 Marital Status", ["Single", "Married", "Divorced", "Widowed"]
+                    " Marital Status", ["Single", "Married", "Divorced", "Widowed"]
                 )
 
-            st.markdown("### 🎯 Your Credit Goals")
+            st.markdown("###  Your Credit Goals")
             credit_purpose = st.multiselect(
                 "What's your mission?",
                 [
-                    "Business expansion 🚀",
-                    "Education 📚",
-                    "Home improvement 🏠",
-                    "Medical expenses 🏥",
-                    "Vehicle purchase 🚗",
-                    "Working capital 💼",
-                    "Emergency fund 🆘",
-                    "Other 📝",
+                    "Business expansion ",
+                    "Education ",
+                    "Home improvement ",
+                    "Medical expenses ",
+                    "Vehicle purchase ",
+                    "Working capital ",
+                    "Emergency fund ",
+                    "Other ",
                 ],
             )
 
             submit_profile = st.form_submit_button(
-                "🚀 Start My Credit Journey!", use_container_width=True
+                " Start My Credit Journey!", use_container_width=True
             )
 
             if submit_profile:
@@ -875,7 +875,7 @@ class ZScoreUserApp:
                         if success:
                             # Award completion bonus
                             st.balloons()
-                            st.success("🎉 Profile Complete! +50 Z-Credits earned!")
+                            st.success(" Profile Complete! +50 Z-Credits earned!")
                             if "z_credits" not in st.session_state:
                                 st.session_state.z_credits = 0
                             st.session_state.z_credits += 50
@@ -898,29 +898,29 @@ class ZScoreUserApp:
 
         # Sidebar navigation
         with st.sidebar:
-            st.markdown(f"### 🎮 Welcome, {applicant['name']}!")
+            st.markdown(f"###  Welcome, {applicant['name']}!")
 
             # User stats with unified scores
-            st.markdown("#### 📊 Your Stats")
-            st.metric("🎯 Trust Score", f"{display_data['trust_percentage']:.1f}%")
+            st.markdown("####  Your Stats")
+            st.metric(" Trust Score", f"{display_data['trust_percentage']:.1f}%")
             st.metric(
-                "🏆 Level",
+                " Level",
                 f"{display_data['level']}/5 - {display_data['level_description']}",
             )
-            st.metric("💎 Z-Credits", st.session_state.z_credits)
+            st.metric(" Z-Credits", st.session_state.z_credits)
 
             # Navigation
             st.markdown("---")
             selected_tab = st.radio(
                 "Navigation",
                 [
-                    "🏠 Dashboard",
-                    "🎯 Trust Builder",
-                    "🎮 Missions",
-                    "🏆 Achievements",
-                    "🤖 AI Insights",
-                    "� My Analytics",
-                    "�👤 Profile",
+                    " Dashboard",
+                    " Trust Builder",
+                    " Missions",
+                    " Achievements",
+                    " AI Insights",
+                    " My Analytics",
+                    " Profile",
                 ],
                 index=0,
                 key="navigation_radio",
@@ -928,35 +928,35 @@ class ZScoreUserApp:
 
             # Quick actions
             st.markdown("---")
-            st.markdown("#### ⚡ Quick Actions")
-            if st.button("🔄 Refresh Score", use_container_width=True):
+            st.markdown("####  Quick Actions")
+            if st.button(" Refresh Score", use_container_width=True):
                 st.rerun()
 
-            if st.button("🚪 Logout", use_container_width=True):
+            if st.button(" Logout", use_container_width=True):
                 self.auth.logout()
                 st.session_state.clear()
                 st.rerun()
 
         # Main content based on selected tab
-        if selected_tab == "🏠 Dashboard":
+        if selected_tab == " Dashboard":
             self.show_dashboard(applicant)
-        elif selected_tab == "🎯 Trust Builder":
+        elif selected_tab == " Trust Builder":
             self.show_trust_builder(applicant)
-        elif selected_tab == "🎮 Missions":
+        elif selected_tab == " Missions":
             self.show_missions(applicant)
-        elif selected_tab == "🏆 Achievements":
+        elif selected_tab == " Achievements":
             self.show_achievements(applicant)
-        elif selected_tab == "🤖 AI Insights":
+        elif selected_tab == " AI Insights":
             self.show_ai_insights(applicant)
-        elif selected_tab == "� My Analytics":
+        elif selected_tab == " My Analytics":
             self.show_personal_analytics(applicant)
-        elif selected_tab == "�👤 Profile":
+        elif selected_tab == " Profile":
             self.show_profile(applicant)
 
     def show_dashboard(self, applicant):
         """User dashboard with gamified elements"""
         st.markdown(
-            '<h1 class="game-header">🎮 Your Credit Journey Dashboard</h1>',
+            '<h1 class="game-header"> Your Credit Journey Dashboard</h1>',
             unsafe_allow_html=True,
         )
 
@@ -973,7 +973,7 @@ class ZScoreUserApp:
 
         with col2:
             st.markdown(
-                f'<h2 class="level-header">🏆 Level {level} - {display_data["level_description"]}</h2>',
+                f'<h2 class="level-header"> Level {level} - {display_data["level_description"]}</h2>',
                 unsafe_allow_html=True,
             )
 
@@ -982,7 +982,7 @@ class ZScoreUserApp:
             st.progress(progress_value)
 
             if trust_percentage >= 70:
-                st.success("🎉 **CREDIT READY!** You can apply for loans!")
+                st.success(" **CREDIT READY!** You can apply for loans!")
             else:
                 next_milestone = (
                     ((level * 20) - trust_percentage)
@@ -990,7 +990,7 @@ class ZScoreUserApp:
                     else (20 - (trust_percentage % 20))
                 )
                 st.info(
-                    f"🎯 Next milestone: {next_milestone:.1f}% to Level {level + 1}"
+                    f" Next milestone: {next_milestone:.1f}% to Level {level + 1}"
                 )
 
         # Key metrics with enhanced cards
@@ -1001,7 +1001,7 @@ class ZScoreUserApp:
             st.markdown(
                 f"""
             <div class="metric-container">
-                <h3>🎯 Trust Score</h3>
+                <h3> Trust Score</h3>
                 <h2 style="color: var(--primary)">{trust_percentage:.1f}%</h2>
                 <p>+{random.randint(1, 5)}% this week</p>
             </div>
@@ -1013,7 +1013,7 @@ class ZScoreUserApp:
             st.markdown(
                 f"""
             <div class="metric-container">
-                <h3>🏆 Credit Level</h3>
+                <h3> Credit Level</h3>
                 <h2 style="color: var(--success)">{level}/5</h2>
                 <p>{"Level up available!" if trust_percentage >= level * 20 else f"Next: {((level * 20) - trust_percentage):.0f}% to go"}</p>
             </div>
@@ -1025,7 +1025,7 @@ class ZScoreUserApp:
             st.markdown(
                 f"""
             <div class="metric-container">
-                <h3>💎 Z-Credits</h3>
+                <h3> Z-Credits</h3>
                 <h2 style="color: var(--accent)">{st.session_state.z_credits}</h2>
                 <p>+{random.randint(10, 50)} earned today</p>
             </div>
@@ -1038,7 +1038,7 @@ class ZScoreUserApp:
             st.markdown(
                 f"""
             <div class="metric-container">
-                <h3>🎮 Missions</h3>
+                <h3> Missions</h3>
                 <h2 style="color: var(--warning)">{completed_count}/8</h2>
                 <p>{8 - completed_count} missions remaining</p>
             </div>
@@ -1050,7 +1050,7 @@ class ZScoreUserApp:
         # Recent achievements with enhanced cards
         if st.session_state.achievements:
             st.markdown(
-                '<h2 style="color: var(--primary); margin: 2rem 0 1rem 0;">🏆 Recent Achievements</h2>',
+                '<h2 style="color: var(--primary); margin: 2rem 0 1rem 0;"> Recent Achievements</h2>',
                 unsafe_allow_html=True,
             )
 
@@ -1062,7 +1062,7 @@ class ZScoreUserApp:
                     st.markdown(
                         f"""
                     <div class="achievement-card" style="background: rgba(16, 185, 129, 0.1); border-color: #10b981; text-align: center;">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;"></div>
                         <h4 style="color: #f8fafc; margin: 0;">{achievement}</h4>
                     </div>
                     """,
@@ -1071,31 +1071,31 @@ class ZScoreUserApp:
 
         # Quick mission suggestions with enhanced cards
         st.markdown(
-            '<h2 style="color: var(--primary); margin: 2rem 0 1rem 0;">🎯 Recommended Next Steps</h2>',
+            '<h2 style="color: var(--primary); margin: 2rem 0 1rem 0;"> Recommended Next Steps</h2>',
             unsafe_allow_html=True,
         )
 
         suggestions = [
             (
-                "📚 Take Financial Quiz",
+                " Take Financial Quiz",
                 "Boost Behavioral Trust by 15%",
                 "quiz",
                 "#48bb78",
             ),
             (
-                "💳 Verify Payment History",
+                " Verify Payment History",
                 "Increase Social Trust by 20%",
                 "payment",
                 "#805ad5",
             ),
             (
-                "👥 Get Community Endorsement",
+                " Get Community Endorsement",
                 "Enhance Social Trust by 25%",
                 "social",
                 "#ed8936",
             ),
             (
-                "🏦 Connect Bank Account",
+                " Connect Bank Account",
                 "Maximize Digital Trust by 30%",
                 "banking",
                 "#9f7aea",
@@ -1112,7 +1112,7 @@ class ZScoreUserApp:
                         <h3 style="color: {color}; margin-bottom: 0.5rem;">{title}</h3>
                         <p style="color: #cbd5e1; margin-bottom: 1rem;">{benefit}</p>
                         <div style="background: rgba(99, 102, 241, 0.1); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
-                            <span style="color: #6366f1; font-weight: 600;">🚀 Quick Win Available!</span>
+                            <span style="color: #6366f1; font-weight: 600;"> Quick Win Available!</span>
                         </div>
                     </div>
                     """,
@@ -1134,7 +1134,7 @@ class ZScoreUserApp:
     def show_trust_builder(self, applicant):
         """Interactive trust score builder"""
         st.markdown(
-            '<h1 class="game-header">🎯 Trust Score Builder</h1>',
+            '<h1 class="game-header"> Trust Score Builder</h1>',
             unsafe_allow_html=True,
         )
 
@@ -1142,9 +1142,9 @@ class ZScoreUserApp:
         self.render_enhanced_trust_bar(applicant)
 
         # Component analysis
-        st.markdown("### 📊 Trust Components Deep Dive")
+        st.markdown("###  Trust Components Deep Dive")
 
-        tabs = st.tabs(["🎭 Behavioral", "👥 Social", "💻 Digital"])
+        tabs = st.tabs([" Behavioral", " Social", " Digital"])
 
         with tabs[0]:
             self.show_behavioral_analysis(applicant)
@@ -1158,13 +1158,13 @@ class ZScoreUserApp:
     def show_missions(self, applicant):
         """Interactive missions with gamification"""
         st.markdown(
-            '<h1 class="game-header">🎮 Credit Building Missions</h1>',
+            '<h1 class="game-header"> Credit Building Missions</h1>',
             unsafe_allow_html=True,
         )
 
         # Mission categories
         mission_categories = {
-            "📚 Learning Missions": [
+            " Learning Missions": [
                 {
                     "id": "quiz_basic",
                     "title": "Financial Basics Quiz",
@@ -1184,7 +1184,7 @@ class ZScoreUserApp:
                     "type": "quiz",
                 },
             ],
-            "💳 Verification Missions": [
+            " Verification Missions": [
                 {
                     "id": "payment_history",
                     "title": "Payment History Verification",
@@ -1204,7 +1204,7 @@ class ZScoreUserApp:
                     "type": "upload",
                 },
             ],
-            "👥 Social Missions": [
+            " Social Missions": [
                 {
                     "id": "community_endorsement",
                     "title": "Community Leader Endorsement",
@@ -1260,7 +1260,7 @@ class ZScoreUserApp:
                     <div class="{card_class}">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                             <h3 style="margin: 0; color: var(--primary); font-size: 1.3rem;">
-                                {"�" if is_completed else "�🎯"} {mission['title']}
+                                {"" if is_completed else ""} {mission['title']}
                             </h3>
                             <div style="background: {diff_color}; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
                                 {mission['difficulty']}
@@ -1273,21 +1273,21 @@ class ZScoreUserApp:
 
                         <div style="background: rgba(128, 90, 213, 0.1); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                <span style="color: var(--primary); font-weight: 600;">💎 Reward:</span>
+                                <span style="color: var(--primary); font-weight: 600;"> Reward:</span>
                                 <span style="color: var(--text); font-weight: 500;">{mission['reward']}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--primary); font-weight: 600;">⏱️ Time:</span>
+                                <span style="color: var(--primary); font-weight: 600;">⏱ Time:</span>
                                 <span style="color: var(--text); font-weight: 500;">{mission['time']}</span>
                             </div>
                         </div>
 
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="color: var(--text); font-size: 0.9rem;">
-                                🏆 Level {self.get_mission_level_requirement(mission)} Required
+                                 Level {self.get_mission_level_requirement(mission)} Required
                             </div>
                             <div>
-                                {"✅ Mission Complete!" if is_completed else ""}
+                                {" Mission Complete!" if is_completed else ""}
                             </div>
                         </div>
                     </div>
@@ -1297,10 +1297,10 @@ class ZScoreUserApp:
 
                     # Action button
                     if is_completed:
-                        st.success("🎉 Mission Completed!", icon="✅")
+                        st.success(" Mission Completed!", icon="")
                     else:
                         if st.button(
-                            "🚀 Start Mission",
+                            " Start Mission",
                             key=f"mission_{mission['id']}",
                             use_container_width=True,
                             type="primary",
@@ -1311,7 +1311,7 @@ class ZScoreUserApp:
 
     def start_mission(self, mission, applicant):
         """Start a specific mission"""
-        st.markdown(f"### 🎮 Starting: {mission['title']}")
+        st.markdown(f"###  Starting: {mission['title']}")
 
         if mission["type"] == "quiz":
             self.show_quiz_mission(mission, applicant)
@@ -1371,10 +1371,10 @@ class ZScoreUserApp:
 
             if st.button(f"Submit Answer {i + 1}", key=f"submit_{i}_{mission['id']}"):
                 if q["options"].index(answer) == q["correct"]:
-                    st.success(f"✅ Correct! {q['explanation']}")
+                    st.success(f" Correct! {q['explanation']}")
                     correct_answers += 1
                 else:
-                    st.error(f"❌ Incorrect. {q['explanation']}")
+                    st.error(f" Incorrect. {q['explanation']}")
 
         # Quiz completion
         if st.button("Complete Quiz", key=f"complete_{mission['id']}"):
@@ -1382,15 +1382,15 @@ class ZScoreUserApp:
 
             if score >= 70:
                 self.complete_mission(mission, applicant)
-                st.success(f"🎉 Quiz Passed! Score: {score:.0f}%")
+                st.success(f" Quiz Passed! Score: {score:.0f}%")
             else:
-                st.warning(f"📚 Study more! Score: {score:.0f}% (70% needed to pass)")
+                st.warning(f" Study more! Score: {score:.0f}% (70% needed to pass)")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
     def show_upload_mission(self, mission, applicant):
         """File upload mission"""
-        st.markdown("### 📄 Document Upload")
+        st.markdown("###  Document Upload")
 
         uploaded_file = st.file_uploader(
             f"Upload documents for: {mission['title']}",
@@ -1399,7 +1399,7 @@ class ZScoreUserApp:
         )
 
         if uploaded_file:
-            st.success("✅ Document uploaded successfully!")
+            st.success(" Document uploaded successfully!")
 
             if st.button("Verify & Complete Mission"):
                 # Simulate verification process
@@ -1407,11 +1407,11 @@ class ZScoreUserApp:
                     time.sleep(3)
 
                 self.complete_mission(mission, applicant)
-                st.success("🎉 Document verified and mission completed!")
+                st.success(" Document verified and mission completed!")
 
     def show_social_mission(self, mission, applicant):
         """Social verification mission"""
-        st.markdown("### 👥 Social Verification")
+        st.markdown("###  Social Verification")
 
         with st.form(f"social_form_{mission['id']}"):
             st.markdown(f"**Mission:** {mission['title']}")
@@ -1430,7 +1430,7 @@ class ZScoreUserApp:
                     with st.spinner("Submitting for verification..."):
                         time.sleep(2)
 
-                    st.success("✅ Endorsement submitted! Verification pending.")
+                    st.success(" Endorsement submitted! Verification pending.")
                     # For demo purposes, auto-complete after short delay
                     time.sleep(3)
                     self.complete_mission(mission, applicant)
@@ -1477,19 +1477,19 @@ class ZScoreUserApp:
         self.db.update_trust_score(applicant["id"], behavioral, social, digital)
 
         # Add achievement
-        achievement = f"🏆 {mission['title']} Master"
+        achievement = f" {mission['title']} Master"
         if achievement not in st.session_state.achievements:
             st.session_state.achievements.append(achievement)
 
         # Celebration
         st.balloons()
-        st.success(f"🎉 Mission Completed! {mission['reward']}")
+        st.success(f" Mission Completed! {mission['reward']}")
 
         # Check for level up
         new_level = min(int((new_trust * 100) // 20) + 1, 5)
         if new_level > st.session_state.user_level:
             st.session_state.user_level = new_level
-            st.success(f"🎉 LEVEL UP! You're now Level {new_level}!")
+            st.success(f" LEVEL UP! You're now Level {new_level}!")
 
         time.sleep(2)
         st.rerun()
@@ -1497,12 +1497,12 @@ class ZScoreUserApp:
     def show_achievements(self, applicant):
         """Display user achievements"""
         st.markdown(
-            '<h1 class="game-header">🏆 Your Achievements</h1>', unsafe_allow_html=True
+            '<h1 class="game-header"> Your Achievements</h1>', unsafe_allow_html=True
         )
 
         # Achievement categories
         categories = {
-            "🎯 Trust Building": [
+            " Trust Building": [
                 (
                     "Newcomer",
                     "Complete profile setup",
@@ -1524,7 +1524,7 @@ class ZScoreUserApp:
                     applicant.get("overall_trust_score", 0) >= 0.9,
                 ),
             ],
-            "🎮 Mission Master": [
+            " Mission Master": [
                 (
                     "First Steps",
                     "Complete first mission",
@@ -1546,7 +1546,7 @@ class ZScoreUserApp:
                     len(st.session_state.completed_missions) >= 8,
                 ),
             ],
-            "💎 Credit Collector": [
+            " Credit Collector": [
                 (
                     "First Earnings",
                     "Earn 50 Z-Credits",
@@ -1586,7 +1586,7 @@ class ZScoreUserApp:
                         <div class="achievement-card" style="background: linear-gradient(145deg, rgba(72, 187, 120, 0.2), rgba(72, 187, 120, 0.1)); border-color: var(--success);">
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <div style="background: var(--success); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem;">
-                                    ✅
+                                    
                                 </div>
                                 <div>
                                     <h3 style="margin: 0; color: var(--success); font-size: 1.2rem;">{title}</h3>
@@ -1594,7 +1594,7 @@ class ZScoreUserApp:
                                 </div>
                             </div>
                             <div style="background: rgba(72, 187, 120, 0.1); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
-                                <span style="color: var(--success); font-weight: 600; font-size: 0.9rem;">🎉 ACHIEVEMENT UNLOCKED!</span>
+                                <span style="color: var(--success); font-weight: 600; font-size: 0.9rem;"> ACHIEVEMENT UNLOCKED!</span>
                             </div>
                         </div>
                         """,
@@ -1607,7 +1607,7 @@ class ZScoreUserApp:
                         <div class="achievement-card" style="opacity: 0.6; border-color: var(--border);">
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <div style="background: #64748b; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem;">
-                                    🔒
+                                    
                                 </div>
                                 <div>
                                     <h3 style="margin: 0; color: #64748b; font-size: 1.2rem;">{title}</h3>
@@ -1615,7 +1615,7 @@ class ZScoreUserApp:
                                 </div>
                             </div>
                             <div style="background: rgba(100, 116, 139, 0.1); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
-                                <span style="color: #64748b; font-weight: 600; font-size: 0.9rem;">🎯 KEEP WORKING!</span>
+                                <span style="color: #64748b; font-weight: 600; font-size: 0.9rem;"> KEEP WORKING!</span>
                             </div>
                         </div>
                         """,
@@ -1627,13 +1627,13 @@ class ZScoreUserApp:
     def show_ai_insights(self, applicant):
         """AI explanations and insights"""
         st.markdown(
-            '<h1 class="game-header">🤖 AI Credit Insights</h1>', unsafe_allow_html=True
+            '<h1 class="game-header"> AI Credit Insights</h1>', unsafe_allow_html=True
         )
 
         # Show SHAP explanations
         try:
             # Temporarily disabled - AI explanations feature under maintenance
-            st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
+            st.info(" AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
             # show_ai_explanations(applicant)
         except Exception as e:
             st.error(f"AI insights temporarily unavailable: {str(e)}")
@@ -1642,23 +1642,23 @@ class ZScoreUserApp:
             unified_scores = get_unified_trust_scores(applicant)
             display_data = format_trust_display(unified_scores)
 
-            st.markdown("### 📊 Basic Credit Analysis")
+            st.markdown("###  Basic Credit Analysis")
 
             trust_percentage = display_data["trust_percentage"]
 
             if display_data["credit_eligible"]:
                 st.success(
-                    "🎉 **Credit Ready!** Your profile shows strong creditworthiness."
+                    " **Credit Ready!** Your profile shows strong creditworthiness."
                 )
             elif trust_percentage >= 50:
-                st.info("🔨 **Building Trust** - You're on the right track!")
+                st.info(" **Building Trust** - You're on the right track!")
             else:
                 st.warning(
-                    "📈 **Early Stage** - Complete more missions to boost your score."
+                    " **Early Stage** - Complete more missions to boost your score."
                 )
 
             # Improvement suggestions
-            st.markdown("### 💡 Personalized Recommendations")
+            st.markdown("###  Personalized Recommendations")
 
             suggestions = [
                 "Complete financial literacy quizzes to demonstrate knowledge",
@@ -1673,29 +1673,29 @@ class ZScoreUserApp:
     def show_profile(self, applicant):
         """User profile management"""
         st.markdown(
-            '<h1 class="game-header">👤 Your Profile</h1>', unsafe_allow_html=True
+            '<h1 class="game-header"> Your Profile</h1>', unsafe_allow_html=True
         )
 
         # Profile overview
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("### 📊 Profile Stats")
+            st.markdown("###  Profile Stats")
             st.metric(
-                "🎯 Trust Score",
+                " Trust Score",
                 f"{applicant.get('overall_trust_score', 0) * 100:.1f}%",
             )
             st.metric(
-                "🏆 Level",
+                " Level",
                 f"{min(int((applicant.get('overall_trust_score', 0) * 100) // 20) + 1, 5)}/5",
             )
-            st.metric("💎 Z-Credits", st.session_state.z_credits)
+            st.metric(" Z-Credits", st.session_state.z_credits)
             st.metric(
-                "🎮 Missions Completed", f"{len(st.session_state.completed_missions)}/8"
+                " Missions Completed", f"{len(st.session_state.completed_missions)}/8"
             )
 
         with col2:
-            st.markdown("### 📋 Personal Information")
+            st.markdown("###  Personal Information")
             st.write(f"**Name:** {applicant.get('name', 'N/A')}")
             st.write(f"**Phone:** {applicant.get('phone', 'N/A')}")
             st.write(f"**Location:** {applicant.get('location', 'N/A')}")
@@ -1704,12 +1704,12 @@ class ZScoreUserApp:
 
         # Edit profile
         st.markdown("---")
-        if st.button("✏️ Edit Profile"):
+        if st.button(" Edit Profile"):
             self.show_profile_edit(applicant)
 
     def show_profile_edit(self, applicant):
         """Profile editing interface"""
-        st.markdown("### ✏️ Edit Your Profile")
+        st.markdown("###  Edit Your Profile")
 
         with st.form("edit_profile"):
             phone = st.text_input("Phone", value=applicant.get("phone", ""))
@@ -1721,7 +1721,7 @@ class ZScoreUserApp:
                 "Monthly Income", value=applicant.get("monthly_income", 0)
             )
 
-            if st.form_submit_button("💾 Save Changes"):
+            if st.form_submit_button(" Save Changes"):
                 # Update database
                 with self.db.get_connection() as conn:
                     cursor = conn.cursor()
@@ -1738,7 +1738,7 @@ class ZScoreUserApp:
 
                     conn.commit()
 
-                st.success("✅ Profile updated successfully!")
+                st.success(" Profile updated successfully!")
                 time.sleep(1)
                 st.rerun()
 
@@ -1759,38 +1759,38 @@ class ZScoreUserApp:
         col1, col2, col3 = st.columns([1, 2, 1])
 
         with col2:
-            st.markdown(f"### 🎯 Overall Trust Score: {overall_trust:.1f}%")
+            st.markdown(f"###  Overall Trust Score: {overall_trust:.1f}%")
             progress_value = min(overall_trust / 100, 1.0)
             st.progress(progress_value)
 
             if overall_trust >= 70:
-                st.success("✅ **CREDIT ELIGIBLE** - Ready for loan applications!")
+                st.success(" **CREDIT ELIGIBLE** - Ready for loan applications!")
             else:
                 needed = 70 - overall_trust
-                st.info(f"🎯 **{needed:.1f}% more** needed for credit eligibility")
+                st.info(f" **{needed:.1f}% more** needed for credit eligibility")
 
         # Component breakdown
-        st.markdown("### 📊 Trust Components")
+        st.markdown("###  Trust Components")
 
         comp_col1, comp_col2, comp_col3 = st.columns(3)
 
         with comp_col1:
-            st.metric("🎭 Behavioral", f"{behavioral_score:.0f}%")
+            st.metric(" Behavioral", f"{behavioral_score:.0f}%")
             st.progress(min(behavioral_score / 100, 1.0))
 
         with comp_col2:
-            st.metric("👥 Social", f"{social_score:.0f}%")
+            st.metric(" Social", f"{social_score:.0f}%")
             st.progress(min(social_score / 100, 1.0))
 
         with comp_col3:
-            st.metric("💻 Digital", f"{digital_score:.0f}%")
+            st.metric(" Digital", f"{digital_score:.0f}%")
             st.progress(min(digital_score / 100, 1.0))
 
         st.markdown("</div>", unsafe_allow_html=True)
 
     def show_trust_breakdown(self, applicant):
         """Detailed trust score breakdown"""
-        st.markdown("### 📊 Trust Score Breakdown")
+        st.markdown("###  Trust Score Breakdown")
 
         # Create visualization
         try:
@@ -1804,7 +1804,7 @@ class ZScoreUserApp:
             fig = go.Figure(
                 data=[
                     go.Pie(
-                        labels=["🎭 Behavioral", "👥 Social", "💻 Digital"],
+                        labels=[" Behavioral", " Social", " Digital"],
                         values=[behavioral, social, digital],
                         hole=0.3,
                         marker_colors=["#FF6B6B", "#4ECDC4", "#45B7D1"],
@@ -1828,7 +1828,7 @@ class ZScoreUserApp:
 
     def show_behavioral_analysis(self, applicant):
         """Behavioral trust analysis"""
-        st.markdown("#### 🎭 Behavioral Trust Analysis")
+        st.markdown("####  Behavioral Trust Analysis")
 
         behavioral_score = applicant.get("behavioral_score", 0) * 100
 
@@ -1849,7 +1849,7 @@ class ZScoreUserApp:
 
     def show_social_analysis(self, applicant):
         """Social trust analysis"""
-        st.markdown("#### 👥 Social Trust Analysis")
+        st.markdown("####  Social Trust Analysis")
 
         social_score = applicant.get("social_score", 0) * 100
 
@@ -1870,7 +1870,7 @@ class ZScoreUserApp:
 
     def show_digital_analysis(self, applicant):
         """Digital trust analysis"""
-        st.markdown("#### 💻 Digital Trust Analysis")
+        st.markdown("####  Digital Trust Analysis")
 
         digital_score = applicant.get("digital_score", 0) * 100
 
@@ -1903,7 +1903,7 @@ class ZScoreUserApp:
     def show_personal_analytics(self, applicant):
         """Personal analytics and insights dashboard"""
         st.markdown(
-            '<h1 class="game-header">📊 Your Personal Analytics Hub</h1>',
+            '<h1 class="game-header"> Your Personal Analytics Hub</h1>',
             unsafe_allow_html=True,
         )
 
@@ -1922,7 +1922,7 @@ class ZScoreUserApp:
                 st.markdown(
                     """
                 <div class="metric-container">
-                    <h3>📈 Progress This Month</h3>
+                    <h3> Progress This Month</h3>
                     <h2 style="color: var(--success)">+15.2%</h2>
                     <p>Credit score improvement</p>
                 </div>
@@ -1937,7 +1937,7 @@ class ZScoreUserApp:
                 st.markdown(
                     f"""
                 <div class="metric-container">
-                    <h3>🎯 Peer Ranking</h3>
+                    <h3> Peer Ranking</h3>
                     <h2 style="color: var(--primary)">Top {100 - percentile:.0f}%</h2>
                     <p>Better than {percentile:.0f}% of users</p>
                 </div>
@@ -1950,7 +1950,7 @@ class ZScoreUserApp:
                 st.markdown(
                     f"""
                 <div class="metric-container">
-                    <h3>🔥 Active Streak</h3>
+                    <h3> Active Streak</h3>
                     <h2 style="color: var(--warning)">{streak} days</h2>
                     <p>Consistent engagement</p>
                 </div>
@@ -1963,7 +1963,7 @@ class ZScoreUserApp:
                 st.markdown(
                     f"""
                 <div class="metric-container">
-                    <h3>💰 Savings Rate</h3>
+                    <h3> Savings Rate</h3>
                     <h2 style="color: var(--accent)">{savings_rate:.1f}%</h2>
                     <p>Of monthly income</p>
                 </div>
@@ -1975,11 +1975,11 @@ class ZScoreUserApp:
         # Personal Analytics Tabs
         tab1, tab2, tab3, tab4, tab5 = st.tabs(
             [
-                "📈 Progress Tracking",
-                "🎯 Goal Achievement",
-                "💡 Behavioral Insights",
-                "🏆 Performance Analysis",
-                "🔮 Predictions & Tips",
+                " Progress Tracking",
+                " Goal Achievement",
+                " Behavioral Insights",
+                " Performance Analysis",
+                " Predictions & Tips",
             ]
         )
 
@@ -2032,7 +2032,7 @@ class ZScoreUserApp:
             )
 
             fig_progress.update_layout(
-                title="🎯 Your Credit Score Journey",
+                title=" Your Credit Score Journey",
                 xaxis_title="Month",
                 yaxis_title="Credit Score",
                 paper_bgcolor="rgba(0,0,0,0)",
@@ -2052,19 +2052,19 @@ class ZScoreUserApp:
                 {"name": "Credit Ready", "date": "2024-08-25", "score": 720},
             ]
 
-            st.markdown("### 🏆 Your Milestones")
+            st.markdown("###  Your Milestones")
 
             for milestone in milestones:
                 with st.container():
                     col_icon, col_info = st.columns([1, 4])
                     with col_icon:
-                        st.markdown("🎉")
+                        st.markdown("")
                     with col_info:
                         st.markdown(f"**{milestone['name']}**")
                         st.caption(f"{milestone['date']} • Score: {milestone['score']}")
 
         # Weekly progress breakdown
-        st.markdown("### 📅 Weekly Progress Breakdown")
+        st.markdown("###  Weekly Progress Breakdown")
 
         categories = [
             "Payment History",
@@ -2111,7 +2111,7 @@ class ZScoreUserApp:
 
     def show_goal_achievement(self, applicant):
         """Goal tracking and achievement analytics"""
-        st.markdown("### 🎯 Your Financial Goals")
+        st.markdown("###  Your Financial Goals")
 
         # Goal progress cards
         goals = [
@@ -2120,21 +2120,21 @@ class ZScoreUserApp:
                 "target": 10000,
                 "current": 7500,
                 "deadline": "2024-12-31",
-                "icon": "🛡️",
+                "icon": "",
             },
             {
                 "name": "Credit Score 750+",
                 "target": 750,
                 "current": 720,
                 "deadline": "2024-11-30",
-                "icon": "📈",
+                "icon": "",
             },
             {
                 "name": "Debt Reduction",
                 "target": 5000,
                 "current": 3200,
                 "deadline": "2025-03-31",
-                "icon": "💸",
+                "icon": "",
             },
         ]
 
@@ -2241,7 +2241,7 @@ class ZScoreUserApp:
 
     def show_behavioral_insights(self, applicant):
         """Behavioral pattern analysis"""
-        st.markdown("### 💡 Your Financial Behavior Insights")
+        st.markdown("###  Your Financial Behavior Insights")
 
         # Spending pattern analysis
         col1, col2 = st.columns(2)
@@ -2322,29 +2322,29 @@ class ZScoreUserApp:
             st.plotly_chart(fig_habits, use_container_width=True)
 
         # Behavioral insights cards
-        st.markdown("### 🧠 Behavioral Insights")
+        st.markdown("###  Behavioral Insights")
 
         insights = [
             {
-                "title": "🕐 Payment Timing",
+                "title": " Payment Timing",
                 "insight": "You consistently pay bills 3-5 days early",
                 "impact": "Excellent for credit score (+15 points)",
                 "color": "success",
             },
             {
-                "title": "💰 Spending Pattern",
+                "title": " Spending Pattern",
                 "insight": "Weekend spending is 40% higher than weekdays",
                 "impact": "Consider weekend budget limits",
                 "color": "warning",
             },
             {
-                "title": "📱 Digital Behavior",
+                "title": " Digital Behavior",
                 "insight": "You check your credit score weekly",
                 "impact": "Great monitoring habit (+10 points)",
                 "color": "success",
             },
             {
-                "title": "🎯 Goal Alignment",
+                "title": " Goal Alignment",
                 "insight": "Spending aligns well with stated goals",
                 "impact": "On track for 85% goal completion",
                 "color": "success",
@@ -2370,7 +2370,7 @@ class ZScoreUserApp:
 
     def show_performance_analysis(self, applicant):
         """Performance analysis and comparisons"""
-        st.markdown("### 🏆 Your Performance Analysis")
+        st.markdown("###  Your Performance Analysis")
 
         # Performance vs peers
         col1, col2 = st.columns(2)
@@ -2464,29 +2464,29 @@ class ZScoreUserApp:
             st.plotly_chart(fig_trend, use_container_width=True)
 
         # Performance achievements
-        st.markdown("### 🎖️ Recent Achievements")
+        st.markdown("###  Recent Achievements")
 
         achievements = [
             {
-                "icon": "🥇",
+                "icon": "",
                 "title": "Credit Score Champion",
                 "description": "Reached 720+ credit score",
                 "date": "2024-08-25",
             },
             {
-                "icon": "💾",
+                "icon": "",
                 "title": "Savings Streak",
                 "description": "6 months of consistent savings",
                 "date": "2024-08-20",
             },
             {
-                "icon": "⚡",
+                "icon": "",
                 "title": "Quick Payer",
                 "description": "Never missed a payment this year",
                 "date": "2024-08-15",
             },
             {
-                "icon": "🎯",
+                "icon": "",
                 "title": "Goal Crusher",
                 "description": "Exceeded monthly savings goal 3x",
                 "date": "2024-08-10",
@@ -2510,7 +2510,7 @@ class ZScoreUserApp:
 
     def show_predictions_tips(self, applicant):
         """Predictive insights and personalized tips"""
-        st.markdown("### 🔮 Your Financial Predictions & Tips")
+        st.markdown("###  Your Financial Predictions & Tips")
 
         # Predictive insights
         col1, col2 = st.columns(2)
@@ -2607,32 +2607,32 @@ class ZScoreUserApp:
             st.plotly_chart(fig_health, use_container_width=True)
 
         # Personalized recommendations
-        st.markdown("### 💡 Personalized Recommendations")
+        st.markdown("###  Personalized Recommendations")
 
         recommendations = [
             {
-                "priority": "🔥 High Impact",
+                "priority": " High Impact",
                 "action": "Pay down credit card balance by $500",
                 "benefit": "Could increase credit score by 15-20 points",
                 "timeline": "1-2 months",
                 "difficulty": "Medium",
             },
             {
-                "priority": "⚡ Quick Win",
+                "priority": " Quick Win",
                 "action": "Set up autopay for all bills",
                 "benefit": "Ensure 100% on-time payment history",
                 "timeline": "1 day",
                 "difficulty": "Easy",
             },
             {
-                "priority": "📈 Long-term",
+                "priority": " Long-term",
                 "action": "Open a savings account for emergency fund",
                 "benefit": "Build financial stability foundation",
                 "timeline": "3-6 months",
                 "difficulty": "Easy",
             },
             {
-                "priority": "🎯 Strategic",
+                "priority": " Strategic",
                 "action": "Diversify credit mix with installment loan",
                 "benefit": "Improve credit score by 5-10 points",
                 "timeline": "6-12 months",
@@ -2651,16 +2651,16 @@ class ZScoreUserApp:
                     st.markdown(f"**Timeline:** {rec['timeline']}")
 
                 with col3:
-                    difficulty_color = {"Easy": "🟢", "Medium": "🟡", "Hard": "🔴"}
+                    difficulty_color = {"Easy": "", "Medium": "", "Hard": ""}
                     st.markdown(
                         f"**Difficulty:** {difficulty_color[rec['difficulty']]} {rec['difficulty']}"
                     )
 
         # Weekly tip
-        st.markdown("### 💎 This Week's Pro Tip")
+        st.markdown("###  This Week's Pro Tip")
         st.info(
             """
-        **💡 Smart Tip: Use the 'Debt Avalanche' Method**
+        ** Smart Tip: Use the 'Debt Avalanche' Method**
 
         Focus on paying off your highest interest rate debt first while making minimum payments on others.
         This strategy can save you hundreds in interest and improve your credit score faster.

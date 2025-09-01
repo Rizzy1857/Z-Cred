@@ -106,7 +106,7 @@ class AuthManager:
             """
         <div style="text-align: center; padding: 3rem 2rem;">
             <h1 style="font-size: 3rem; font-weight: 300; color: #2c3e50; margin-bottom: 1rem;">
-                ⚡ Z-Score
+                 Z-Score
             </h1>
             <h3 style="font-weight: 300; color: #7f8c8d; margin-bottom: 2rem;">
                 Dynamic Trust-Based Credit Assessment
@@ -127,7 +127,7 @@ class AuthManager:
             st.markdown("### Get Started")
 
             # Cleaner tabs
-            tab1, tab2 = st.tabs(["🔑 Sign In", "✨ Sign Up"])
+            tab1, tab2 = st.tabs([" Sign In", " Sign Up"])
 
             with tab1:
                 # Clean login form
@@ -141,18 +141,18 @@ class AuthManager:
                         "Password", type="password", placeholder="Enter your password"
                     )
 
-                    if st.form_submit_button("🔑 Sign In", use_container_width=True):
+                    if st.form_submit_button(" Sign In", use_container_width=True):
                         if username and password:
                             if self.login(username, password):
-                                st.success("✅ Login successful!")
+                                st.success(" Login successful!")
                                 st.rerun()
                             else:
-                                st.error("❌ Invalid username or password")
+                                st.error(" Invalid username or password")
                         else:
-                            st.warning("⚠️ Please enter both username and password")
+                            st.warning(" Please enter both username and password")
 
                 # Demo credentials in clean format (context-aware)
-                with st.expander("🔓 Demo Access"):
+                with st.expander(" Demo Access"):
                     md_lines = []
                     if context in ("user", "both"):
                         md_lines.append("**Demo User Login:**  ")
@@ -180,10 +180,10 @@ class AuthManager:
                 with st.sidebar:
                     # Clean user info
                     st.markdown("---")
-                    st.markdown(f"**👤 {user['username']}**")
+                    st.markdown(f"** {user['username']}**")
                     st.caption(f"Role: {user['role'].title()}")
 
-                    if st.button("🚪 Sign Out", use_container_width=True):
+                    if st.button(" Sign Out", use_container_width=True):
                         self.logout()
 
     def show_signup_form(self):
@@ -227,13 +227,13 @@ class AuthManager:
             # Terms and consent
             st.markdown("---")
             terms_accepted = st.checkbox(
-                "✅ I accept the Terms & Privacy Policy",
+                " I accept the Terms & Privacy Policy",
                 help="Required for account creation",
             )
 
             if account_role == "applicant":
                 data_consent = st.checkbox(
-                    "✅ I consent to credit assessment data processing",
+                    " I consent to credit assessment data processing",
                     help="Required for credit scoring functionality",
                 )
             else:
@@ -255,7 +255,7 @@ class AuthManager:
                     success = create_user(new_username, new_password, account_role)
                     if success:
                         st.success("Account created successfully!")
-                        st.info("👉 Switch to Sign In tab to access your account.")
+                        st.info(" Switch to Sign In tab to access your account.")
                         time.sleep(2)
                         st.rerun()
                     else:

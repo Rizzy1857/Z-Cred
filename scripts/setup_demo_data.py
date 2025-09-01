@@ -105,14 +105,14 @@ def setup_demo_data():
             # Store in database
             applicant_id = db.create_applicant(user)
             if applicant_id:
-                print(f"✅ Created demo user: {user['name']} ({user['story']})")
+                print(f" Created demo user: {user['name']} ({user['story']})")
             else:
-                print(f"⚠️ User {user['name']} may already exist")
+                print(f" User {user['name']} may already exist")
         except Exception as e:
-            print(f"⚠️ Error creating {user['name']}: {e}")
+            print(f" Error creating {user['name']}: {e}")
 
     print(
-        f"🎯 Demo data setup complete! {len(demo_users)} users ready for presentation."
+        f" Demo data setup complete! {len(demo_users)} users ready for presentation."
     )
     return demo_users
 
@@ -139,13 +139,13 @@ def get_demo_credentials():
 
 
 if __name__ == "__main__":
-    print("🎬 Setting up Z-Score Demo Data...")
+    print(" Setting up Z-Score Demo Data...")
     users = setup_demo_data()
 
-    print("\n📋 Demo Credentials:")
+    print("\n Demo Credentials:")
     creds = get_demo_credentials()
     for name, info in creds.items():
-        print(f"👤 {name.title()}: {info['email']} / {info['password']}")
+        print(f" {name.title()}: {info['email']} / {info['password']}")
         print(f"   Story: {info['story']}")
 
-    print("\n🎯 Ready for hackathon demo!")
+    print("\n Ready for hackathon demo!")

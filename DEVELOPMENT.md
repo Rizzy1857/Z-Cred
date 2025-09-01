@@ -65,17 +65,17 @@ make clean         # Clean temporary files
 
 ```
 Z-Cred/
-├── src/                    # Source code
-│   ├── apps/              # Streamlit applications
-│   ├── core/              # Core functionality
-│   ├── database/          # Database operations
-│   ├── models/            # ML models and pipelines
-│   └── utils/             # Utility functions
-├── tests/                 # Test files
-├── docs/                  # Documentation
-├── scripts/               # Utility scripts
-├── .github/               # GitHub Actions workflows
-└── requirements*.txt      # Dependencies
+ src/                    # Source code
+    apps/              # Streamlit applications
+    core/              # Core functionality
+    database/          # Database operations
+    models/            # ML models and pipelines
+    utils/             # Utility functions
+ tests/                 # Test files
+ docs/                  # Documentation
+ scripts/               # Utility scripts
+ .github/               # GitHub Actions workflows
+ requirements*.txt      # Dependencies
 ```
 
 ## Configuration Files

@@ -235,23 +235,23 @@ class SHAPExplainer:
             confidence = prediction_data.get("prediction_confidence", 0)
 
             explanation_text = f"""
-## 🎯 Your Credit Assessment Explanation
+##  Your Credit Assessment Explanation
 
 **Assessment Result:** {risk_category} 
 **Confidence Level:** {confidence:.1%}
 
-### 🟢 What Helped Your Score:
+###  What Helped Your Score:
 """
 
             for i, (feature, impact, value) in enumerate(top_positive[:3], 1):
                 explanation_text += f"{i}. **{self._humanize_feature_name(feature)}**: {self._explain_feature_impact(feature, impact, value, positive=True)}\n"
 
             if top_negative:
-                explanation_text += "\n### 🔴 What Lowered Your Score:\n"
+                explanation_text += "\n###  What Lowered Your Score:\n"
                 for i, (feature, impact, value) in enumerate(top_negative[:3], 1):
                     explanation_text += f"{i}. **{self._humanize_feature_name(feature)}**: {self._explain_feature_impact(feature, impact, value, positive=False)}\n"
 
-            explanation_text += "\n### 💡 How to Improve Your Score:\n"
+            explanation_text += "\n###  How to Improve Your Score:\n"
             explanation_text += self._generate_improvement_suggestions(
                 top_negative, applicant_data
             )
@@ -333,7 +333,7 @@ class SHAPExplainer:
 
 def render_shap_explainability_dashboard(applicant_data: Dict):
     """Main function to render the SHAP explainability dashboard"""
-    st.markdown("## 🔍 **AI Decision Explanation Dashboard**")
+    st.markdown("##  **AI Decision Explanation Dashboard**")
     st.markdown("Understanding how AI reached your credit assessment")
     st.markdown("---")
 
@@ -342,11 +342,11 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
 
     # Create tabs for different views
     tab1, tab2, tab3 = st.tabs(
-        ["📊 Visual Explanation", "📈 Feature Analysis", "💬 Plain Language"]
+        [" Visual Explanation", " Feature Analysis", " Plain Language"]
     )
 
     with tab1:
-        st.subheader("🎯 Why Did You Get This Score?")
+        st.subheader(" Why Did You Get This Score?")
 
         with st.spinner("Generating AI explanation..."):
             explanation = explainer.get_explanation(applicant_data)
@@ -370,7 +370,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 st.error("Unable to generate explanation chart")
         else:
             # Show enhanced fallback explanation when SHAP is not available
-            st.warning("🔧 **AI Explanations Initializing**")
+            st.warning(" **AI Explanations Initializing**")
             
             # Create a basic explanation based on user data
             col1, col2 = st.columns(2)
@@ -380,12 +380,12 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                     """
                 **What affects your trust score:**
                 
-                🎯 **Behavioral Factors** (40%)
+                 **Behavioral Factors** (40%)
                 - Payment history consistency
                 - Spending pattern stability  
                 - Financial responsibility indicators
                 
-                🤝 **Social Connections** (30%)
+                 **Social Connections** (30%)
                 - Network quality and diversity
                 - Relationship stability
                 - Community engagement
@@ -397,12 +397,12 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                     """
                 **Additional Considerations:**
                 
-                💻 **Digital Footprint** (30%)
+                 **Digital Footprint** (30%)
                 - Online activity patterns
                 - Digital identity verification
                 - Technology usage maturity
                 
-                📊 **Your Current Scores:**
+                 **Your Current Scores:**
                 - Overall: {:.1f}%
                 - Behavioral: {:.1f}%
                 - Social: {:.1f}%
@@ -415,7 +415,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 )
                 )
             
-            st.success("🔄 **Tip:** Refresh this page in a few moments to access advanced AI explanations with detailed factor analysis.")
+            st.success(" **Tip:** Refresh this page in a few moments to access advanced AI explanations with detailed factor analysis.")
 
             # Show basic trust score info as fallback
             trust_score = applicant_data.get("overall_trust_score", 0) * 100
@@ -424,10 +424,10 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             with col1:
                 st.metric("Your Trust Score", f"{trust_score:.1f}%")
                 if trust_score >= 70:
-                    st.success("✅ Credit Eligible!")
+                    st.success(" Credit Eligible!")
                 else:
                     st.info(
-                        f"📈 {70 - trust_score:.1f}% more needed for credit eligibility"
+                        f" {70 - trust_score:.1f}% more needed for credit eligibility"
                     )
 
             with col2:
@@ -441,7 +441,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 st.write(f"• Digital Presence: {digital:.0f}%")
 
     with tab2:
-        st.subheader("📈 Feature Impact Analysis")
+        st.subheader(" Feature Impact Analysis")
 
         if explanation:
             # Show feature importance chart
@@ -466,7 +466,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                     st.metric("Risk Probability", f"{risk_prob:.1%}")
         else:
             st.info(
-                "🔧 Feature analysis will be available once the AI explanation system is ready."
+                " Feature analysis will be available once the AI explanation system is ready."
             )
 
             # Show basic metrics as fallback
@@ -492,7 +492,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 st.metric("Experience", f"{age} years")
 
     with tab3:
-        st.subheader("💬 Personalized Explanation")
+        st.subheader(" Personalized Explanation")
 
         if explanation:
             # Generate and display plain language explanation
@@ -502,13 +502,13 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             st.markdown(plain_explanation)
         else:
             # Provide basic guidance when SHAP is not available
-            st.markdown("## 🎯 Your Credit Assessment Overview")
+            st.markdown("##  Your Credit Assessment Overview")
 
             trust_score = applicant_data.get("overall_trust_score", 0) * 100
 
             if trust_score >= 70:
                 st.success(
-                    "🎉 **Congratulations!** You have strong creditworthiness indicators."
+                    " **Congratulations!** You have strong creditworthiness indicators."
                 )
                 st.markdown(
                     """
@@ -519,7 +519,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 """
                 )
             elif trust_score >= 50:
-                st.info("🔨 **Building Trust** - You're on the right track!")
+                st.info(" **Building Trust** - You're on the right track!")
                 st.markdown(
                     """
                 **How to improve:**
@@ -530,7 +530,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 )
             else:
                 st.warning(
-                    "📈 **Early Stage** - Let's build your credit profile together!"
+                    " **Early Stage** - Let's build your credit profile together!"
                 )
                 st.markdown(
                     """
@@ -542,7 +542,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 )
 
             # Show improvement suggestions
-            st.markdown("### 💡 Personalized Recommendations")
+            st.markdown("###  Personalized Recommendations")
 
             suggestions = [
                 "Complete financial literacy quizzes to demonstrate knowledge",
@@ -556,7 +556,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
 
             # Add interactive Q&A
             st.markdown("---")
-            st.subheader("❓ Common Questions")
+            st.subheader(" Common Questions")
 
             with st.expander("Why is AI transparency important?"):
                 st.write(
@@ -586,7 +586,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
 
     # Add model performance info
     st.markdown("---")
-    st.markdown("### 🔧 Model Information")
+    st.markdown("###  Model Information")
 
     col1, col2 = st.columns(2)
     with col1:

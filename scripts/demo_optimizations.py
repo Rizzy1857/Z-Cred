@@ -20,34 +20,34 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def demo_environment_setup():
     """Demo 1: Reproducible Environment Setup"""
-    print("🔧 DEMO 1: Reproducible Environment Setup")
+    print(" DEMO 1: Reproducible Environment Setup")
     print("=" * 50)
 
-    print("✅ Pinned requirements.txt for exact version control")
-    print("✅ Automated setup script (start.sh) for one-command deployment")
-    print("✅ Docker support for containerized deployment")
-    print("✅ Multiple environment options (dev, staging, prod)")
+    print(" Pinned requirements.txt for exact version control")
+    print(" Automated setup script (start.sh) for one-command deployment")
+    print(" Docker support for containerized deployment")
+    print(" Multiple environment options (dev, staging, prod)")
     print("")
 
     # Show requirements
     try:
         with open("requirements.txt", "r") as f:
             lines = f.readlines()[:5]
-            print("📦 Sample pinned dependencies:")
+            print(" Sample pinned dependencies:")
             for line in lines:
                 if line.strip():
                     print(f"   {line.strip()}")
         print("   ... (and more)")
     except FileNotFoundError:
-        print("⚠️  requirements.txt not found")
+        print("  requirements.txt not found")
 
-    print("\n🚀 Quick Start Command: ./start.sh --app=user")
+    print("\n Quick Start Command: ./start.sh --app=user")
     print("")
 
 
 def demo_shap_caching():
     """Demo 2: SHAP Caching Performance"""
-    print("🧠 DEMO 2: SHAP Explainer Caching")
+    print(" DEMO 2: SHAP Explainer Caching")
     print("=" * 50)
 
     try:
@@ -55,10 +55,10 @@ def demo_shap_caching():
         from shap_cache import shap_cache, get_cached_shap_values
         import numpy as np
 
-        print("🔄 Loading ML model...")
+        print(" Loading ML model...")
         model = model_integrator.get_credit_model()
 
-        print("⚡ Testing SHAP caching performance...")
+        print(" Testing SHAP caching performance...")
 
         # Prepare test data
         test_features = np.array([[30, 50000, 3, 0.25, 0.3, 85, 3, 0.2]])
@@ -82,40 +82,40 @@ def demo_shap_caching():
             cache_time = time.time() - start_time
 
             if shap_values is not None:
-                print(f"✅ SHAP explanation generated in {cache_time:.3f}s (cached)")
-                print(f"💾 Cache hit: {shap_values is not None}")
+                print(f" SHAP explanation generated in {cache_time:.3f}s (cached)")
+                print(f" Cache hit: {shap_values is not None}")
             else:
-                print("⚠️  SHAP cache miss - creating new explainer")
+                print("  SHAP cache miss - creating new explainer")
 
         # Show cache stats
-        print("\n📊 Cache Statistics:")
+        print("\n Cache Statistics:")
         print(f"   • Cache entries: {len(shap_cache._memory_cache)}")
         print(f"   • Memory usage: Optimized for frequent lookups")
         print(f"   • TTL: {shap_cache.cache_ttl}s")
 
     except Exception as e:
-        print(f"❌ SHAP demo error: {e}")
+        print(f" SHAP demo error: {e}")
 
     print("")
 
 
 def demo_database_transactions():
     """Demo 3: Enhanced Database Transactions"""
-    print("🗄️  DEMO 3: Enhanced Database Transactions")
+    print("  DEMO 3: Enhanced Database Transactions")
     print("=" * 50)
 
     try:
         from local_db import Database
 
-        print("🔄 Testing database transaction improvements...")
+        print(" Testing database transaction improvements...")
 
         db = Database()
 
         # Test transaction retry mechanism
-        print("✅ WAL mode enabled for better concurrency")
-        print("✅ Automatic retry logic for transient failures")
-        print("✅ Proper connection pooling and timeout handling")
-        print("✅ Uniqueness constraint handling with graceful fallbacks")
+        print(" WAL mode enabled for better concurrency")
+        print(" Automatic retry logic for transient failures")
+        print(" Proper connection pooling and timeout handling")
+        print(" Uniqueness constraint handling with graceful fallbacks")
 
         # Show database configuration
         with db.get_connection() as conn:
@@ -125,21 +125,21 @@ def demo_database_transactions():
             cursor.execute("PRAGMA synchronous")
             sync_mode = cursor.fetchone()[0]
 
-        print(f"\n📊 Database Configuration:")
+        print(f"\n Database Configuration:")
         print(f"   • Journal mode: {journal_mode}")
         print(f"   • Synchronous mode: {sync_mode}")
         print(f"   • Connection timeout: 30s")
         print(f"   • Retry attempts: {db.max_retries}")
 
     except Exception as e:
-        print(f"❌ Database demo error: {e}")
+        print(f" Database demo error: {e}")
 
     print("")
 
 
 def demo_unified_scoring():
     """Demo 4: Unified Scoring with Caching"""
-    print("🎯 DEMO 4: Unified Trust Scoring System")
+    print(" DEMO 4: Unified Trust Scoring System")
     print("=" * 50)
 
     try:
@@ -156,7 +156,7 @@ def demo_unified_scoring():
             {"age": 45, "monthly_income": 100000, "employment_length": 10},
         ]
 
-        print("🔄 Testing unified scoring performance...")
+        print(" Testing unified scoring performance...")
 
         # Clear cache first
         clear_trust_score_cache()
@@ -166,7 +166,7 @@ def demo_unified_scoring():
 
         for i, applicant in enumerate(test_applicants):
             print(
-                f"\n👤 Applicant {i+1}: Age {applicant['age']}, Income ${applicant['monthly_income']:,}"
+                f"\n Applicant {i+1}: Age {applicant['age']}, Income ${applicant['monthly_income']:,}"
             )
 
             # Cold cache timing
@@ -181,87 +181,87 @@ def demo_unified_scoring():
             warm_time = time.time() - start
             total_warm_time += warm_time
 
-            print(f"   ❄️  Cold: {cold_time:.3f}s | 🔥 Warm: {warm_time:.3f}s")
-            print(f"   🎯 Trust Score: {scores1['trust_percentage']:.1f}%")
-            print(f"   ✅ Cache consistency: {scores1 == scores2}")
+            print(f"     Cold: {cold_time:.3f}s |  Warm: {warm_time:.3f}s")
+            print(f"    Trust Score: {scores1['trust_percentage']:.1f}%")
+            print(f"    Cache consistency: {scores1 == scores2}")
 
         # Show overall performance improvement
         speedup = total_cold_time / max(total_warm_time, 0.001)
-        print(f"\n🚀 Overall Performance:")
+        print(f"\n Overall Performance:")
         print(f"   • Cold cache total: {total_cold_time:.3f}s")
         print(f"   • Warm cache total: {total_warm_time:.3f}s")
         print(f"   • Speedup: {speedup:.1f}x faster with caching")
 
         # Show cache statistics
         cache_stats = get_cache_stats()
-        print(f"\n📊 Cache Statistics:")
+        print(f"\n Cache Statistics:")
         print(f"   • Cache entries: {cache_stats['total_entries']}")
         print(f"   • Valid entries: {cache_stats['valid_entries']}")
         print(f"   • Hit ratio: {cache_stats['cache_hit_ratio']:.2%}")
 
     except Exception as e:
-        print(f"❌ Unified scoring demo error: {e}")
+        print(f" Unified scoring demo error: {e}")
 
     print("")
 
 
 def demo_performance_profiling():
     """Demo 5: Performance Profiling Results"""
-    print("📊 DEMO 5: Performance Profiling Results")
+    print(" DEMO 5: Performance Profiling Results")
     print("=" * 50)
 
-    print("✅ Comprehensive profiling script implemented")
-    print("✅ Identifies blocking operations >100ms")
-    print("✅ Generates optimization recommendations")
-    print("✅ Tracks performance metrics across components")
+    print(" Comprehensive profiling script implemented")
+    print(" Identifies blocking operations >100ms")
+    print(" Generates optimization recommendations")
+    print(" Tracks performance metrics across components")
 
-    print("\n🎯 Key Findings:")
+    print("\n Key Findings:")
     print("   • Trust scoring: Optimized with caching (8-12% improvement)")
     print("   • Database operations: Enhanced with WAL mode (4-6% improvement)")
     print("   • SHAP explanations: Cached for sub-second responses")
     print("   • ML model loading: Lazy initialization with background caching")
 
-    print("\n💡 Implemented Optimizations:")
-    print("   1. ⚡ Caching layer for trust score calculations")
-    print("   2. 💾 Database WAL mode and transaction retries")
-    print("   3. 🧠 SHAP explainer pre-computation and caching")
-    print("   4. 🔧 Lazy loading and background initialization")
-    print("   5. 📦 Streamlined startup with automated setup script")
+    print("\n Implemented Optimizations:")
+    print("   1.  Caching layer for trust score calculations")
+    print("   2.  Database WAL mode and transaction retries")
+    print("   3.  SHAP explainer pre-computation and caching")
+    print("   4.  Lazy loading and background initialization")
+    print("   5.  Streamlined startup with automated setup script")
 
     print("")
 
 
 def demo_test_coverage():
     """Demo 6: Test Coverage and Validation"""
-    print("🧪 DEMO 6: Test Coverage and Validation")
+    print(" DEMO 6: Test Coverage and Validation")
     print("=" * 50)
 
     try:
         from test_unified_scoring import run_unified_scoring_tests
 
-        print("🔄 Running unified scoring tests...")
+        print(" Running unified scoring tests...")
         results = run_unified_scoring_tests()
 
-        print(f"\n📊 Test Results:")
+        print(f"\n Test Results:")
         print(f"   • Tests run: {results['tests_run']}")
         print(f"   • Failures: {results['failures']}")
         print(f"   • Errors: {results['errors']}")
         print(f"   • Success rate: {results['success']}")
 
         if results["success"]:
-            print("   ✅ All unified scoring tests PASSED")
+            print("    All unified scoring tests PASSED")
         else:
-            print("   ❌ Some tests FAILED - check implementation")
+            print("    Some tests FAILED - check implementation")
 
     except Exception as e:
-        print(f"❌ Test demo error: {e}")
+        print(f" Test demo error: {e}")
 
     print("")
 
 
 def show_impact_summary():
     """Show the expected impact summary"""
-    print("🎉 IMPLEMENTATION IMPACT SUMMARY")
+    print(" IMPLEMENTATION IMPACT SUMMARY")
     print("=" * 50)
 
     improvements = [
@@ -303,24 +303,24 @@ def show_impact_summary():
     )
     total_max = sum(int(imp[2].split("-")[1].replace("%", "")) for imp in improvements)
 
-    print("📈 Expected Performance Improvements:")
+    print(" Expected Performance Improvements:")
     for name, priority, impact, description in improvements:
         print(f"   • {name:<25} {priority:<10} {impact:<8} {description}")
 
     print(
-        f"\n🚀 Total Expected Impact: +{total_min}-{total_max}% performance improvement"
+        f"\n Total Expected Impact: +{total_min}-{total_max}% performance improvement"
     )
 
-    print(f"\n✅ Implementation Status:")
-    print(f"   • All 5 major improvements: COMPLETED ✅")
-    print(f"   • Tests and validation: PASSING ✅")
-    print(f"   • Documentation updated: COMPLETED ✅")
-    print(f"   • Ready for production: YES ✅")
+    print(f"\n Implementation Status:")
+    print(f"   • All 5 major improvements: COMPLETED ")
+    print(f"   • Tests and validation: PASSING ")
+    print(f"   • Documentation updated: COMPLETED ")
+    print(f"   • Ready for production: YES ")
 
 
 def main():
     """Run all demonstrations"""
-    print("🚀 Z-CRED PERFORMANCE OPTIMIZATION DEMONSTRATION")
+    print(" Z-CRED PERFORMANCE OPTIMIZATION DEMONSTRATION")
     print("=" * 60)
     print("Showcasing implemented improvements for enhanced application performance")
     print("=" * 60)
@@ -336,7 +336,7 @@ def main():
     show_impact_summary()
 
     print("\n" + "=" * 60)
-    print("🎯 DEMONSTRATION COMPLETED SUCCESSFULLY!")
+    print(" DEMONSTRATION COMPLETED SUCCESSFULLY!")
     print("=" * 60)
     print("All performance optimizations are working as expected.")
     print("The Z-Cred application is now optimized for production deployment.")

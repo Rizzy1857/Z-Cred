@@ -23,11 +23,11 @@ def test_enhanced_model():
     try:
         model = CreditRiskModel()
         model.train()
-        print("✅ Model training successful")
+        print(" Model training successful")
         print(f"   - Model confidence intervals: {model.model_confidence}")
         print(f"   - Training history entries: {len(model.training_history)}")
     except Exception as e:
-        print(f"❌ Model training failed: {e}")
+        print(f" Model training failed: {e}")
         return False
 
     # Test 2: Valid prediction with confidence intervals
@@ -48,13 +48,13 @@ def test_enhanced_model():
 
     try:
         prediction = model.predict(valid_applicant)
-        print("✅ Valid prediction successful")
+        print(" Valid prediction successful")
         print(f"   - Risk Category: {prediction['risk_category']}")
         print(f"   - Confidence Score: {prediction['confidence_score']:.3f}")
         print(f"   - Prediction Confidence: {prediction['prediction_confidence']:.3f}")
         print(f"   - Model Version: {prediction['model_version']}")
     except Exception as e:
-        print(f"❌ Valid prediction failed: {e}")
+        print(f" Valid prediction failed: {e}")
         return False
 
     # Test 3: SHAP explanation
@@ -62,7 +62,7 @@ def test_enhanced_model():
     try:
         explanation = model.explain_prediction(valid_applicant)
         if "error" not in explanation:
-            print("✅ SHAP explanation successful")
+            print(" SHAP explanation successful")
             print(
                 f"   - Explanation quality: {explanation.get('explanation_quality', 'unknown')}"
             )
@@ -79,11 +79,11 @@ def test_enhanced_model():
                 for contrib in explanation["top_contributors"]["positive"][:2]:
                     print(f"     • {contrib['feature']}: {contrib['impact']:.3f}")
         else:
-            print(f"⚠️  SHAP explanation returned error: {explanation['error']}")
+            print(f"  SHAP explanation returned error: {explanation['error']}")
             if "fallback_explanation" in explanation:
-                print("✅ Fallback explanation available")
+                print(" Fallback explanation available")
     except Exception as e:
-        print(f"❌ SHAP explanation failed: {e}")
+        print(f" SHAP explanation failed: {e}")
 
     # Test 4: Error handling for invalid data
     print("\n4. Testing Error Handling...")
@@ -96,18 +96,18 @@ def test_enhanced_model():
 
     try:
         prediction = model.predict(invalid_applicant)
-        print("✅ Error handling successful - invalid data converted safely")
+        print(" Error handling successful - invalid data converted safely")
         print(f"   - Risk Category: {prediction['risk_category']}")
     except (ModelError, FeatureExtractionError, ValidationError) as e:
-        print(f"✅ Proper error handling - caught expected error: {type(e).__name__}")
+        print(f" Proper error handling - caught expected error: {type(e).__name__}")
     except Exception as e:
-        print(f"⚠️  Unexpected error type: {type(e).__name__}: {e}")
+        print(f"  Unexpected error type: {type(e).__name__}: {e}")
 
     # Test 5: Trust score calculation
     print("\n5. Testing Enhanced Trust Score Calculation...")
     try:
         trust_result = calculate_trust_score(valid_applicant)
-        print("✅ Trust score calculation successful")
+        print(" Trust score calculation successful")
         print(
             f"   - Overall Trust Score: {trust_result.get('overall_trust_score', 'N/A'):.3f}"
         )
@@ -117,7 +117,7 @@ def test_enhanced_model():
         print(f"   - Social Score: {trust_result.get('social_score', 'N/A'):.3f}")
         print(f"   - Digital Score: {trust_result.get('digital_score', 'N/A'):.3f}")
     except Exception as e:
-        print(f"❌ Trust score calculation failed: {e}")
+        print(f" Trust score calculation failed: {e}")
 
     # Test 6: Edge cases
     print("\n6. Testing Edge Cases...")
@@ -131,27 +131,27 @@ def test_enhanced_model():
     for i, case in enumerate(edge_cases):
         try:
             prediction = model.predict(case)
-            print(f"✅ Edge case {i+1} handled successfully")
+            print(f" Edge case {i+1} handled successfully")
         except Exception as e:
-            print(f"⚠️  Edge case {i+1} failed: {type(e).__name__}")
+            print(f"  Edge case {i+1} failed: {type(e).__name__}")
 
     # Test 7: Model persistence (save/load)
     print("\n7. Testing Model Persistence...")
     try:
         model.save_model("test_models/")
-        print("✅ Model save successful")
+        print(" Model save successful")
 
         new_model = CreditRiskModel()
         new_model.load_model("test_models/")
-        print("✅ Model load successful")
+        print(" Model load successful")
 
         # Test loaded model
         test_prediction = new_model.predict(valid_applicant)
         print(
-            f"✅ Loaded model prediction successful: {test_prediction['risk_category']}"
+            f" Loaded model prediction successful: {test_prediction['risk_category']}"
         )
     except Exception as e:
-        print(f"⚠️  Model persistence test failed: {e}")
+        print(f"  Model persistence test failed: {e}")
 
     print("\n" + "=" * 60)
     print("ENHANCED MODEL PIPELINE TEST COMPLETE")
@@ -188,13 +188,13 @@ def test_error_handling_module():
         try:
             result = safe_json_parse(json_input)
             if should_succeed and isinstance(result, dict):
-                print(f"✅ JSON parse handled correctly: {str(json_input)[:20]}")
+                print(f" JSON parse handled correctly: {str(json_input)[:20]}")
             elif not should_succeed and result == {}:
-                print(f"✅ Invalid JSON handled correctly: {str(json_input)[:20]}")
+                print(f" Invalid JSON handled correctly: {str(json_input)[:20]}")
             else:
-                print(f"⚠️  Unexpected result for: {str(json_input)[:20]}")
+                print(f"  Unexpected result for: {str(json_input)[:20]}")
         except Exception as e:
-            print(f"❌ JSON parse failed: {e}")
+            print(f" JSON parse failed: {e}")
 
     # Test numeric conversion
     print("\n2. Testing Safe Numeric Conversion...")
@@ -214,9 +214,9 @@ def test_error_handling_module():
                 result = safe_numeric_conversion(value, max_val=100)
             else:
                 result = safe_numeric_conversion(value)
-            print(f"✅ Numeric conversion: {value} -> {result}")
+            print(f" Numeric conversion: {value} -> {result}")
         except Exception as e:
-            print(f"❌ Numeric conversion failed: {e}")
+            print(f" Numeric conversion failed: {e}")
 
     # Test validation functions
     print("\n3. Testing Validation Functions...")
@@ -233,25 +233,25 @@ def test_error_handling_module():
         try:
             result = func(value)
             if result == expected:
-                print(f"✅ Validation {func.__name__}: {value} -> {result}")
+                print(f" Validation {func.__name__}: {value} -> {result}")
             else:
                 print(
-                    f"⚠️  Validation {func.__name__}: {value} -> {result} (expected {expected})"
+                    f"  Validation {func.__name__}: {value} -> {result} (expected {expected})"
                 )
         except Exception as e:
-            print(f"❌ Validation {func.__name__} failed: {e}")
+            print(f" Validation {func.__name__} failed: {e}")
 
     # Test confidence intervals
     print("\n4. Testing Confidence Interval Calculator...")
     try:
         test_predictions = [0.3, 0.5, 0.7, 0.4, 0.6, 0.8, 0.2, 0.9]
         intervals = confidence_interval_calculator(test_predictions)
-        print(f"✅ Confidence intervals calculated:")
+        print(f" Confidence intervals calculated:")
         print(f"   - Mean: {intervals['mean']:.3f}")
         print(f"   - Lower bound: {intervals['lower']:.3f}")
         print(f"   - Upper bound: {intervals['upper']:.3f}")
     except Exception as e:
-        print(f"❌ Confidence interval calculation failed: {e}")
+        print(f" Confidence interval calculation failed: {e}")
 
     print("\n" + "=" * 60)
     print("ERROR HANDLING MODULE TEST COMPLETE")
@@ -267,14 +267,14 @@ if __name__ == "__main__":
         test_error_handling_module()
 
         if model_success:
-            print("\n🎉 ALL TESTS COMPLETED SUCCESSFULLY!")
-            print("✅ Enhanced model pipeline is ready for production")
-            print("✅ Error handling is robust and comprehensive")
-            print("✅ Confidence intervals are working correctly")
-            print("✅ SHAP explanations are enhanced with fallbacks")
+            print("\n ALL TESTS COMPLETED SUCCESSFULLY!")
+            print(" Enhanced model pipeline is ready for production")
+            print(" Error handling is robust and comprehensive")
+            print(" Confidence intervals are working correctly")
+            print(" SHAP explanations are enhanced with fallbacks")
         else:
-            print("\n⚠️  Some tests failed. Please review the output above.")
+            print("\n  Some tests failed. Please review the output above.")
 
     except Exception as e:
-        print(f"\n❌ Test execution failed: {e}")
+        print(f"\n Test execution failed: {e}")
         traceback.print_exc()

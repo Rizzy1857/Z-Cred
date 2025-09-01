@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def test_database():
     """Test database operations"""
-    print("🗄️ Testing database...")
+    print(" Testing database...")
     try:
         from local_db import Database
 
@@ -33,29 +33,29 @@ def test_database():
 
         applicant_id = db.create_applicant(test_applicant)
         if applicant_id:
-            print("   ✅ Database operations working")
+            print("    Database operations working")
 
             # Test trust score update
             db.update_trust_score(applicant_id, 0.5, 0.6, 0.4)
-            print("   ✅ Trust score updates working")
+            print("    Trust score updates working")
 
             # Test consent logging
             db.log_consent(applicant_id, "test_consent", "testing", True)
-            print("   ✅ Consent logging working")
+            print("    Consent logging working")
 
             return True
         else:
-            print("   ❌ Database creation failed")
+            print("    Database creation failed")
             return False
 
     except Exception as e:
-        print(f"   ❌ Database test failed: {e}")
+        print(f"    Database test failed: {e}")
         return False
 
 
 def test_authentication():
     """Test authentication system"""
-    print("🔐 Testing authentication...")
+    print(" Testing authentication...")
     try:
         from auth import AuthManager
 
@@ -64,31 +64,31 @@ def test_authentication():
         # Test authentication (should fail with wrong credentials)
         result = auth.db.authenticate_user("test_user", "wrong_password")
         if result is None:
-            print("   ✅ Authentication rejection working")
+            print("    Authentication rejection working")
 
         # Test with admin credentials
         result = auth.db.authenticate_user("admin", "admin123")
         if result:
-            print("   ✅ Admin authentication working")
+            print("    Admin authentication working")
             return True
         else:
-            print("   ❌ Admin authentication failed")
+            print("    Admin authentication failed")
             return False
 
     except Exception as e:
-        print(f"   ❌ Authentication test failed: {e}")
+        print(f"    Authentication test failed: {e}")
         return False
 
 
 def test_ml_pipeline():
     """Test ML pipeline"""
-    print("🤖 Testing ML pipeline...")
+    print(" Testing ML pipeline...")
     try:
         from model_pipeline import CreditRiskModel, calculate_trust_score
 
         # Test model initialization
         model = CreditRiskModel()
-        print("   ✅ Model initialization working")
+        print("    Model initialization working")
 
         # Test trust score calculation
         sample_data = {
@@ -99,11 +99,11 @@ def test_ml_pipeline():
 
         trust_scores = calculate_trust_score(sample_data)
         if trust_scores and "overall_trust_score" in trust_scores:
-            print("   ✅ Trust score calculation working")
+            print("    Trust score calculation working")
 
         # Test model training (quick synthetic data)
         model.train()
-        print("   ✅ Model training working")
+        print("    Model training working")
 
         # Test prediction
         sample_applicant = {
@@ -119,35 +119,35 @@ def test_ml_pipeline():
 
         prediction = model.predict(sample_applicant)
         if prediction and "risk_category" in prediction:
-            print("   ✅ ML prediction working")
+            print("    ML prediction working")
             return True
         else:
-            print("   ❌ ML prediction failed")
+            print("    ML prediction failed")
             return False
 
     except Exception as e:
-        print(f"   ❌ ML pipeline test failed: {e}")
+        print(f"    ML pipeline test failed: {e}")
         return False
 
 
 def test_streamlit_imports():
     """Test Streamlit application imports"""
-    print("🌐 Testing Streamlit imports...")
+    print(" Testing Streamlit imports...")
     try:
         from app import ZScoreApp
 
         ZScoreApp()
-        print("   ✅ Streamlit app imports working")
+        print("    Streamlit app imports working")
         return True
 
     except Exception as e:
-        print(f"   ❌ Streamlit import test failed: {e}")
+        print(f"    Streamlit import test failed: {e}")
         return False
 
 
 def main():
     """Run all tests"""
-    print("🚀 Z-Score System Component Tests")
+    print(" Z-Score System Component Tests")
     print("=" * 50)
 
     tests = [
@@ -166,17 +166,17 @@ def main():
         print()
 
     print("=" * 50)
-    print(f"📊 Test Results: {passed}/{total} tests passed")
+    print(f" Test Results: {passed}/{total} tests passed")
 
     if passed == total:
-        print("🎉 All systems ready for demo!")
-        print("\n🚀 To start the application, run:")
+        print(" All systems ready for demo!")
+        print("\n To start the application, run:")
         print("   ./run.sh")
         print("   or")
         print("   streamlit run app.py")
-        print("\n🔐 Default login: admin / admin123")
+        print("\n Default login: admin / admin123")
     else:
-        print("❌ Some tests failed. Please check the errors above.")
+        print(" Some tests failed. Please check the errors above.")
         return False
 
     return True

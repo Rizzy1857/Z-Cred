@@ -12,7 +12,7 @@ from typing import Optional, Tuple
 import streamlit as st
 
 # Page configuration
-st.set_page_config(page_title="Z-Score Launcher", page_icon="⚡", layout="centered")
+st.set_page_config(page_title="Z-Score Launcher", page_icon="", layout="centered")
 
 
 def _is_port_free(port: int) -> bool:
@@ -181,7 +181,7 @@ def main():
                 if success:
                     st.success("User App launched!")
                     # Use link button to open in new tab
-                    st.link_button("🚀 Open User App", result, use_container_width=True)
+                    st.link_button(" Open User App", result, use_container_width=True)
                     st.info(f"URL: {result}")
                 else:
                     st.error(f"Launch failed: {result}")
@@ -205,7 +205,7 @@ def main():
                     st.success("Admin App launched!")
                     # Use link button to open in new tab
                     st.link_button(
-                        "🚀 Open Admin App", result, use_container_width=True
+                        " Open Admin App", result, use_container_width=True
                     )
                     st.info(f"URL: {result}")
                 else:

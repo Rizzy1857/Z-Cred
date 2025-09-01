@@ -68,15 +68,15 @@ Project Z-Score is a hackathon prototype for PSB's FinTech Cybersecurity Hackath
 
 ```
 zscore/
-├── app.py                 # Main Streamlit application
-├── auth.py               # Authentication system
-├── local_db.py           # Database operations
-├── model_pipeline.py     # ML models and training
-├── requirements.txt      # Dependencies
-├── README.md            # This file
-└── data/
-    ├── applicants.db    # Main SQLite database
-    └── sample_data/     # Demo datasets
+ app.py                 # Main Streamlit application
+ auth.py               # Authentication system
+ local_db.py           # Database operations
+ model_pipeline.py     # ML models and training
+ requirements.txt      # Dependencies
+ README.md            # This file
+ data/
+     applicants.db    # Main SQLite database
+     sample_data/     # Demo datasets
 ```
 
 ### Database Guidelines

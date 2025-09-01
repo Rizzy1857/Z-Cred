@@ -61,10 +61,10 @@ class SHAPCache:
                 self._memory_cache[cache_key] = explainer
                 self._cache_timestamps[cache_key] = time.time()
 
-            print(f"✅ SHAP explainer cached for {model_type}")
+            print(f" SHAP explainer cached for {model_type}")
 
         except Exception as e:
-            print(f"❌ Error caching SHAP explainer: {e}")
+            print(f" Error caching SHAP explainer: {e}")
 
     def load_explainer(self, model_type: str, feature_names: list) -> Optional[Any]:
         """Load SHAP explainer from memory or disk cache"""
@@ -106,7 +106,7 @@ class SHAPCache:
                     cache_path.unlink()
 
             except Exception as e:
-                print(f"⚠️ Error loading cached explainer: {e}")
+                print(f" Error loading cached explainer: {e}")
 
         return None
 
@@ -121,7 +121,7 @@ class SHAPCache:
             return explainer
 
         # Create new explainer if not cached
-        print(f"🔄 Creating new SHAP explainer for {model_type}...")
+        print(f" Creating new SHAP explainer for {model_type}...")
         try:
             import shap
 
@@ -138,7 +138,7 @@ class SHAPCache:
             return explainer
 
         except Exception as e:
-            print(f"❌ Error creating SHAP explainer: {e}")
+            print(f" Error creating SHAP explainer: {e}")
             return None
 
     def clear_cache(self):
@@ -151,13 +151,13 @@ class SHAPCache:
         for cache_file in self.cache_dir.glob("*_explainer.pkl"):
             cache_file.unlink()
 
-        print("🗑️ SHAP cache cleared")
+        print(" SHAP cache cleared")
 
     def precompute_explainers(
         self, models_dict: Dict[str, Any], sample_data: pd.DataFrame
     ):
         """Pre-compute explainers for all models"""
-        print("🚀 Pre-computing SHAP explainers...")
+        print(" Pre-computing SHAP explainers...")
 
         for model_name, model_info in models_dict.items():
             try:
@@ -177,12 +177,12 @@ class SHAPCache:
                 )
 
                 if explainer:
-                    print(f"✅ Pre-computed explainer for {model_name}")
+                    print(f" Pre-computed explainer for {model_name}")
                 else:
-                    print(f"❌ Failed to pre-compute explainer for {model_name}")
+                    print(f" Failed to pre-compute explainer for {model_name}")
 
             except Exception as e:
-                print(f"❌ Error pre-computing explainer for {model_name}: {e}")
+                print(f" Error pre-computing explainer for {model_name}: {e}")
 
 
 # Global cache instance
@@ -223,10 +223,10 @@ def cache_shap_explainers(credit_model):
         # Pre-compute explainers
         shap_cache.precompute_explainers(models_to_cache, sample_df)
 
-        print("🎉 SHAP explainer caching completed!")
+        print(" SHAP explainer caching completed!")
 
     except Exception as e:
-        print(f"❌ Error in SHAP caching: {e}")
+        print(f" Error in SHAP caching: {e}")
 
 
 def get_cached_shap_values(model, X, model_type: str, feature_names: list):
@@ -259,7 +259,7 @@ def get_cached_shap_values(model, X, model_type: str, feature_names: list):
         return shap_values
 
     except Exception as e:
-        print(f"❌ Error getting SHAP values: {e}")
+        print(f" Error getting SHAP values: {e}")
         return None
 
 
@@ -271,11 +271,11 @@ def start_background_refresh(credit_model, refresh_interval: int = 3600):
         while True:
             time.sleep(refresh_interval)
             try:
-                print("🔄 Refreshing SHAP cache...")
+                print(" Refreshing SHAP cache...")
                 cache_shap_explainers(credit_model)
             except Exception as e:
-                print(f"❌ Error in background refresh: {e}")
+                print(f" Error in background refresh: {e}")
 
     refresh_thread = threading.Thread(target=refresh_loop, daemon=True)
     refresh_thread.start()
-    print(f"🔄 Background SHAP refresh started (interval: {refresh_interval}s)")
+    print(f" Background SHAP refresh started (interval: {refresh_interval}s)")

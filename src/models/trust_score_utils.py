@@ -133,7 +133,7 @@ def clear_trust_score_cache():
     """Clear the trust score cache"""
     _trust_score_cache.clear()
     _cache_timestamps.clear()
-    print("🗑️ Trust score cache cleared")
+    print(" Trust score cache cleared")
 
 
 def get_cache_stats() -> Dict[str, Any]:

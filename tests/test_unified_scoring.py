@@ -401,23 +401,23 @@ def run_unified_scoring_tests():
 
 
 if __name__ == "__main__":
-    print("🧪 Running Unified Trust Scoring Tests...")
+    print(" Running Unified Trust Scoring Tests...")
     print("=" * 60)
 
     results = run_unified_scoring_tests()
 
     print("\n" + "=" * 60)
-    print("📊 Test Results Summary:")
-    print(f"✅ Tests Run: {results['tests_run']}")
-    print(f"❌ Failures: {results['failures']}")
-    print(f"⚠️  Errors: {results['errors']}")
-    print(f"🎯 Overall Success: {'✅ PASSED' if results['success'] else '❌ FAILED'}")
+    print(" Test Results Summary:")
+    print(f" Tests Run: {results['tests_run']}")
+    print(f" Failures: {results['failures']}")
+    print(f"  Errors: {results['errors']}")
+    print(f" Overall Success: {' PASSED' if results['success'] else ' FAILED'}")
 
     if not results["success"]:
-        print("\n🔍 Issues Found:")
+        print("\n Issues Found:")
         for failure in results["details"]["failures"]:
-            print(f"❌ {failure[0]}: {failure[1]}")
+            print(f" {failure[0]}: {failure[1]}")
         for error in results["details"]["errors"]:
-            print(f"⚠️  {error[0]}: {error[1]}")
+            print(f"  {error[0]}: {error[1]}")
 
     print("=" * 60)

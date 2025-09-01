@@ -89,7 +89,7 @@ class PerformanceProfiler:
     def generate_report(self) -> str:
         """Generate comprehensive performance report"""
         report = []
-        report.append("🚀 Z-Cred Performance Analysis Report")
+        report.append(" Z-Cred Performance Analysis Report")
         report.append("=" * 50)
         report.append("")
         
@@ -97,46 +97,46 @@ class PerformanceProfiler:
         total_sections = len(self.profiles)
         total_blocking = len(self.blocking_operations)
         
-        report.append(f"📊 Summary:")
+        report.append(f" Summary:")
         report.append(f"   • Sections profiled: {total_sections}")
         report.append(f"   • Blocking operations: {total_blocking}")
         report.append("")
         
         # Blocking operations analysis
         if self.blocking_operations:
-            report.append("⚠️  Blocking Operations (>100ms):")
+            report.append("  Blocking Operations (>100ms):")
             for op in sorted(self.blocking_operations, key=lambda x: x['time'], reverse=True):
                 report.append(f"   • {op['section']}: {op['time']:.3f}s")
             report.append("")
         
         # Section-by-section analysis
-        report.append("📈 Section Performance:")
+        report.append(" Section Performance:")
         for section_name, profile_data in self.profiles.items():
             exec_time = profile_data['execution_time']
-            status = "🔴" if exec_time > 0.5 else "🟡" if exec_time > 0.1 else "🟢"
+            status = "" if exec_time > 0.5 else "" if exec_time > 0.1 else ""
             report.append(f"   {status} {section_name}: {exec_time:.3f}s")
             
             # Top slow functions in this section
             slow_funcs = self.get_slow_functions(section_name, 0.005)[:3]
             for func in slow_funcs:
-                report.append(f"      └─ {func['function']}: {func['cumulative_time']:.3f}s")
+                report.append(f"       {func['function']}: {func['cumulative_time']:.3f}s")
         
         report.append("")
         
         # Recommendations
-        report.append("💡 Optimization Recommendations:")
+        report.append(" Optimization Recommendations:")
         
         if total_blocking > 0:
-            report.append("   1. ⚡ Reduce blocking operations:")
+            report.append("   1.  Reduce blocking operations:")
             for op in self.blocking_operations[:3]:
                 report.append(f"      • Optimize {op['section']} (currently {op['time']:.3f}s)")
         
         if any(p['execution_time'] > 0.2 for p in self.profiles.values()):
-            report.append("   2. 🔧 Consider async operations for slow sections")
+            report.append("   2.  Consider async operations for slow sections")
             
-        report.append("   3. 💾 Use caching for repeated calculations")
-        report.append("   4. 🧵 Move heavy operations to background threads")
-        report.append("   5. 📦 Lazy load expensive resources")
+        report.append("   3.  Use caching for repeated calculations")
+        report.append("   4.  Move heavy operations to background threads")
+        report.append("   5.  Lazy load expensive resources")
         
         return "\n".join(report)
     
@@ -158,7 +158,7 @@ def profile_trust_scoring():
     """Profile trust scoring operations"""
     profiler = PerformanceProfiler()
     
-    print("🔍 Profiling trust scoring operations...")
+    print(" Profiling trust scoring operations...")
     
     # Test data
     test_applicant = {
@@ -191,7 +191,7 @@ def profile_trust_scoring():
             transformed_data = integrator.transform_applicant_data(test_applicant)
             
     except Exception as e:
-        print(f"❌ Error during trust scoring profiling: {e}")
+        print(f" Error during trust scoring profiling: {e}")
         traceback.print_exc()
     
     return profiler
@@ -201,7 +201,7 @@ def profile_database_operations():
     """Profile database operations"""
     profiler = PerformanceProfiler()
     
-    print("🔍 Profiling database operations...")
+    print(" Profiling database operations...")
     
     try:
         # Profile database initialization
@@ -238,7 +238,7 @@ def profile_database_operations():
                 db.update_trust_score(applicant_id, 0.7, 0.6, 0.8)
             
     except Exception as e:
-        print(f"❌ Error during database profiling: {e}")
+        print(f" Error during database profiling: {e}")
         traceback.print_exc()
     
     return profiler
@@ -248,7 +248,7 @@ def profile_ml_model_loading():
     """Profile ML model loading and inference"""
     profiler = PerformanceProfiler()
     
-    print("🔍 Profiling ML model operations...")
+    print(" Profiling ML model operations...")
     
     try:
         # Profile model loading
@@ -262,7 +262,7 @@ def profile_ml_model_loading():
             cache_shap_explainers(model)
             
     except Exception as e:
-        print(f"❌ Error during ML model profiling: {e}")
+        print(f" Error during ML model profiling: {e}")
         traceback.print_exc()
     
     return profiler
@@ -272,7 +272,7 @@ def profile_shap_operations():
     """Profile SHAP explanation generation"""
     profiler = PerformanceProfiler()
     
-    print("🔍 Profiling SHAP operations...")
+    print(" Profiling SHAP operations...")
     
     try:
         # Setup test data
@@ -298,7 +298,7 @@ def profile_shap_operations():
                 )
                 
     except Exception as e:
-        print(f"❌ Error during SHAP profiling: {e}")
+        print(f" Error during SHAP profiling: {e}")
         traceback.print_exc()
     
     return profiler
@@ -306,7 +306,7 @@ def profile_shap_operations():
 
 def run_comprehensive_profiling():
     """Run comprehensive performance profiling"""
-    print("🚀 Starting Comprehensive Z-Cred Performance Profiling")
+    print(" Starting Comprehensive Z-Cred Performance Profiling")
     print("=" * 60)
     
     all_profilers = []
@@ -320,70 +320,70 @@ def run_comprehensive_profiling():
     ]
     
     for section_name, profile_func in sections:
-        print(f"\n📊 Profiling {section_name}...")
+        print(f"\n Profiling {section_name}...")
         try:
             profiler = profile_func()
             all_profilers.append((section_name, profiler))
-            print(f"✅ {section_name} profiling completed")
+            print(f" {section_name} profiling completed")
         except Exception as e:
-            print(f"❌ {section_name} profiling failed: {e}")
+            print(f" {section_name} profiling failed: {e}")
     
     # Generate combined report
     print("\n" + "=" * 60)
-    print("📋 COMPREHENSIVE PERFORMANCE REPORT")
+    print(" COMPREHENSIVE PERFORMANCE REPORT")
     print("=" * 60)
     
     total_blocking_operations = 0
     critical_issues = []
     
     for section_name, profiler in all_profilers:
-        print(f"\n🔍 {section_name} Results:")
+        print(f"\n {section_name} Results:")
         print("-" * 30)
         
         blocking_count = len(profiler.blocking_operations)
         total_blocking_operations += blocking_count
         
         if blocking_count > 0:
-            print(f"⚠️  Found {blocking_count} blocking operations:")
+            print(f"  Found {blocking_count} blocking operations:")
             for op in profiler.blocking_operations:
                 print(f"   • {op['section']}: {op['time']:.3f}s")
                 if op['time'] > 1.0:
                     critical_issues.append(f"{section_name}: {op['section']}")
         else:
-            print("✅ No blocking operations detected")
+            print(" No blocking operations detected")
         
         # Show execution times
         if profiler.profiles:
-            print("⏱️  Execution times:")
+            print("⏱  Execution times:")
             for profile_name, data in profiler.profiles.items():
                 exec_time = data['execution_time']
-                status = "🔴" if exec_time > 0.5 else "🟡" if exec_time > 0.1 else "🟢"
+                status = "" if exec_time > 0.5 else "" if exec_time > 0.1 else ""
                 print(f"   {status} {profile_name}: {exec_time:.3f}s")
     
     # Final recommendations
     print("\n" + "=" * 60)
-    print("🎯 OPTIMIZATION PRIORITIES")
+    print(" OPTIMIZATION PRIORITIES")
     print("=" * 60)
     
     if critical_issues:
-        print("🔴 CRITICAL (>1s execution time):")
+        print(" CRITICAL (>1s execution time):")
         for issue in critical_issues:
             print(f"   • {issue}")
         print("")
     
     if total_blocking_operations > 0:
-        print(f"🟡 MEDIUM ({total_blocking_operations} blocking operations >100ms)")
+        print(f" MEDIUM ({total_blocking_operations} blocking operations >100ms)")
         print("   • Consider caching and async operations")
         print("")
     
-    print("💡 IMMEDIATE ACTIONS:")
-    print("   1. ⚡ Pre-cache SHAP explainers: python -c 'from shap_cache import cache_shap_explainers; ...'")
-    print("   2. 💾 Enable database WAL mode (already implemented)")
-    print("   3. 🧵 Move model loading to background thread")
-    print("   4. 📦 Implement lazy loading for UI components")
-    print("   5. 🔧 Use session state caching in Streamlit")
+    print(" IMMEDIATE ACTIONS:")
+    print("   1.  Pre-cache SHAP explainers: python -c 'from shap_cache import cache_shap_explainers; ...'")
+    print("   2.  Enable database WAL mode (already implemented)")
+    print("   3.  Move model loading to background thread")
+    print("   4.  Implement lazy loading for UI components")
+    print("   5.  Use session state caching in Streamlit")
     
-    print("\n📈 EXPECTED IMPACT:")
+    print("\n EXPECTED IMPACT:")
     if total_blocking_operations > 5:
         print("   • HIGH impact: 8-12% performance improvement")
     elif total_blocking_operations > 2:
@@ -391,7 +391,7 @@ def run_comprehensive_profiling():
     else:
         print("   • LOW impact: 2-4% performance improvement")
     
-    print("\n🎉 Profiling completed!")
+    print("\n Profiling completed!")
     
     # Save detailed profiles for critical issues
     for section_name, profiler in all_profilers:
