@@ -31,6 +31,7 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
 ### Installation
 
 1. **Clone and setup:**
+
    ```bash
    git clone https://github.com/Rizzy1857/Z-Cred.git
    cd Z-Cred
@@ -38,6 +39,7 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
    ```
 
 2. **Run the application:**
+
    ```bash
    make run          # Main application
    make run-user     # User interface
@@ -45,6 +47,7 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
    ```
 
 3. **Run tests:**
+
    ```bash
    make test         # Run all tests
    make test-cov     # With coverage

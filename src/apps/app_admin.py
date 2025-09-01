@@ -25,8 +25,13 @@ from src.database.local_db import Database
 from src.models.model_integration import model_integrator
 from src.models.model_pipeline import CreditRiskModel
 
-# Temporarily comment out problematic script import
-# from scripts.shap_dashboard import show_ai_explanations
+# Import SHAP dashboard for AI explanations
+try:
+    from scripts.shap_dashboard import show_ai_explanations
+    SHAP_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: SHAP dashboard not available: {e}")
+    SHAP_AVAILABLE = False
 
 # Page configuration
 st.set_page_config(
@@ -64,7 +69,7 @@ st.markdown(
     /* Advanced Analytics Cards */
     .main .block-container {
         background: var(--glass) !important;
-        padding: 2rem 2.5rem !important;
+        padding: 1.5rem 2rem !important;
         border-radius: 20px !important;
         max-width: 1400px !important;
         margin: 1rem auto !important;
@@ -76,14 +81,68 @@ st.markdown(
     .stContainer > div, .element-container {
         background: var(--card) !important;
         border-radius: 16px !important;
-        padding: 24px !important;
-        margin: 12px 0 !important;
+        padding: 20px !important;
+        margin: 8px 0 !important;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
                     0 0 0 1px var(--border),
                     inset 0 1px 0 rgba(148, 163, 184, 0.1) !important;
         backdrop-filter: blur(20px) !important;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         border: 1px solid var(--border) !important;
+    }
+
+    /* Responsive Column Layout */
+    .stColumns {
+        gap: 1rem !important;
+    }
+
+    @media (max-width: 768px) {
+        .stColumns > div {
+            min-width: 100% !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        .main .block-container {
+            padding: 1rem !important;
+            margin: 0.5rem !important;
+        }
+    }
+
+    /* Metric Container Styling */
+    .metric-container {
+        background: var(--card) !important;
+        padding: 1.5rem !important;
+        border-radius: 12px !important;
+        border: 1px solid var(--border) !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+        min-height: 120px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+
+    .metric-container:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .metric-container h3 {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.5rem !important;
+        opacity: 0.8 !important;
+    }
+
+    .metric-container h2 {
+        font-size: 1.8rem !important;
+        margin: 0.5rem 0 !important;
+        font-weight: 700 !important;
+    }
+
+    .metric-container p {
+        font-size: 0.8rem !important;
+        opacity: 0.7 !important;
+        margin: 0 !important;
     }
 
     .stContainer > div:hover, .element-container:hover {
@@ -211,10 +270,84 @@ class ZScoreAdminApp:
         if "selected_applicant_id" not in st.session_state:
             st.session_state.selected_applicant_id = None
 
+    def show_admin_login_form(self):
+        """Display admin-specific login form with perfect alignment (copied from user app)"""
+        # Clean welcome header
+        st.markdown(
+            """
+        <div style="text-align: center; padding: 3rem 2rem;">
+            <h1 style="font-size: 3rem; font-weight: 300; color: #2c3e50; margin-bottom: 1rem;">
+                Z-Score Admin
+            </h1>
+            <h3 style="font-weight: 300; color: #7f8c8d; margin-bottom: 2rem;">
+                System Administration Dashboard
+            </h3>
+            <p style="font-size: 1.1rem; color: #95a5a6; max-width: 600px; margin: 0 auto 2rem;">
+                Comprehensive analytics and management platform for the Z-Score credit assessment system.
+            </p>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
+
+        # Center login/signup options
+        col1, col2, col3 = st.columns([1, 2, 1])
+
+        with col2:
+            st.markdown("### Admin Access")
+
+            # Cleaner tabs
+            tab1, tab2 = st.tabs(["Sign In", "Sign Up"])
+
+            with tab1:
+                # Clean login form
+                with st.form("admin_login_form", clear_on_submit=False):
+                    st.markdown("#### Administrator Login")
+
+                    username = st.text_input(
+                        "Username", placeholder="Enter your admin username"
+                    )
+                    password = st.text_input(
+                        "Password", type="password", placeholder="Enter your admin password"
+                    )
+
+                    if st.form_submit_button("Sign In", use_container_width=True):
+                        if username and password:
+                            if self.auth.login(username, password):
+                                st.success("Login successful!")
+                                st.rerun()
+                            else:
+                                st.error("Invalid username or password")
+                        else:
+                            st.warning("Please enter both username and password")
+
+                # Demo credentials - ADMIN ONLY
+                with st.expander("Demo Access"):
+                    st.markdown(
+                        """
+                    **Demo Admin Login:**
+                    Username: `admin`
+                    Password: `admin123`
+                    Role: System Administrator
+
+                    *Demo account for testing the admin dashboard*
+                    """
+                    )
+
+            with tab2:
+                self.auth.show_signup_form()
+
+    def require_admin_auth(self):
+        """Require authentication with admin-specific login form"""
+        if not self.auth.is_authenticated():
+            self.show_admin_login_form()
+            return False
+        return True
+
     def run(self):
         """Main application entry point"""
-        # Show authentication check (admin context)
-        if not self.auth.require_auth(context="admin"):
+        # Use custom admin login form instead of generic auth
+        if not self.require_admin_auth():
             return
 
         # Ensure only admins can access
@@ -622,11 +755,15 @@ class ZScoreAdminApp:
                 st.session_state.selected_applicant_id = user.get("id")
                 with st.expander("AI Explanation", expanded=True):
                     try:
-                        # Temporarily disabled - AI explanations feature under maintenance
-                        st.info("🔧 AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
-                        # show_ai_explanations(user)
+                        if SHAP_AVAILABLE:
+                            # Show AI explanations with proper user data
+                            show_ai_explanations(user)
+                        else:
+                            st.warning("🔧 AI explanations feature requires SHAP library installation.")
+                            st.info("Install with: `pip install shap` to enable advanced AI insights.")
                     except Exception as e:
-                        st.error(f"AI explanation unavailable: {str(e)}")
+                        st.error(f"AI explanation error: {str(e)}")
+                        st.info("💡 Fallback: This user's trust score is based on behavioral patterns, social connections, and digital footprint analysis.")
 
         with col3:
             if st.button("✏️ Edit User"):
@@ -635,15 +772,18 @@ class ZScoreAdminApp:
     def show_ml_analytics(self):
         """Advanced ML Analytics & Intelligence Platform"""
         st.markdown(
-            '<h1 class="analytics-header">� Advanced ML Intelligence Platform</h1>',
+            '<h1 class="analytics-header">🧠 Advanced ML Intelligence Platform</h1>',
             unsafe_allow_html=True,
         )
 
-        # Real-time Status Banner
+        # Real-time Status Banner - Better responsive layout
         with st.container():
             st.markdown('<div class="analytics-card">', unsafe_allow_html=True)
-            col1, col2, col3, col4, col5 = st.columns(5)
-
+            
+            # Use 2 rows for better mobile experience
+            # First row: 3 metrics
+            col1, col2, col3 = st.columns(3)
+            
             with col1:
                 st.markdown(
                     """
@@ -679,6 +819,9 @@ class ZScoreAdminApp:
                 """,
                     unsafe_allow_html=True,
                 )
+            
+            # Second row: 2 metrics
+            col4, col5 = st.columns(2)
 
             with col4:
                 st.markdown(

@@ -13,7 +13,25 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from typing import Dict, List, Any, Optional
 import shap
-from model_integration import model_integrator
+import sys
+import os
+
+# Add project root to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+# Import with correct paths
+try:
+    from src.models.model_integration import model_integrator
+except ImportError:
+    # Fallback for when running from scripts directory
+    try:
+        from model_integration import model_integrator
+    except ImportError:
+        # Final fallback - create a dummy integrator
+        class DummyIntegrator:
+            def get_credit_model(self):
+                return None
+        model_integrator = DummyIntegrator()
 
 
 class SHAPExplainer:
@@ -28,9 +46,10 @@ class SHAPExplainer:
         """Initialize model and SHAP explainer if not already done"""
         if self.model is None:
             self.model = model_integrator.get_credit_model()
-            # SHAP explainer is already initialized in the model
-            self.explainer = self.model.shap_explainer
-            self.feature_names = self.model.feature_names
+            if self.model is not None:
+                # SHAP explainer is already initialized in the model
+                self.explainer = getattr(self.model, 'shap_explainer', None)
+                self.feature_names = getattr(self.model, 'feature_names', [])
         return self.model, self.explainer
 
     def get_explanation(self, applicant_data: Dict) -> Optional[Dict]:
@@ -38,24 +57,29 @@ class SHAPExplainer:
         try:
             model, explainer = self.get_model_and_explainer()
 
-            if explainer is None:
-                st.warning("SHAP explainer not available. Model may need retraining.")
+            if model is None or explainer is None:
+                st.warning("SHAP explainer not available. Model may need initialization.")
                 return None
 
             # Use the model's built-in explanation method
-            explanation = model.explain_prediction(applicant_data)
+            if hasattr(model, 'explain_prediction'):
+                explanation = model.explain_prediction(applicant_data)
 
-            if "error" in explanation:
-                st.warning(f"SHAP explanation unavailable: {explanation['error']}")
+                if "error" in explanation:
+                    st.warning(f"SHAP explanation unavailable: {explanation['error']}")
+                    return None
+
+                # Also get the prediction for additional context
+                if hasattr(model, 'predict'):
+                    prediction = model.predict(applicant_data)
+                    # Combine explanation with prediction data
+                    enhanced_explanation = {**explanation, "prediction_data": prediction}
+                    return enhanced_explanation
+                else:
+                    return explanation
+            else:
+                st.info("SHAP explanations not available for this model type.")
                 return None
-
-            # Also get the prediction for additional context
-            prediction = model.predict(applicant_data)
-
-            # Combine explanation with prediction data
-            enhanced_explanation = {**explanation, "prediction_data": prediction}
-
-            return enhanced_explanation
 
         except Exception as e:
             st.error(f"Error generating SHAP explanation: {e}")
@@ -345,16 +369,53 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             else:
                 st.error("Unable to generate explanation chart")
         else:
-            # Show fallback explanation when SHAP is not available
-            st.warning("🔧 **Advanced AI explanations are initializing...**")
-            st.info(
-                """
-            **What's happening?** Our AI explanation system is setting up for the first time. 
-            This usually takes a few moments. Please try refreshing in a moment.
+            # Show enhanced fallback explanation when SHAP is not available
+            st.warning("🔧 **AI Explanations Initializing**")
             
-            **Alternative:** You can still view your basic trust score breakdown in the Trust Builder section.
-            """
-            )
+            # Create a basic explanation based on user data
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.info(
+                    """
+                **What affects your trust score:**
+                
+                🎯 **Behavioral Factors** (40%)
+                - Payment history consistency
+                - Spending pattern stability  
+                - Financial responsibility indicators
+                
+                🤝 **Social Connections** (30%)
+                - Network quality and diversity
+                - Relationship stability
+                - Community engagement
+                """
+                )
+            
+            with col2:
+                st.info(
+                    """
+                **Additional Considerations:**
+                
+                💻 **Digital Footprint** (30%)
+                - Online activity patterns
+                - Digital identity verification
+                - Technology usage maturity
+                
+                📊 **Your Current Scores:**
+                - Overall: {:.1f}%
+                - Behavioral: {:.1f}%
+                - Social: {:.1f}%
+                - Digital: {:.1f}%
+                """.format(
+                    applicant_data.get('overall_trust_score', 0) * 100,
+                    applicant_data.get('behavioral_score', 0) * 100,
+                    applicant_data.get('social_score', 0) * 100,
+                    applicant_data.get('digital_score', 0) * 100
+                )
+                )
+            
+            st.success("🔄 **Tip:** Refresh this page in a few moments to access advanced AI explanations with detailed factor analysis.")
 
             # Show basic trust score info as fallback
             trust_score = applicant_data.get("overall_trust_score", 0) * 100
