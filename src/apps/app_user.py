@@ -22,8 +22,8 @@ from src.models.model_integration import get_enhanced_trust_assessment
 from src.models.model_pipeline import CreditRiskModel
 from trust_score_utils import format_trust_display, get_unified_trust_scores
 
-# Temporarily comment out problematic script import
-# from scripts.shap_dashboard import show_ai_explanations
+# Import SHAP dashboard for AI explanations
+from scripts.shap_dashboard import show_ai_explanations
 
 # Page configuration
 st.set_page_config(
@@ -152,8 +152,14 @@ st.markdown(
     }
 
     .achievement-card h4, .achievement-card h3 {
-        color: var(--text-primary) !important;
+        color: #2d3748 !important;
         margin: 0.5rem 0 !important;
+        font-weight: 700 !important;
+    }
+
+    .achievement-card p {
+        color: #4a5568 !important;
+        font-weight: 500 !important;
     }
 
     .achievement-card:hover {
@@ -473,7 +479,7 @@ st.markdown(
 
     /* Achievement Cards */
     .achievement-card {
-        background: rgba(255, 255, 255, 0.95) !important;
+        background: rgba(255, 255, 255, 0.98) !important;
         border: 2px solid rgba(102, 126, 234, 0.2) !important;
         padding: 1.2rem !important;
         border-radius: 12px !important;
@@ -487,6 +493,17 @@ st.markdown(
 
     .achievement-card * {
         color: #1a202c !important;
+        font-weight: 500 !important;
+    }
+
+    .achievement-card h3, .achievement-card h4 {
+        color: #2d3748 !important;
+        font-weight: 700 !important;
+    }
+
+    .achievement-card p {
+        color: #4a5568 !important;
+        font-weight: 500 !important;
     }
 
     .achievement-card:hover {
@@ -1586,15 +1603,15 @@ class ZScoreUserApp:
                         <div class="achievement-card" style="background: linear-gradient(145deg, rgba(72, 187, 120, 0.2), rgba(72, 187, 120, 0.1)); border-color: var(--success);">
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <div style="background: var(--success); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem;">
-                                    
+                                    ✅
                                 </div>
                                 <div>
-                                    <h3 style="margin: 0; color: var(--success); font-size: 1.2rem;">{title}</h3>
-                                    <p style="margin: 0; color: var(--text); font-size: 0.9rem;">{description}</p>
+                                    <h3 style="margin: 0; color: #2d3748; font-size: 1.2rem; font-weight: 700;">{title}</h3>
+                                    <p style="margin: 0; color: #4a5568; font-size: 0.9rem; font-weight: 500;">{description}</p>
                                 </div>
                             </div>
-                            <div style="background: rgba(72, 187, 120, 0.1); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
-                                <span style="color: var(--success); font-weight: 600; font-size: 0.9rem;"> ACHIEVEMENT UNLOCKED!</span>
+                            <div style="background: rgba(72, 187, 120, 0.2); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
+                                <span style="color: #2d3748; font-weight: 700; font-size: 0.9rem;"> ACHIEVEMENT UNLOCKED!</span>
                             </div>
                         </div>
                         """,
@@ -1604,18 +1621,18 @@ class ZScoreUserApp:
                         # Locked badge
                         st.markdown(
                             f"""
-                        <div class="achievement-card" style="opacity: 0.6; border-color: var(--border);">
+                        <div class="achievement-card" style="opacity: 0.8; border-color: var(--border);">
                             <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                 <div style="background: #64748b; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem;">
-                                    
+                                    🔒
                                 </div>
                                 <div>
-                                    <h3 style="margin: 0; color: #64748b; font-size: 1.2rem;">{title}</h3>
-                                    <p style="margin: 0; color: #64748b; font-size: 0.9rem;">{description}</p>
+                                    <h3 style="margin: 0; color: #2d3748; font-size: 1.2rem; font-weight: 600;">{title}</h3>
+                                    <p style="margin: 0; color: #4a5568; font-size: 0.9rem; font-weight: 500;">{description}</p>
                                 </div>
                             </div>
-                            <div style="background: rgba(100, 116, 139, 0.1); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
-                                <span style="color: #64748b; font-weight: 600; font-size: 0.9rem;"> KEEP WORKING!</span>
+                            <div style="background: rgba(100, 116, 139, 0.15); padding: 0.5rem 1rem; border-radius: 20px; text-align: center;">
+                                <span style="color: #2d3748; font-weight: 700; font-size: 0.9rem;"> KEEP WORKING!</span>
                             </div>
                         </div>
                         """,
@@ -1632,9 +1649,7 @@ class ZScoreUserApp:
 
         # Show SHAP explanations
         try:
-            # Temporarily disabled - AI explanations feature under maintenance
-            st.info(" AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
-            # show_ai_explanations(applicant)
+            show_ai_explanations(applicant)
         except Exception as e:
             st.error(f"AI insights temporarily unavailable: {str(e)}")
 

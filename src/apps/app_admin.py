@@ -652,6 +652,13 @@ class ZScoreAdminApp:
             df_data = []
             for applicant in filtered_applicants:
                 trust_score = applicant.get("overall_trust_score", 0) * 100
+                # Safe income formatting
+                income_value = applicant.get('monthly_income', 0)
+                try:
+                    income_formatted = f"₹{float(income_value):,.0f}" if income_value else "₹0"
+                except (ValueError, TypeError):
+                    income_formatted = "₹0"
+                
                 df_data.append(
                     {
                         "ID": applicant.get("id"),
@@ -659,7 +666,7 @@ class ZScoreAdminApp:
                         "Phone": applicant.get("phone", "N/A"),
                         "Location": applicant.get("location", "N/A"),
                         "Occupation": applicant.get("occupation", "N/A"),
-                        "Income": f"₹{applicant.get('monthly_income', 0):,}",
+                        "Income": income_formatted,
                         "Trust Score": f"{trust_score:.1f}%",
                         "Status": applicant.get(
                             "credit_application_status", "not_applied"
@@ -738,7 +745,15 @@ class ZScoreAdminApp:
             st.write(f"**Age:** {user.get('age', 'N/A')}")
             st.write(f"**Location:** {user.get('location', 'N/A')}")
             st.write(f"**Occupation:** {user.get('occupation', 'N/A')}")
-            st.write(f"**Income:** ₹{user.get('monthly_income', 0):,}")
+            
+            # Safe income formatting
+            income_value = user.get('monthly_income', 0)
+            try:
+                income_display = f"₹{float(income_value):,.0f}" if income_value else "₹0"
+            except (ValueError, TypeError):
+                income_display = "₹0"
+            st.write(f"**Income:** {income_display}")
+            
             st.write(
                 f"**Status:** {user.get('credit_application_status', 'not_applied')}"
             )
@@ -2628,11 +2643,18 @@ class ZScoreAdminApp:
                 # Create DataFrame for selected risk category
                 df_data = []
                 for user in selected_users:
+                    # Safe income formatting
+                    income_value = user.get('monthly_income', 0)
+                    try:
+                        income_formatted = f"₹{float(income_value):,.0f}" if income_value else "₹0"
+                    except (ValueError, TypeError):
+                        income_formatted = "₹0"
+                    
                     df_data.append(
                         {
                             "Name": user.get("name", "Unknown"),
                             "Trust Score": f"{user.get('overall_trust_score', 0) * 100:.1f}%",
-                            "Income": f"₹{user.get('monthly_income', 0):,}",
+                            "Income": income_formatted,
                             "Location": user.get("location", "N/A"),
                             "Occupation": user.get("occupation", "N/A"),
                         }

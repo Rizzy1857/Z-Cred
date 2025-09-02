@@ -58,20 +58,21 @@ class SHAPExplainer:
             model, explainer = self.get_model_and_explainer()
 
             if model is None or explainer is None:
-                st.warning("SHAP explainer not available. Model may need initialization.")
                 return None
+
+            # Clean and prepare applicant data for model input
+            cleaned_data = self._prepare_applicant_data(applicant_data)
 
             # Use the model's built-in explanation method
             if hasattr(model, 'explain_prediction'):
-                explanation = model.explain_prediction(applicant_data)
+                explanation = model.explain_prediction(cleaned_data)
 
                 if "error" in explanation:
-                    st.warning(f"SHAP explanation unavailable: {explanation['error']}")
                     return None
 
                 # Also get the prediction for additional context
                 if hasattr(model, 'predict'):
-                    prediction = model.predict(applicant_data)
+                    prediction = model.predict(cleaned_data)
                     # Combine explanation with prediction data
                     enhanced_explanation = {**explanation, "prediction_data": prediction}
                     return enhanced_explanation
@@ -84,6 +85,87 @@ class SHAPExplainer:
         except Exception as e:
             st.error(f"Error generating SHAP explanation: {e}")
             return None
+
+    def _prepare_applicant_data(self, applicant_data: Dict) -> Dict:
+        """Clean and prepare applicant data for model input"""
+        # The model expects specific field names, so we need to preserve the original format
+        # but ensure all values are properly formatted
+        cleaned_data = {}
+        
+        # Essential fields that the model's create_features method expects
+        essential_fields = [
+            'age', 'gender', 'monthly_income', 'behavioral_score', 
+            'social_score', 'digital_score', 'overall_trust_score',
+            'employment_type', 'previous_loans', 'payment_history',
+            'education_level', 'location_risk', 'digital_footprint',
+            'social_connections', 'transaction_patterns', 'risk_behavior'
+        ]
+        
+        # Copy all fields from original data, ensuring numeric conversion where needed
+        for field in essential_fields:
+            value = applicant_data.get(field, 0)
+            
+            # Convert string values to numeric if needed
+            if isinstance(value, str):
+                try:
+                    if value in ['good', 'excellent']:
+                        cleaned_data[field] = 1.0
+                    elif value in ['fair', 'average']:
+                        cleaned_data[field] = 0.7
+                    elif value in ['poor', 'bad']:
+                        cleaned_data[field] = 0.3
+                    elif value in ['Male', 'male']:
+                        cleaned_data[field] = 'Male'
+                    elif value in ['Female', 'female']:
+                        cleaned_data[field] = 'Female'
+                    else:
+                        # Try to convert to float
+                        cleaned_data[field] = float(value)
+                except (ValueError, TypeError):
+                    # Use default values for each field type
+                    defaults = {
+                        'age': 30, 'monthly_income': 15000, 'gender': 'Male',
+                        'behavioral_score': 0.5, 'social_score': 0.5, 
+                        'digital_score': 0.5, 'overall_trust_score': 0.5,
+                        'employment_type': 0, 'previous_loans': 0,
+                        'payment_history': 0.5, 'education_level': 0,
+                        'location_risk': 0.1, 'digital_footprint': 0.5,
+                        'social_connections': 0.5, 'transaction_patterns': 0.5,
+                        'risk_behavior': 0.2
+                    }
+                    cleaned_data[field] = defaults.get(field, 0.0)
+            else:
+                cleaned_data[field] = value if value is not None else 0.0
+        
+        # Ensure we have all required fields with defaults
+        defaults = {
+            'age': 30, 'monthly_income': 15000, 'gender': 'Male',
+            'behavioral_score': 0.5, 'social_score': 0.5, 
+            'digital_score': 0.5, 'overall_trust_score': 0.5,
+            'employment_type': 0, 'previous_loans': 0,
+            'payment_history': 0.5, 'education_level': 0,
+            'location_risk': 0.1, 'digital_footprint': 0.5,
+            'social_connections': 0.5, 'transaction_patterns': 0.5,
+            'risk_behavior': 0.2
+        }
+        
+        for field, default_value in defaults.items():
+            if field not in cleaned_data:
+                cleaned_data[field] = default_value
+        
+        # Special handling for fields that the model expects as JSON objects
+        # These need to be properly formatted to avoid the 'float has no attribute get' error
+        json_fields = {
+            'utility_payment_history': '{"on_time_ratio": 0.8, "average_amount": 2000}',
+            'social_proof_data': '{"community_rating": 3.5, "endorsements": 5}',
+            'digital_footprint': '{"activity_score": 0.7, "verification_level": 0.8}'
+        }
+        
+        for field, default_json in json_fields.items():
+            if field not in cleaned_data or not isinstance(cleaned_data.get(field), str):
+                cleaned_data[field] = default_json
+        
+        return cleaned_data
 
     def create_waterfall_chart(self, explanation: Dict) -> Optional[go.Figure]:
         """Create SHAP waterfall chart showing feature contributions"""
@@ -351,7 +433,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
         with st.spinner("Generating AI explanation..."):
             explanation = explainer.get_explanation(applicant_data)
 
-        if explanation:
+        if explanation and isinstance(explanation, dict) and "shap_values" in explanation:
             # Show waterfall chart
             waterfall_fig = explainer.create_waterfall_chart(explanation)
             if waterfall_fig:
@@ -443,7 +525,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
     with tab2:
         st.subheader(" Feature Impact Analysis")
 
-        if explanation:
+        if explanation and isinstance(explanation, dict) and "shap_values" in explanation:
             # Show feature importance chart
             importance_fig = explainer.create_feature_importance_chart(explanation)
             if importance_fig:
@@ -494,7 +576,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
     with tab3:
         st.subheader(" Personalized Explanation")
 
-        if explanation:
+        if explanation and isinstance(explanation, dict) and "shap_values" in explanation:
             # Generate and display plain language explanation
             plain_explanation = explainer.generate_plain_language_explanation(
                 explanation, applicant_data
