@@ -66,6 +66,14 @@ st.markdown(
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
+    .stTextInput {
+        width: auto;
+    }
+
+    .stElementContainer {
+        width: auto;
+    }
+
     /* Advanced Analytics Cards */
     .main .block-container {
         background: var(--glass) !important;
@@ -247,6 +255,10 @@ st.markdown(
         0% { opacity: 1; }
         50% { opacity: 0.5; }
         100% { opacity: 1; }
+    }
+
+    .stFormSubmitButton {
+        max-width: 92%;
     }
 
     footer, #MainMenu, .stToolbar { visibility: hidden !important; }
