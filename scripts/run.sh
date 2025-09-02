@@ -26,4 +26,4 @@ echo ""
 echo "Press Ctrl+C to stop the application"
 echo ""
 
-streamlit run app.py
+streamlit run src/apps/app.py
