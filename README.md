@@ -298,26 +298,62 @@ For optimal performance:
 
 ## Demo Scenarios
 
-### Scenario 1: New User Journey (Priya - Rural Artisan)
+Z-Cred showcases three realistic scenarios representing different segments of India's credit-invisible population, each demonstrating unique aspects of alternative credit scoring.
 
-1. **Onboarding**: New user starts in "Obscurity" phase with 5% Trust Bar
-2. **Literacy Mission**: Complete quiz on bill payment importance (+15% Trust Bar)
-3. **Behavioral Challenge**: Pay electricity bill on time (+20% Trust Bar)
-4. **Data Sharing**: Provide consent for bank transaction history (+30% Trust Bar)
-5. **Graduation**: Cross 70% threshold, unlock credit application eligibility
+### Scenario 1: Rural Entrepreneur (Meera - SHG Leader)
 
-### Scenario 2: Credit Decision with Explanation
+**Profile**: 32-year-old handicraft artisan from Rajasthan, leading a Self-Help Group
+**Credit Need**: ₹25,000 for business equipment expansion
+**Trust Score**: 77/100
 
-1. **Application Processing**: Submit credit application with complete profile
-2. **ML Prediction**: XGBoost model generates risk score and probability of default
-3. **SHAP Explanation**: Visual breakdown of decision factors
-4. **Actionable Feedback**: Clear guidance on improving creditworthiness
+**Key Demo Points**:
 
-### Scenario 3: Compliance Demonstration
+- **Social Proof**: SHG leadership and community endorsements
+- **Payment History**: Consistent utility bill payments despite seasonal income
+- **Alternative Data**: Government scheme participation and community ratings
+- **AI Explanation**: SHAP shows community trust as top positive factor
 
-1. **Consent Management**: Granular data permissions with easy withdrawal
-2. **DPDPA Compliance**: Data minimization and purpose limitation enforcement
-3. **RBI Guidelines**: KFS generation, cooling-off period implementation
+**Login**: `meera@selfhelp.in` / `demo123`
+
+### Scenario 2: Urban Gig Worker (Arjun - Delivery Partner)
+
+**Profile**: 26-year-old food delivery partner from Bangalore
+**Credit Need**: ₹80,000 for electric vehicle purchase
+**Trust Score**: 83/100
+
+**Key Demo Points**:
+
+- **Digital Footprint**: High platform ratings (4.7+ on Swiggy/Zomato)
+- **Income Diversification**: Multiple gig platform earnings
+- **Real-time Data**: GPS tracking, transaction velocity, customer feedback
+- **AI Explanation**: Platform consistency drives high trust score
+
+**Login**: `arjun@delivery.in` / `demo123`
+
+### Scenario 3: Small Business Owner (Fatima - Tailoring Business)
+
+**Profile**: 38-year-old tailoring business owner from Kerala with 12 years experience
+**Credit Need**: ₹1,50,000 for business expansion and equipment
+**Trust Score**: 85/100
+
+**Key Demo Points**:
+
+- **Business Track Record**: 12-year operational history with growth trajectory
+- **Customer Loyalty**: 89% retention rate, excellent online reviews
+- **Financial Discipline**: Perfect rent payments, supplier relationship management
+- **AI Explanation**: Business stability and customer trust drive approval
+
+**Login**: `fatima@tailoring.in` / `demo123`
+
+### Demo Flow
+
+1. **User Selection**: Choose from three distinct personas
+2. **Trust Score Analysis**: See breakdown of behavioral, social, and digital components
+3. **AI Explanations**: SHAP-powered transparency for each decision factor
+4. **Credit Journey**: Gamified missions and achievements for score improvement
+5. **Compliance Demo**: DPDPA consent management and data transparency
+
+**Quick Access**: All demo documentation available at [docs/DEMO_SCENARIOS.md](docs/DEMO_SCENARIOS.md)
 
 ## Key Metrics & Performance
 
@@ -338,44 +374,44 @@ For optimal performance:
 
 ### DPDPA 2023 Compliance
 
--  Valid consent (free, specific, informed, unambiguous)
--  Purpose limitation (credit assessment only)
--  Data minimization (collect only necessary data)
--  Data localization (India-based storage)
--  Consent withdrawal mechanisms
+- Valid consent (free, specific, informed, unambiguous)
+- Purpose limitation (credit assessment only)
+- Data minimization (collect only necessary data)
+- Data localization (India-based storage)
+- Consent withdrawal mechanisms
 
 ### RBI Digital Lending Guidelines 2025
 
--  LSP partnership model with regulated entities
--  Direct fund flow (no intermediary handling)
--  Key Fact Statement generation
--  Mandatory cooling-off period
--  Grievance redressal mechanism
+- LSP partnership model with regulated entities
+- Direct fund flow (no intermediary handling)
+- Key Fact Statement generation
+- Mandatory cooling-off period
+- Grievance redressal mechanism
 
 ## Development Status
 
 ### Completed Features
 
--  Authentication system with role management
--  SQLite database with offline-first architecture
--  ML pipeline with Logistic Regression + XGBoost
--  Trust scoring framework (Behavioral, Social, Digital components)
--  Basic gamification (Z-Credits, Trust Bar)
--  DPDPA-compliant consent management
--  Professional Streamlit UI
+- Authentication system with role management
+- SQLite database with offline-first architecture
+- ML pipeline with Logistic Regression + XGBoost
+- Trust scoring framework (Behavioral, Social, Digital components)
+- Basic gamification (Z-Credits, Trust Bar)
+- DPDPA-compliant consent management
+- Professional Streamlit UI
 
 ### In Progress
 
--  SHAP integration for explainable AI
--  Advanced visualizations (Trust Bar animations, SHAP plots)
--  Demo data scenarios refinement
+- SHAP integration for explainable AI
+- Advanced visualizations (Trust Bar animations, SHAP plots)
+- Demo data scenarios refinement
 
 ### Planned Enhancements
 
--  PDF credit reports generation
--  Offline/online data synchronization
--  Mobile-optimized interface for field agents
--  Account Aggregator framework integration
+- PDF credit reports generation
+- Offline/online data synchronization
+- Mobile-optimized interface for field agents
+- Account Aggregator framework integration
 
 ## Usage Guide
 

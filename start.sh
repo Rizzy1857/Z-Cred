@@ -83,37 +83,42 @@ install_deps() {
 # Initialize database
 init_database() {
     print_status "Initializing database..."
-    $PYTHON_VENV -c "import sys; sys.path.insert(0, '.'); from src.database.local_db import initialize_database; from scripts.setup_demo_data import setup_demo_data; print('Setting up database...'); initialize_database(); setup_demo_data(); print('Database initialization complete!')"
+    $PYTHON_VENV -c "
+from local_db import initialize_database
+from setup_demo_data import setup_demo_data
+print('Setting up database...')
+initialize_database()
+setup_demo_data()
+print('Database initialization complete!')
+"
     print_status "Database initialized with demo data"
 }
 
 # Cache SHAP explainers
 cache_shap() {
     print_status "Pre-computing SHAP explainers for faster UI responses..."
-    $PYTHON_VENV shap_cache.py
-    print_status "SHAP explainers cached successfully"
+    $PYTHON_VENV -c "
+from model_integration import model_integrator
+from shap_cache import cache_shap_explainers
+print('Loading and caching SHAP explainers...')
+model = model_integrator.get_credit_model()
+cache_shap_explainers(model)
+print('SHAP explainers cached successfully!')
+"
+    print_status "SHAP explainers cached"
 }
 
-# Launch main application
-launch_app() {
-    print_status "Launching Z-Cred application..."
-    print_warning "If the app does not open, navigate to: http://localhost:8501"
-    $PYTHON_VENV -m streamlit run main.py
-}
-
-# Main execution flow
-main() {
-    check_python
-    setup_venv
-    install_deps
-    init_database
-    cache_shap
-    launch_app
-    print_status "Z-Cred is now running."
-}
-
-main "$@"
-
+# Start application
+start_app() {
+    APP_TYPE=${1:-"main"}
+    
+    case $APP_TYPE in
+        "main")
+            PORT=8501
+            APP_FILE="app.py"
+            print_status "Starting main application on port $PORT..."
+            ;;
+        "user")
             PORT=8502
             APP_FILE="app_user.py"
             print_status "Starting user application on port $PORT..."

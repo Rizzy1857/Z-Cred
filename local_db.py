@@ -477,48 +477,46 @@ class Database:
         return self.execute_with_retry(_get_all)
     
     def add_sample_data(self):
-        """Add sample data for demo purposes"""
-        sample_applicants = [
-            {
-                'name': 'Priya Sharma',
-                'phone': '+91-9876543210',
-                'email': 'priya@example.com',
-                'age': 28,
-                'gender': 'Female',
-                'location': 'Rajasthan, India',
-                'occupation': 'Handicraft Artisan',
-                'monthly_income': 15000.0
-            },
-            {
-                'name': 'Raj Kumar',
-                'phone': '+91-9876543211',
-                'email': 'raj@example.com',
-                'age': 35,
-                'gender': 'Male',
-                'location': 'Punjab, India',
-                'occupation': 'Small Farmer',
-                'monthly_income': 20000.0
-            }
-        ]
-        
-        for applicant_data in sample_applicants:
-            try:
-                applicant_id = self.create_applicant(applicant_data)
-                if applicant_id is not None:
-                    # Add some trust score progression
-                    self.update_trust_score(applicant_id, 0.3, 0.25, 0.2)
-                    
-                    # Log sample consent
-                    self.log_consent(
-                        applicant_id, 
-                        'data_collection', 
-                        'credit_assessment', 
-                        True,
-                        {'ip_address': '127.0.0.1', 'user_agent': 'Demo Browser'}
-                    )
-            except DatabaseException as e:
-                if "unique constraint" not in str(e).lower():
-                    print(f"Error adding sample data: {e}")
+        """Add scenario-based sample data for demo purposes"""
+        # Use the new scenario-based demo data instead of old samples
+        from scripts.setup_demo_data import setup_demo_data
+        try:
+            setup_demo_data()
+            print(" ✅ Scenario-based demo data added successfully!")
+        except Exception as e:
+            print(f" ❌ Error adding scenario demo data: {e}")
+            # Fallback to minimal sample data
+            sample_applicants = [
+                {
+                    'name': 'Demo User',
+                    'phone': '+91-9999999999',
+                    'email': 'demo@zcred.in',
+                    'age': 30,
+                    'gender': 'Other',
+                    'location': 'India',
+                    'occupation': 'Demo Applicant',
+                    'monthly_income': 25000.0
+                }
+            ]
+            
+            for applicant_data in sample_applicants:
+                try:
+                    applicant_id = self.create_applicant(applicant_data)
+                    if applicant_id is not None:
+                        # Add some trust score progression
+                        self.update_trust_score(applicant_id, 0.7, 0.6, 0.8)
+                        
+                        # Log sample consent
+                        self.log_consent(
+                            applicant_id, 
+                            'data_collection', 
+                            'credit_assessment', 
+                            True,
+                            {'ip_address': '127.0.0.1', 'user_agent': 'Demo Browser'}
+                        )
+                except DatabaseException as e:
+                    if "unique constraint" not in str(e).lower():
+                        print(f" ❌ Error adding sample data: {e}")
                 # Skip if already exists
 
 
