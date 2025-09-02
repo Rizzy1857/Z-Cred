@@ -333,16 +333,26 @@ class ZScoreAdminApp:
                         else:
                             st.warning("Please enter both username and password")
 
-                # Demo credentials - ADMIN ONLY
-                with st.expander("Demo Access"):
+                # Demo credentials - ADMIN ACCESS
+                with st.expander("🔧 Demo Admin Access"):
                     st.markdown(
                         """
-                    **Demo Admin Login:**
-                    Username: `admin`
-                    Password: `admin123`
-                    Role: System Administrator
-
-                    *Demo account for testing the admin dashboard*
+                    **System Administrator Demo:**
+                    - **Username:** `admin`
+                    - **Password:** `admin123`
+                    - **Role:** System Administrator
+                    - **Access:** Full system management and analytics
+                    
+                    ---
+                    
+                    **User Demo Accounts Available:**
+                    
+                    🎯 **For testing user experience, use the User App with:**
+                    - Rural Entrepreneur: `meera@selfhelp.in` / `demo123`
+                    - Urban Gig Worker: `arjun@delivery.in` / `demo123`  
+                    - Small Business Owner: `fatima@tailoring.in` / `demo123`
+                    
+                    *Admin dashboard provides oversight of all user accounts and system analytics*
                     """
                     )
 
@@ -2725,9 +2735,11 @@ class ZScoreAdminApp:
 
         # Show AI explanations
         try:
-            # Temporarily disabled - AI explanations feature under maintenance
-            st.info(" AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
-            # show_ai_explanations(selected_applicant)
+            if SHAP_AVAILABLE:
+                show_ai_explanations(selected_applicant)
+            else:
+                st.error("SHAP dashboard is not available. Please check installation.")
+                st.info("AI explanations feature is currently under maintenance. Enhanced insights coming soon!")
         except Exception as e:
             st.error(f"AI explanation unavailable: {str(e)}")
 

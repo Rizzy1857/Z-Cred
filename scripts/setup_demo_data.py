@@ -265,32 +265,105 @@ def setup_demo_data():
 
     for user in demo_users:
         try:
-            # Store in database
-            applicant_id = db.create_applicant(user)
-            if applicant_id:
-                print(f" ✅ Created scenario user: {user['name']} ({user['scenario_type']})")
-                
-                # Add trust score progression
-                db.update_trust_score(
-                    applicant_id,
-                    user['behavioral_score'],
-                    user['social_score'], 
-                    user['digital_score']
-                )
-                
-                # Log consent for demo
-                db.log_consent(
-                    applicant_id,
-                    'demo_scenario',
-                    'comprehensive_assessment',
-                    True,
-                    {'demo_type': user['scenario_type'], 'setup_date': datetime.now().isoformat()}
-                )
-                
+            # Check if user already exists
+            existing_user = None
+            try:
+                with db.get_connection() as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT id FROM applicants WHERE email = ?", (user['email'],))
+                    result = cursor.fetchone()
+                    if result:
+                        existing_user = result[0]
+            except Exception:
+                pass
+            
+            if existing_user:
+                print(f" ♻️  Demo user already exists: {user['name']} ({user['scenario_type']})")
+                # Update existing user with latest scenario data
+                try:
+                    with db.get_connection() as conn:
+                        cursor = conn.cursor()
+                        # Parse alternative data JSON
+                        alt_data = json.loads(user['alternative_data'])
+                        
+                        cursor.execute("""
+                            UPDATE applicants SET 
+                                name = ?, phone = ?, email = ?, age = ?, gender = ?, location = ?,
+                                occupation = ?, monthly_income = ?, overall_trust_score = ?,
+                                utility_payment_history = ?, mfi_loan_history = ?, 
+                                social_proof_data = ?, digital_footprint = ?
+                            WHERE email = ?
+                        """, (
+                            user['name'], user['phone'], user['email'], user['age'], user['gender'], user['location'],
+                            user['occupation'], user['monthly_income'], user['overall_trust_score'],
+                            json.dumps(alt_data.get('payment_history', {})),
+                            json.dumps(alt_data.get('payment_history', {})),
+                            json.dumps(alt_data.get('social_proof', {})),
+                            json.dumps(alt_data.get('digital_footprint', {})),
+                            user['email']
+                        ))
+                        conn.commit()
+                        
+                    # Update trust scores
+                    db.update_trust_score(
+                        existing_user,
+                        user['behavioral_score'],
+                        user['social_score'], 
+                        user['digital_score']
+                    )
+                    print(f" ✅ Updated existing demo user: {user['name']}")
+                except Exception as e:
+                    print(f" ⚠️  Could not update existing user {user['name']}: {e}")
             else:
-                print(f" ⚠️  User {user['name']} may already exist")
+                # Create new user
+                applicant_id = db.create_applicant(user)
+                if applicant_id:
+                    print(f" ✅ Created scenario user: {user['name']} ({user['scenario_type']})")
+                    
+                    # Update with alternative data fields
+                    try:
+                        with db.get_connection() as conn:
+                            cursor = conn.cursor()
+                            alt_data = json.loads(user['alternative_data'])
+                            
+                            cursor.execute("""
+                                UPDATE applicants SET 
+                                    overall_trust_score = ?, utility_payment_history = ?, 
+                                    mfi_loan_history = ?, social_proof_data = ?, digital_footprint = ?
+                                WHERE id = ?
+                            """, (
+                                user['overall_trust_score'],
+                                json.dumps(alt_data.get('payment_history', {})),
+                                json.dumps(alt_data.get('payment_history', {})),
+                                json.dumps(alt_data.get('social_proof', {})),
+                                json.dumps(alt_data.get('digital_footprint', {})),
+                                applicant_id
+                            ))
+                            conn.commit()
+                    except Exception as e:
+                        print(f" ⚠️  Could not update alternative data for {user['name']}: {e}")
+                    
+                    # Add trust score progression
+                    db.update_trust_score(
+                        applicant_id,
+                        user['behavioral_score'],
+                        user['social_score'], 
+                        user['digital_score']
+                    )
+                    
+                    # Log consent for demo
+                    db.log_consent(
+                        applicant_id,
+                        'demo_scenario',
+                        'comprehensive_assessment',
+                        True,
+                        {'demo_type': user['scenario_type'], 'setup_date': datetime.now().isoformat()}
+                    )
+                else:
+                    print(f" ⚠️  Could not create user {user['name']}")
+                    
         except Exception as e:
-            print(f" ❌ Error creating {user['name']}: {e}")
+            print(f" ❌ Error processing {user['name']}: {e}")
 
     print(f"\n 🎯 Scenario demo data setup complete! {len(demo_users)} users ready.")
     print(f" 📊 Scenarios: Rural Entrepreneur, Urban Gig Worker, Small Business Owner")
@@ -327,39 +400,113 @@ def get_scenario_credentials():
     }
 
 
-def cleanup_old_demo_data():
-    """Remove old demo data before setting up new scenarios"""
+def cleanup_all_existing_data():
+    """Remove ALL existing data except new demo scenarios"""
     db = Database()
     
-    def _cleanup_old_data():
-        """Internal cleanup function"""
+    def _cleanup_all_data():
+        """Internal cleanup function to remove all existing data"""
         with db.get_connection() as conn:
             cursor = conn.cursor()
             
-            # Remove old demo users by email
-            old_demo_emails = ["sarah@freelancer.in", "raj@smallbiz.in", "priya@student.in"]
-            for email in old_demo_emails:
-                try:
-                    cursor.execute("DELETE FROM applicants WHERE email = ?", (email,))
-                    if cursor.rowcount > 0:
-                        print(f" 🗑️  Removed old demo user: {email}")
-                except Exception as e:
-                    print(f" ⚠️  Could not remove {email}: {e}")
+            # Keep only our new demo scenario users
+            demo_scenario_emails = [
+                "meera@selfhelp.in",
+                "arjun@delivery.in", 
+                "fatima@tailoring.in"
+            ]
             
-            conn.commit()
+            # Build placeholders for SQL IN clause
+            placeholders = ",".join("?" * len(demo_scenario_emails))
+            
+            try:
+                # Remove all applicants EXCEPT our demo scenarios
+                cursor.execute(
+                    f"DELETE FROM applicants WHERE email NOT IN ({placeholders})",
+                    demo_scenario_emails
+                )
+                removed_count = cursor.rowcount
+                print(f" 🗑️  Removed {removed_count} non-demo users from applicants table")
+                
+                # Clean up related tables - trust_scores (keep only demo scenarios)
+                cursor.execute("""
+                    DELETE FROM trust_scores 
+                    WHERE applicant_id NOT IN (
+                        SELECT id FROM applicants WHERE email IN ({})
+                    )
+                """.format(placeholders), demo_scenario_emails)
+                removed_trust_scores = cursor.rowcount
+                print(f" 🗑️  Removed {removed_trust_scores} non-demo trust score records")
+                
+                # Clean up consent_logs (keep only demo scenarios)
+                cursor.execute("""
+                    DELETE FROM consent_logs 
+                    WHERE applicant_id NOT IN (
+                        SELECT id FROM applicants WHERE email IN ({})
+                    )
+                """.format(placeholders), demo_scenario_emails)
+                removed_consent_logs = cursor.rowcount
+                print(f" 🗑️  Removed {removed_consent_logs} non-demo consent log records")
+                
+                # Clean up any other related data tables if they exist
+                try:
+                    # Check if there are other tables with applicant references
+                    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+                    tables = [row[0] for row in cursor.fetchall()]
+                    
+                    for table in tables:
+                        if table.startswith('sqlite_') or table in ['applicants', 'trust_scores', 'consent_logs']:
+                            continue  # Skip system tables and already cleaned tables
+                        
+                        # Try to clean tables that might have applicant_id references
+                        try:
+                            cursor.execute(f"PRAGMA table_info({table})")
+                            columns = [col[1] for col in cursor.fetchall()]
+                            
+                            if 'applicant_id' in columns:
+                                cursor.execute(f"""
+                                    DELETE FROM {table} 
+                                    WHERE applicant_id NOT IN (
+                                        SELECT id FROM applicants WHERE email IN ({placeholders})
+                                    )
+                                """, demo_scenario_emails)
+                                removed_other = cursor.rowcount
+                                if removed_other > 0:
+                                    print(f" 🗑️  Removed {removed_other} non-demo records from {table}")
+                        except Exception as e:
+                            # Some tables might not have applicant_id, that's fine
+                            pass
+                            
+                except Exception as e:
+                    print(f" ⚠️  Could not clean additional tables: {e}")
+                
+                conn.commit()
+                print(f" ✅ Database cleanup completed - only demo scenario data remains")
+                
+            except Exception as e:
+                print(f" ❌ Error during cleanup: {e}")
+                conn.rollback()
     
     try:
-        db.execute_with_retry(_cleanup_old_data)
-        print(" ✅ Old demo data cleanup completed")
+        db.execute_with_retry(_cleanup_all_data)
+        print(" ✅ All existing data cleanup completed")
     except Exception as e:
         print(f" ⚠️  Error during cleanup: {e}")
 
 
+def cleanup_old_demo_data():
+    """Remove old demo data before setting up new scenarios - DEPRECATED"""
+    # This function is now replaced by cleanup_all_existing_data()
+    print(" ℹ️  Using comprehensive cleanup instead of old demo cleanup")
+    cleanup_all_existing_data()
+
+
 if __name__ == "__main__":
     print(" 🚀 Setting up Z-Cred Scenario-Based Demo Data...")
+    print(" 🧹 This will remove ALL existing data except demo scenarios")
     
-    # Clean up old data first
-    cleanup_old_demo_data()
+    # Clean up ALL existing data first (not just old demo data)
+    cleanup_all_existing_data()
     
     # Setup new scenario data
     users = setup_demo_data()
@@ -379,5 +526,6 @@ if __name__ == "__main__":
     print(" 📖 Detailed scenarios: docs/DEMO_SCENARIOS.md")
     print(" 📝 Individual scenarios: docs/SCENARIO_*.md")
     print("\n ✨ Ready for hackathon demonstration!")
+    print("\n 🎯 Database now contains ONLY demo scenario data!")
 
     print("\n Ready for hackathon demo!")

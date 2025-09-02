@@ -750,16 +750,45 @@ class ZScoreUserApp:
                         else:
                             st.warning("Please enter both username and password")
 
-                # Demo credentials - USER ONLY
-                with st.expander("Demo Access"):
+                # Demo credentials - USER SCENARIOS
+                with st.expander("🎯 Demo User Scenarios"):
                     st.markdown(
                         """
-                    **Demo User Login:**
-                    Username: `demo_user`
-                    Password: `user123`
-                    Role: Credit Applicant
-
-                    *Demo account for testing the credit building journey*
+                    **Choose a Demo Scenario to Experience:**
+                    
+                    ---
+                    
+                    **🏘️ Rural Entrepreneur - Meera Devi**
+                    - **Email:** `meera@selfhelp.in`
+                    - **Password:** `demo123`
+                    - **Profile:** SHG Leader, Handicraft Artisan
+                    - **Trust Score:** 77/100
+                    - **Credit Need:** ₹25,000 for handicraft equipment
+                    - **Strengths:** Community leadership, Payment consistency, Social proof
+                    
+                    ---
+                    
+                    **🏙️ Urban Gig Worker - Arjun Krishnan**
+                    - **Email:** `arjun@delivery.in`
+                    - **Password:** `demo123`
+                    - **Profile:** Food Delivery Partner
+                    - **Trust Score:** 83/100
+                    - **Credit Need:** ₹80,000 for electric vehicle
+                    - **Strengths:** High platform ratings, Digital proficiency, Income diversification
+                    
+                    ---
+                    
+                    **🏢 Small Business Owner - Fatima Beevi**
+                    - **Email:** `fatima@tailoring.in`
+                    - **Password:** `demo123`
+                    - **Profile:** Tailoring Business Owner
+                    - **Trust Score:** 85/100
+                    - **Credit Need:** ₹1,50,000 for business expansion
+                    - **Strengths:** 12-year business track record, Excellent customer retention, Growth trajectory
+                    
+                    ---
+                    
+                    *Each demo account showcases different alternative credit scoring scenarios and demonstrates the full range of Z-Score features.*
                     """
                     )
 
