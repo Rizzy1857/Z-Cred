@@ -83,11 +83,11 @@ def launch_app(
         # Wait briefly for server to start
         time.sleep(2)
 
-        # Try to open browser programmatically (best-effort)
-        try:
-            webbrowser.open(app_url)
-        except Exception:
-            pass
+        # Try to open browser programmatically (best-effort) & UNNEEDED
+        # try:
+        #     webbrowser.open(app_url)
+        # except Exception:
+        #     pass
 
         return True, app_url, process
 
