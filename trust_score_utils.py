@@ -71,33 +71,54 @@ def get_unified_trust_scores(applicant_data: Dict[str, Any]) -> Dict[str, Any]:
         if cached_scores is not None:
             return cached_scores
         
-        # Prepare data for trust score calculation
-        calc_data = {
-            'age': applicant_data.get('age', 25),
-            'income': applicant_data.get('income', applicant_data.get('monthly_income', 30000)),
-            'employment_length': applicant_data.get('employment_length', 2),
-            'debt_to_income': applicant_data.get('debt_to_income', 0.3),
-            'credit_utilization': applicant_data.get('credit_utilization', 0.4),
-            'payment_history_score': applicant_data.get('payment_history_score', 80),
-            'account_diversity': applicant_data.get('account_diversity', 2),
-            'savings_rate': applicant_data.get('savings_rate', 0.15),
-            'education_level': applicant_data.get('education_level', 'Bachelor')
-        }
+        # For demo users, prioritize database scores if they exist and are realistic
+        db_overall = applicant_data.get('overall_trust_score', 0)
+        db_behavioral = applicant_data.get('behavioral_score', 0)
+        db_social = applicant_data.get('social_score', 0)
+        db_digital = applicant_data.get('digital_score', 0)
         
-        # Calculate trust scores using the actual ML pipeline
-        trust_result = calculate_trust_score(calc_data)
-        
-        # Ensure consistent format
-        unified_scores = {
-            'behavioral_score': trust_result.get('behavioral_score', 0.5),
-            'social_score': trust_result.get('social_score', 0.5),
-            'digital_score': trust_result.get('digital_score', 0.5),
-            'overall_trust_score': trust_result.get('overall_trust_score', 0.5),
-            'trust_percentage': trust_result.get('trust_percentage', 50.0),
-            'behavioral_percentage': trust_result.get('behavioral_score', 0.5) * 100,
-            'social_percentage': trust_result.get('social_score', 0.5) * 100,
-            'digital_percentage': trust_result.get('digital_score', 0.5) * 100
-        }
+        # Check if we have realistic database scores (> 0.15 = 15%)
+        if db_overall > 0.15 and db_behavioral > 0.15 and db_social > 0.15 and db_digital > 0.15:
+            # Use database scores for consistency
+            unified_scores = {
+                'behavioral_score': db_behavioral,
+                'social_score': db_social,
+                'digital_score': db_digital,
+                'overall_trust_score': db_overall,
+                'trust_percentage': db_overall * 100,
+                'behavioral_percentage': db_behavioral * 100,
+                'social_percentage': db_social * 100,
+                'digital_percentage': db_digital * 100
+            }
+        else:
+            # Fallback to ML pipeline calculation for new users
+            # Prepare data for trust score calculation
+            calc_data = {
+                'age': applicant_data.get('age', 25),
+                'income': applicant_data.get('income', applicant_data.get('monthly_income', 30000)),
+                'employment_length': applicant_data.get('employment_length', 2),
+                'debt_to_income': applicant_data.get('debt_to_income', 0.3),
+                'credit_utilization': applicant_data.get('credit_utilization', 0.4),
+                'payment_history_score': applicant_data.get('payment_history_score', 80),
+                'account_diversity': applicant_data.get('account_diversity', 2),
+                'savings_rate': applicant_data.get('savings_rate', 0.15),
+                'education_level': applicant_data.get('education_level', 'Bachelor')
+            }
+            
+            # Calculate trust scores using the actual ML pipeline
+            trust_result = calculate_trust_score(calc_data)
+            
+            # Ensure consistent format
+            unified_scores = {
+                'behavioral_score': trust_result.get('behavioral_score', 0.5),
+                'social_score': trust_result.get('social_score', 0.5),
+                'digital_score': trust_result.get('digital_score', 0.5),
+                'overall_trust_score': trust_result.get('overall_trust_score', 0.5),
+                'trust_percentage': trust_result.get('trust_percentage', 50.0),
+                'behavioral_percentage': trust_result.get('behavioral_score', 0.5) * 100,
+                'social_percentage': trust_result.get('social_score', 0.5) * 100,
+                'digital_percentage': trust_result.get('digital_score', 0.5) * 100
+            }
         
         # Cache the results
         _cache_scores(cache_key, unified_scores)
