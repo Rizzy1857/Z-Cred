@@ -41,231 +41,231 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.markdown(
-    """
-<style>
-    :root {
-        --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 100%);
-        --card: rgba(30, 41, 59, 0.95);
-        --card-hover: rgba(51, 65, 85, 0.98);
-        --text: #f1f5f9;
-        --text-muted: #94a3b8;
-        --primary: #3b82f6;
-        --secondary: #06b6d4;
-        --accent: #8b5cf6;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --border: rgba(148, 163, 184, 0.2);
-        --glass: rgba(15, 23, 42, 0.8);
-    }
+# st.markdown(
+#     """
+# <style>
+#     :root {
+#         --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 100%);
+#         --card: rgba(30, 41, 59, 0.95);
+#         --card-hover: rgba(51, 65, 85, 0.98);
+#         --text: #f1f5f9;
+#         --text-muted: #94a3b8;
+#         --primary: #3b82f6;
+#         --secondary: #06b6d4;
+#         --accent: #8b5cf6;
+#         --success: #10b981;
+#         --warning: #f59e0b;
+#         --danger: #ef4444;
+#         --border: rgba(148, 163, 184, 0.2);
+#         --glass: rgba(15, 23, 42, 0.8);
+#     }
 
-    body, .stApp, .main {
-        background: var(--bg) !important;
-        color: var(--text) !important;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+#     body, .stApp, .main {
+#         background: var(--bg) !important;
+#         color: var(--text) !important;
+#         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+#     }
 
-    .stTextInput {
-        width: auto;
-    }
+#     .stTextInput {
+#         width: auto;
+#     }
 
-    .stElementContainer {
-        width: auto;
-    }
+#     .stElementContainer {
+#         width: auto;
+#     }
 
-    /* Advanced Analytics Cards */
-    .main .block-container {
-        background: var(--glass) !important;
-        padding: 1.5rem 2rem !important;
-        border-radius: 20px !important;
-        max-width: 1400px !important;
-        margin: 1rem auto !important;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4),
-                    0 0 0 1px var(--border) !important;
-        backdrop-filter: blur(20px) !important;
-    }
+#     /* Advanced Analytics Cards */
+#     .main .block-container {
+#         background: var(--glass) !important;
+#         padding: 1.5rem 2rem !important;
+#         border-radius: 20px !important;
+#         max-width: 1400px !important;
+#         margin: 1rem auto !important;
+#         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4),
+#                     0 0 0 1px var(--border) !important;
+#         backdrop-filter: blur(20px) !important;
+#     }
 
-    .stContainer > div, .element-container {
-        background: var(--card) !important;
-        border-radius: 16px !important;
-        padding: 20px !important;
-        margin: 8px 0 !important;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                    0 0 0 1px var(--border),
-                    inset 0 1px 0 rgba(148, 163, 184, 0.1) !important;
-        backdrop-filter: blur(20px) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        border: 1px solid var(--border) !important;
-    }
+#     .stContainer > div, .element-container {
+#         background: var(--card) !important;
+#         border-radius: 16px !important;
+#         padding: 20px !important;
+#         margin: 8px 0 !important;
+#         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+#                     0 0 0 1px var(--border),
+#                     inset 0 1px 0 rgba(148, 163, 184, 0.1) !important;
+#         backdrop-filter: blur(20px) !important;
+#         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+#         border: 1px solid var(--border) !important;
+#     }
 
-    /* Responsive Column Layout */
-    .stColumns {
-        gap: 1rem !important;
-    }
+#     /* Responsive Column Layout */
+#     .stColumns {
+#         gap: 1rem !important;
+#     }
 
-    @media (max-width: 768px) {
-        .stColumns > div {
-            min-width: 100% !important;
-            margin-bottom: 1rem !important;
-        }
+#     @media (max-width: 768px) {
+#         .stColumns > div {
+#             min-width: 100% !important;
+#             margin-bottom: 1rem !important;
+#         }
         
-        .main .block-container {
-            padding: 1rem !important;
-            margin: 0.5rem !important;
-        }
-    }
+#         .main .block-container {
+#             padding: 1rem !important;
+#             margin: 0.5rem !important;
+#         }
+#     }
 
-    /* Metric Container Styling */
-    .metric-container {
-        background: var(--card) !important;
-        padding: 1.5rem !important;
-        border-radius: 12px !important;
-        border: 1px solid var(--border) !important;
-        text-align: center !important;
-        transition: all 0.3s ease !important;
-        min-height: 120px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-    }
+#     /* Metric Container Styling */
+#     .metric-container {
+#         background: var(--card) !important;
+#         padding: 1.5rem !important;
+#         border-radius: 12px !important;
+#         border: 1px solid var(--border) !important;
+#         text-align: center !important;
+#         transition: all 0.3s ease !important;
+#         min-height: 120px !important;
+#         display: flex !important;
+#         flex-direction: column !important;
+#         justify-content: center !important;
+#     }
 
-    .metric-container:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
-    }
+#     .metric-container:hover {
+#         transform: translateY(-2px) !important;
+#         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+#     }
 
-    .metric-container h3 {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.5rem !important;
-        opacity: 0.8 !important;
-    }
+#     .metric-container h3 {
+#         font-size: 0.9rem !important;
+#         margin-bottom: 0.5rem !important;
+#         opacity: 0.8 !important;
+#     }
 
-    .metric-container h2 {
-        font-size: 1.8rem !important;
-        margin: 0.5rem 0 !important;
-        font-weight: 700 !important;
-    }
+#     .metric-container h2 {
+#         font-size: 1.8rem !important;
+#         margin: 0.5rem 0 !important;
+#         font-weight: 700 !important;
+#     }
 
-    .metric-container p {
-        font-size: 0.8rem !important;
-        opacity: 0.7 !important;
-        margin: 0 !important;
-    }
+#     .metric-container p {
+#         font-size: 0.8rem !important;
+#         opacity: 0.7 !important;
+#         margin: 0 !important;
+#     }
 
-    .stContainer > div:hover, .element-container:hover {
-        background: var(--card-hover) !important;
-        box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4),
-                    0 0 0 1px rgba(59, 130, 246, 0.3),
-                    inset 0 1px 0 rgba(148, 163, 184, 0.2) !important;
-        transform: translateY(-2px) !important;
-    }
+#     .stContainer > div:hover, .element-container:hover {
+#         background: var(--card-hover) !important;
+#         box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4),
+#                     0 0 0 1px rgba(59, 130, 246, 0.3),
+#                     inset 0 1px 0 rgba(148, 163, 184, 0.2) !important;
+#         transform: translateY(-2px) !important;
+#     }
 
-    h1, h2, h3 {
-        color: var(--text) !important;
-        font-weight: 700 !important;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
-        background: linear-gradient(145deg, var(--primary), var(--secondary)) !important;
-        -webkit-background-clip: text !important;
-        -webkit-text-fill-color: transparent !important;
-        background-clip: text !important;
-    }
+#     h1, h2, h3 {
+#         color: var(--text) !important;
+#         font-weight: 700 !important;
+#         text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+#         background: linear-gradient(145deg, var(--primary), var(--secondary)) !important;
+#         -webkit-background-clip: text !important;
+#         -webkit-text-fill-color: transparent !important;
+#         background-clip: text !important;
+#     }
 
-    /* Advanced Buttons */
-    .stButton > button {
-        background: linear-gradient(145deg, var(--primary), var(--secondary)) !important;
-        color: white !important;
-        border-radius: 12px !important;
-        padding: 12px 24px !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3) !important;
-        border: none !important;
-        font-weight: 600 !important;
-    }
+#     /* Advanced Buttons */
+#     .stButton > button {
+#         background: linear-gradient(145deg, var(--primary), var(--secondary)) !important;
+#         color: white !important;
+#         border-radius: 12px !important;
+#         padding: 12px 24px !important;
+#         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+#         box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3) !important;
+#         border: none !important;
+#         font-weight: 600 !important;
+#     }
 
-    .stButton > button:hover {
-        background: linear-gradient(145deg, var(--secondary), var(--accent)) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4) !important;
-    }
+#     .stButton > button:hover {
+#         background: linear-gradient(145deg, var(--secondary), var(--accent)) !important;
+#         transform: translateY(-2px) !important;
+#         box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4) !important;
+#     }
 
-    /* Analytics Cards */
-    .app-card, .analytics-card {
-        background: var(--card) !important;
-        border: 1px solid var(--border) !important;
-        padding: 24px !important;
-        border-radius: 16px !important;
-        backdrop-filter: blur(20px) !important;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        position: relative !important;
-        overflow: hidden !important;
-    }
+#     /* Analytics Cards */
+#     .app-card, .analytics-card {
+#         background: var(--card) !important;
+#         border: 1px solid var(--border) !important;
+#         padding: 24px !important;
+#         border-radius: 16px !important;
+#         backdrop-filter: blur(20px) !important;
+#         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+#         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+#         position: relative !important;
+#         overflow: hidden !important;
+#     }
 
-    .analytics-card::before {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 3px !important;
-        background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)) !important;
-    }
+#     .analytics-card::before {
+#         content: '' !important;
+#         position: absolute !important;
+#         top: 0 !important;
+#         left: 0 !important;
+#         right: 0 !important;
+#         height: 3px !important;
+#         background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)) !important;
+#     }
 
-    /* Metric Cards */
-    .stMetric {
-        background: var(--card) !important;
-        padding: 20px !important;
-        border-radius: 12px !important;
-        border: 1px solid var(--border) !important;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
-        transition: all 0.3s ease !important;
-    }
+#     /* Metric Cards */
+#     .stMetric {
+#         background: var(--card) !important;
+#         padding: 20px !important;
+#         border-radius: 12px !important;
+#         border: 1px solid var(--border) !important;
+#         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+#         transition: all 0.3s ease !important;
+#     }
 
-    .stMetric:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
-    }
+#     .stMetric:hover {
+#         transform: translateY(-2px) !important;
+#         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+#     }
 
-    /* Data Tables */
-    .stDataFrame {
-        background: var(--card) !important;
-        border-radius: 12px !important;
-        border: 1px solid var(--border) !important;
-        overflow: hidden !important;
-    }
+#     /* Data Tables */
+#     .stDataFrame {
+#         background: var(--card) !important;
+#         border-radius: 12px !important;
+#         border: 1px solid var(--border) !important;
+#         overflow: hidden !important;
+#     }
 
-    /* Sidebar Dark Theme */
-    .css-1d391kg, .css-1cypcdb, .css-17eq0hr {
-        background: var(--glass) !important;
-        border-right: 1px solid var(--border) !important;
-    }
+#     /* Sidebar Dark Theme */
+#     .css-1d391kg, .css-1cypcdb, .css-17eq0hr {
+#         background: var(--glass) !important;
+#         border-right: 1px solid var(--border) !important;
+#     }
 
-    /* Status Indicators */
-    .status-online { color: var(--success) !important; }
-    .status-warning { color: var(--warning) !important; }
-    .status-error { color: var(--danger) !important; }
+#     /* Status Indicators */
+#     .status-online { color: var(--success) !important; }
+#     .status-warning { color: var(--warning) !important; }
+#     .status-error { color: var(--danger) !important; }
 
-    /* Real-time indicators */
-    .pulse {
-        animation: pulse 2s infinite !important;
-    }
+#     /* Real-time indicators */
+#     .pulse {
+#         animation: pulse 2s infinite !important;
+#     }
 
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.5; }
-        100% { opacity: 1; }
-    }
+#     @keyframes pulse {
+#         0% { opacity: 1; }
+#         50% { opacity: 0.5; }
+#         100% { opacity: 1; }
+#     }
 
-    .stFormSubmitButton {
-        max-width: 92%;
-    }
+#     .stFormSubmitButton {
+#         max-width: 92%;
+#     }
 
-    footer, #MainMenu, .stToolbar { visibility: hidden !important; }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+#     footer, #MainMenu, .stToolbar { visibility: hidden !important; }
+# </style>
+# """,
+#     unsafe_allow_html=True,
+# )
 
 
 class ZScoreAdminApp:
