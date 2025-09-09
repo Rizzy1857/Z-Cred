@@ -18,6 +18,7 @@ Where:
 ### Component Calculations
 
 #### 1. Behavioral Trust (33.33% weight)
+
 **Primary Data Source**: F1 (Payment History) + F2 (Income Stability)
 
 **Note**: The enhanced scoring formula below represents the improved logic design. Current implementation uses a simplified version for stability during demo phase.

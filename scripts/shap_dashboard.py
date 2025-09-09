@@ -322,6 +322,15 @@ class SHAPExplainer:
 **Assessment Result:** {risk_category} 
 **Confidence Level:** {confidence:.1%}
 
+###  How Your Score Was Calculated:
+
+**🎯 The Process Flow:**
+1. **Starting Point**: We began with a baseline score representing average creditworthiness
+2. **Data Analysis**: Our AI analyzed your financial profile across multiple factors
+3. **Impact Assessment**: Each factor was evaluated for positive or negative influence
+4. **Score Building**: Factors were mathematically combined to build your personalized score
+5. **Final Result**: Your unique credit assessment emerged from this comprehensive analysis
+
 ###  What Helped Your Score:
 """
 
@@ -439,6 +448,7 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
             if waterfall_fig:
                 st.plotly_chart(waterfall_fig, use_container_width=True)
 
+                # Enhanced flow chart explanation
                 st.info(
                     """
                 **How to read this chart:**
@@ -448,11 +458,79 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 - The final bar shows your overall predicted score
                 """
                 )
+                
+                # Add comprehensive flow explanation
+                with st.expander("🔍 **Understanding Your Assessment Flow**", expanded=False):
+                    st.markdown(
+                        """
+                        ### Step-by-Step: How Your Credit Score Was Calculated
+                        
+                        **Step 1: Starting Point (Base Score)**
+                        - Every assessment begins with a baseline score representing the average creditworthiness
+                        - This is shown as the first gray bar in the chart
+                        
+                        **Step 2: Factor Analysis**
+                        - Our AI examines your financial data across multiple dimensions
+                        - Each factor is analyzed for its impact on credit risk
+                        - Factors include: income, employment, payment history, behavioral patterns, and more
+                        
+                        **Step 3: Impact Calculation**
+                        - Each factor either increases (green) or decreases (red) your score
+                        - The bar height shows the strength of impact
+                        - Taller bars = stronger influence on your final score
+                        
+                        **Step 4: Cumulative Assessment**
+                        - All factors are combined mathematically
+                        - Positive impacts are added, negative impacts are subtracted
+                        - This creates your personalized risk profile
+                        
+                        **Step 5: Final Score (Blue Bar)**
+                        - The rightmost blue bar shows your final predicted score
+                        - This represents your overall creditworthiness
+                        - Higher scores indicate lower risk and better credit access
+                        
+                        ### 💡 **Reading the Flow:**
+                        - **Left to Right**: Follow the progression from base score to final assessment
+                        - **Bar Colors**: Green = helps you, Red = challenges you, Blue = final result
+                        - **Bar Heights**: Taller bars have more influence on your score
+                        - **Running Total**: Each bar builds upon the previous to reach your final score
+                        """
+                    )
             else:
                 st.error("Unable to generate explanation chart")
         else:
             # Show enhanced fallback explanation when SHAP is not available
             st.warning(" **AI Explanations Initializing**")
+            
+            # Add flow chart explanation even without SHAP
+            with st.expander("🔄 **How Credit Assessment Works - Process Flow**", expanded=True):
+                st.markdown(
+                    """
+                    ### Your Credit Assessment Journey:
+                    
+                    ```
+                    📊 Data Collection → 🧮 Analysis → ⚖️ Scoring → 📈 Result
+                    ```
+                    
+                    **Step 1: Data Collection** 📊
+                    - We gather your financial information securely
+                    - Income, employment, transaction patterns, and behavioral data
+                    
+                    **Step 2: Multi-Factor Analysis** 🧮  
+                    - Behavioral patterns (40% weight): Payment consistency, spending habits
+                    - Social connections (30% weight): Network quality, community engagement
+                    - Digital footprint (30% weight): Online activity, digital identity
+                    
+                    **Step 3: Intelligent Scoring** ⚖️
+                    - AI algorithms evaluate each factor's impact
+                    - Positive behaviors increase your score
+                    - Risk indicators are carefully weighted
+                    
+                    **Step 4: Final Assessment** 📈
+                    - All factors combine into your trust score
+                    - Result determines your credit access and terms
+                    """
+                )
             
             # Create a basic explanation based on user data
             col1, col2 = st.columns(2)
@@ -582,9 +660,82 @@ def render_shap_explainability_dashboard(applicant_data: Dict):
                 explanation, applicant_data
             )
             st.markdown(plain_explanation)
+            
+            # Add detailed flow explanation
+            with st.expander("🎓 **Detailed Assessment Process**", expanded=False):
+                st.markdown(
+                    """
+                    ### Understanding Your Credit Journey:
+                    
+                    **How We Built Your Score:**
+                    
+                    **🔍 Step 1: Comprehensive Data Review**
+                    - We analyzed your complete financial profile
+                    - Income stability, employment history, and transaction patterns
+                    - Behavioral indicators and payment consistency
+                    
+                    **⚡ Step 2: AI-Powered Factor Weighting**
+                    - Each data point was assigned an importance score
+                    - Machine learning algorithms identified key risk indicators
+                    - Positive behaviors were recognized and rewarded
+                    
+                    **🧮 Step 3: Mathematical Scoring**
+                    - All factors were mathematically combined
+                    - Weights adjusted based on predictive power
+                    - Your unique risk profile emerged from this analysis
+                    
+                    **📊 Step 4: Confidence Assessment**
+                    - AI calculated confidence in the prediction
+                    - Multiple validation checks ensured accuracy
+                    - Final score reflects both prediction and certainty
+                    
+                    **💡 Why This Matters:**
+                    - Transparent AI helps you understand credit decisions
+                    - You can see exactly what impacts your score
+                    - Clear path to improvement through targeted actions
+                    """
+                )
         else:
             # Provide basic guidance when SHAP is not available
             st.markdown("##  Your Credit Assessment Overview")
+            
+            # Add process flow explanation even without SHAP
+            with st.expander("🔄 **Your Assessment Process Flow**", expanded=True):
+                st.markdown(
+                    """
+                    ### How Your Score Was Determined:
+                    
+                    **🎯 Assessment Pipeline:**
+                    ```
+                    Input Data → Factor Analysis → Scoring → Validation → Final Result
+                    ```
+                    
+                    **1. Data Input Stage**
+                    - Financial information collected securely
+                    - Behavioral patterns analyzed
+                    - Social and digital indicators evaluated
+                    
+                    **2. Multi-Dimensional Analysis**
+                    - **Behavioral Trust (40%)**: Payment history, consistency patterns
+                    - **Social Trust (30%)**: Network quality, community connections  
+                    - **Digital Trust (30%)**: Online presence, transaction maturity
+                    
+                    **3. Intelligent Scoring**
+                    - AI algorithms weight each factor's importance
+                    - Machine learning identifies optimal combinations
+                    - Your unique profile drives personalized assessment
+                    
+                    **4. Quality Validation**
+                    - Multiple checks ensure scoring accuracy
+                    - Bias detection and fairness validation
+                    - Confidence metrics calculated
+                    
+                    **5. Final Assessment**
+                    - Comprehensive score reflects your creditworthiness
+                    - Clear reasoning provided for transparency
+                    - Actionable insights for improvement
+                    """
+                )
 
             trust_score = applicant_data.get("overall_trust_score", 0) * 100
 

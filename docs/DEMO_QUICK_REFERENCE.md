@@ -1,12 +1,13 @@
 # Z-Cred Demo Quick Reference
 
-## 🚀 Demo Data Setup Complete!
+## 🚀 Demo Data Setup Complete
 
 All old demo data has been removed and replaced with three realistic, scenario-based users that showcase different aspects of Z-Cred's alternative credit scoring capabilities.
 
 ## 👥 Demo Users
 
 ### 1. 👩‍🌾 Meera Devi - Rural Entrepreneur
+
 - **Login**: `meera@selfhelp.in` / `demo123`
 - **Profile**: 32-year-old SHG leader from Rajasthan
 - **Trust Score**: 77/100 ⭐
@@ -18,6 +19,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 - **Demo Focus**: Rural financial inclusion, social proof, community endorsements
 
 ### 2. 🏍️ Arjun Krishnan - Urban Gig Worker  
+
 - **Login**: `arjun@delivery.in` / `demo123`
 - **Profile**: 26-year-old delivery partner from Bangalore
 - **Trust Score**: 83/100 ⭐⭐
@@ -29,6 +31,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 - **Demo Focus**: Gig economy workers, digital footprint analysis, real-time data
 
 ### 3. 👗 Fatima Beevi - Small Business Owner
+
 - **Login**: `fatima@tailoring.in` / `demo123` 
 - **Profile**: 38-year-old tailoring business owner from Kerala
 - **Trust Score**: 85/100 ⭐⭐⭐
@@ -42,6 +45,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 ## 🎯 Demo Flow Suggestions
 
 ### For Each Scenario:
+
 1. **Login** with provided credentials
 2. **Show Trust Score Breakdown** (behavioral, social, digital components)
 3. **Demonstrate SHAP Explanations** (AI transparency)
@@ -50,6 +54,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 6. **Show Credit Recommendation** and loan terms
 
 ### Key Demo Points:
+
 - **Alternative Data Integration**: How we assess creditworthiness without traditional credit history
 - **Explainable AI**: SHAP-powered transparency for regulatory compliance
 - **Gamification**: Making credit building engaging and educational
@@ -59,6 +64,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 ## 📊 Technical Showcase
 
 ### Platform Features Demonstrated:
+
 - ✅ Real-time ML inference with XGBoost + Logistic Regression
 - ✅ SHAP explainability for transparent decision-making
 - ✅ Multi-source alternative data integration
@@ -67,6 +73,7 @@ All old demo data has been removed and replaced with three realistic, scenario-b
 - ✅ Secure authentication and session management
 
 ### Business Value Highlighted:
+
 - ✅ 15-20% improvement in risk prediction accuracy
 - ✅ 60-80% reduction in manual underwriting time
 - ✅ Access to 451M credit-invisible market segment
