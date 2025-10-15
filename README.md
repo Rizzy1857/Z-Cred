@@ -21,11 +21,6 @@ Project Z-Score addresses India's dual crisis of credit exclusion (451M individu
 
 ## Team Z-Row
 
-- Abhinand
-- Hrisheekesh  
-- Alvin
-- Anjana
-
 ## Quick Start
 
 ### Installation
